@@ -78,6 +78,8 @@ _PY_PAREN_SAFE = frozenset(
         "set",
         "tuple",
         "expression_list",
+        "generator_expression",
+        "list_comprehension",
     }
 )
 # Tuples are stricter: `assert (x, "msg")` is always true, unlike `assert x, "msg"`.
@@ -295,6 +297,8 @@ def _kept_items(node: Node, node_type: str, language: str) -> list[Node | bytes]
         children = _without_trailing_comma(node, node_type, children)
     if _parens_are_redundant(node, node_type, language):
         children = children[1:-1]
+    if language == "python" and node_type == "with_clause":
+        children = [c for c in children if c.type not in ("(", ")")]
     return children
 
 

@@ -15,7 +15,7 @@ from provenance.model import ChangeKind
 from provenance.trace.tokens import ID_PREFIX, bound_names, language_for, tokenize
 
 #: Bump when classification rules change, so stale results are not reused.
-ALGO_VERSION = 4
+ALGO_VERSION = 5
 
 #: Generated or minified files can be huge, and aren't worth parsing.
 MAX_BLOB_SIZE = 2_000_000

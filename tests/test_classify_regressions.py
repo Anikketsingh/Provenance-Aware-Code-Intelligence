@@ -27,6 +27,8 @@ MUST_STAY_LOGIC = [
         'def f():\n    """\n    >>> g()\n    1\n    """\n',
         'def f():\n    """\n    >>> g()\n    2\n    """\n',
     ),
+    # Parentheses that change which expression is the condition
+    ("python", "x = (a if b else c) if d else e\n", "x = a if b else (c if d else e)\n"),
     # Joining strings must not hide a change
     ("python", "x = 'a' 'b'\n", "x = 'a' 'c'\n"),
     ("python", "x = b'ab'\n", "x = b'a' b'c'\n"),
@@ -34,6 +36,9 @@ MUST_STAY_LOGIC = [
 ]
 
 COSMETIC = [
+    # Black's 2024 style
+    ("python", "with a(), b():\n    pass\n", "with (\n    a(),\n    b(),\n):\n    pass\n"),
+    ("python", "x = [a if b else c for d in e]\n", "x = [(a if b else c) for d in e]\n"),
     ("python", "x = 'ab'\n", "x = 'a' 'b'\n"),
     ("python", "x = f('a b', 1)\n", "x = f(\n    'a '\n    'b',\n    1,\n)\n"),
     ("python", "x = {'a': b if c else d}\n", "x = {'a': (b if c else d)}\n"),
