@@ -10,9 +10,10 @@ from provenance.model import ChangeKind
 
 
 class Store:
-    def __init__(self, path: Path):
+    def __init__(self, path: Path, *, shared: bool = False):
+        """`shared` allows use from several threads, one at a time under the caller's lock."""
         path.parent.mkdir(parents=True, exist_ok=True)
-        self._db = sqlite3.connect(path)
+        self._db = sqlite3.connect(path, check_same_thread=not shared)
         self._db.execute("PRAGMA journal_mode=WAL")
         self._db.execute("PRAGMA synchronous=NORMAL")
         schema = resources.files("provenance.store").joinpath("schema.sql").read_text()
@@ -78,6 +79,10 @@ class Store:
 
     def subject(self, sha: str) -> str:
         row = self._db.execute("SELECT subject FROM commits WHERE sha = ?", (sha,)).fetchone()
+        return row[0] if row else ""
+
+    def body(self, sha: str) -> str:
+        row = self._db.execute("SELECT body FROM commits WHERE sha = ?", (sha,)).fetchone()
         return row[0] if row else ""
 
     def commit_time(self, sha: str) -> int | None:

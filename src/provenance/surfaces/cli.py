@@ -47,6 +47,14 @@ def classify(repo: str, workers: int = 4) -> None:
 
 
 @app.command()
+def mcp(repo: str) -> None:
+    """Run the MCP server for a repo, over stdio."""
+    from provenance.surfaces.mcp_server import build_server  # slow import, needed only here
+
+    build_server(Repo.named(repo)).run()
+
+
+@app.command()
 def why(repo: str, path: str, line: int, rev: str = "HEAD") -> None:
     """Trace a line to the change that really introduced it."""
     target = Repo.named(repo)

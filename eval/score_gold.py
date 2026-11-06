@@ -18,6 +18,7 @@ from corpus import Baselines, hand_list, pinned_rev
 
 from provenance.config import Repo
 from provenance.store.db import Store
+from provenance.trace.chain import Tracer
 
 GOLD = Path(__file__).parent / "gold"
 RESULTS = Path(__file__).parent / "results"
@@ -116,6 +117,7 @@ def main() -> None:
         rev = pinned_rev(name)
         with Store(repo.db_path) as store:
             baselines = Baselines(repo, store, rev, hand_list(repo, rev))
+            tracer = Tracer(repo, store)
             for label in (r for r in labelled if r["repo"] == name):
                 item = by_id[label["id"]]
                 blamed = baselines.blame_all(item["path"])
@@ -123,24 +125,34 @@ def main() -> None:
                 for method, lines in blamed.items():
                     commit = lines[item["line"] - 1].commit
                     row[method] = same_commit(commit, label["last_logic_change"])
+                chain = tracer.trace(item["path"], item["line"], rev)
+                row["Ours-C"] = same_commit(chain.origin or "", label["last_logic_change"])
+                first = label["first_appearance"]
+                row["first:Ours-C"] = same_commit(chain.first_seen or "", first)
+                row["first:B2"] = same_commit(blamed["B2"][item["line"] - 1].commit, first)
                 rows.append(row)
 
-    methods = [m for m in ("B0", "B1", "B2", "B3", "Ours-A") if all(m in r for r in rows)]
+    methods = [m for m in ("B0", "B1", "B2", "B3", "Ours-A", "Ours-C") if all(m in r for r in rows)]
     weights = stratum_weights(key["meta"])
     report: dict = {"labelled": len(rows), "ambiguous": ambiguous, "methods": {}}
-    print(f"\n{'Method':8} {'Weighted':>9} {'95% CI':>17} {'Raw':>7}  vs Ours-A")
+    print(f"\n{'Method':8} {'Weighted':>9} {'95% CI':>17} {'Raw':>7}  vs Ours-C")
     for method in methods:
         score = weighted_accuracy(rows, method, weights)
         low, high = bootstrap_interval(rows, method, weights)
         raw = sum(r[method] for r in rows) / len(rows)
-        versus = mcnemar_exact(rows, method, "Ours-A")
+        versus = mcnemar_exact(rows, method, "Ours-C")
         report["methods"][method] = {
             "weighted": score,
             "ci": [low, high],
             "raw": raw,
-            "vs_ours_a": versus,
+            "vs_ours_c": versus,
         }
         print(f"{method:8} {score:9.1%} {low:8.1%} - {high:6.1%} {raw:7.1%}  p={versus['p']:.3f}")
+
+    for method in ("first:B2", "first:Ours-C"):
+        score = weighted_accuracy(rows, method, weights)
+        report["methods"][method] = {"weighted": score}
+        print(f"{method:14} first appearance {score:6.1%}")
 
     if args.second:
         first = {

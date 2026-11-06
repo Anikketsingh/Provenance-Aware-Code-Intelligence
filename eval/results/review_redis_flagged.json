@@ -1,0 +1,10 @@
+{
+  "repo": "redis",
+  "date": "2026-11-08",
+  "method": "eval/review_sample.py redis --cosmetic 40 --seed 11",
+  "reviewer": "Claude. Needs confirming by a person before it goes in the report.",
+  "limit": "Only the first 6 changed lines of each commit were read, so long commits were not read in full.",
+  "reviewed": {"rename": 18, "cosmetic": 40},
+  "correct": {"rename": 18, "cosmetic": 40},
+  "note": "All 18 rename commits in Redis were reviewed, so that is a census. Cosmetic is a seeded sample of 40 from 280, and most are comment edits that don't touch logic lines."
+}
