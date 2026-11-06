@@ -27,6 +27,9 @@ MUST_STAY_LOGIC = [
         'def f():\n    """\n    >>> g()\n    1\n    """\n',
         'def f():\n    """\n    >>> g()\n    2\n    """\n',
     ),
+    # 430b819967: two statements became one call, found by the AST check
+    ("python", "self.check\n(a, b)\n", "self.check(a, b)\n"),
+    ("javascript", "let f = g\n;(a)\n", "let f = g(a);\n"),
     # Parentheses that change which expression is the condition
     ("python", "x = (a if b else c) if d else e\n", "x = a if b else (c if d else e)\n"),
     # Joining strings must not hide a change
@@ -36,6 +39,11 @@ MUST_STAY_LOGIC = [
 ]
 
 COSMETIC = [
+    # Statement boundaries must not add noise
+    ("python", "a(); b()\n", "a()\nb()\n"),
+    ("python", "x = 1\n'Docstring.'\n", "x = 1\n"),
+    ("javascript", "a(); b();\n", "a()\nb()\n"),
+    ("javascript", "// one\na();\n// two\n", "a();\n"),
     # Black's 2024 style
     ("python", "with a(), b():\n    pass\n", "with (\n    a(),\n    b(),\n):\n    pass\n"),
     ("python", "x = [a if b else c for d in e]\n", "x = [(a if b else c) for d in e]\n"),

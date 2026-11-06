@@ -2,7 +2,7 @@
   "repo": "django",
   "rev": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
   "seed": 7,
-  "algo_version": 4,
+  "algo_version": 5,
   "class_counts": {
     "cosmetic": 1054,
     "logic": 23275,
@@ -16,7 +16,7 @@
       "subject": "Applied Black's 2024 stable style.",
       "kind": "logic",
       "code_files": 204,
-      "non_logic_files": 163
+      "non_logic_files": 201
     },
     {
       "sha": "ca88caa1031c0de545d82de8d90dcae0e03651fb",
@@ -206,13 +206,13 @@
       "lines": 5366,
       "strongest_on_listed": 1220,
       "hand_on_listed": 62,
-      "auto_on_listed": 93,
-      "auto_equals_hand": 5060
+      "auto_on_listed": 90,
+      "auto_equals_hand": 5063
     },
     "seconds": {
-      "strongest": 30.717198792006457,
-      "hand": 22.371792164998624,
-      "auto": 24.674892962006197
+      "strongest": 30.942227793988422,
+      "hand": 22.022915876004845,
+      "auto": 24.053043873995193
     }
   },
   "flagged": {

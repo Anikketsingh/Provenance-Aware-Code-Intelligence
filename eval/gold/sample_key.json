@@ -1,0 +1,521 @@
+{
+  "meta": {
+    "seed": 20261108,
+    "repos": {
+      "django": {
+        "rev": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
+        "files_eligible": 627,
+        "files_sampled": 120,
+        "lines": 14690,
+        "strata": {
+          "agree": {
+            "population": 8898,
+            "sampled": 15
+          },
+          "disagree": {
+            "population": 5792,
+            "sampled": 25
+          }
+        }
+      },
+      "redis": {
+        "rev": "5b69ba2ce91fea8e9fc70ebac8ce341b37e75533",
+        "files_eligible": 219,
+        "files_sampled": 120,
+        "lines": 68007,
+        "strata": {
+          "agree": {
+            "population": 59810,
+            "sampled": 8
+          },
+          "disagree": {
+            "population": 8197,
+            "sampled": 12
+          }
+        }
+      }
+    }
+  },
+  "items": [
+    {
+      "repo": "django",
+      "path": "django/contrib/gis/gdal/prototypes/raster.py",
+      "line": 134,
+      "code": "POINTER(c_double),",
+      "stratum": "disagree",
+      "id": "L001"
+    },
+    {
+      "repo": "redis",
+      "path": "src/cluster_legacy.h",
+      "line": 329,
+      "code": "int cport;                  /* Latest known cluster port of this node. */",
+      "stratum": "disagree",
+      "id": "L002"
+    },
+    {
+      "repo": "redis",
+      "path": "src/db.c",
+      "line": 3381,
+      "code": "} else if (spec->begin_search_type == KSPEC_BS_KEYWORD) {",
+      "stratum": "agree",
+      "id": "L003"
+    },
+    {
+      "repo": "redis",
+      "path": "src/object.c",
+      "line": 612,
+      "code": "void freeModuleObject(robj *o) {",
+      "stratum": "agree",
+      "id": "L004"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/models/lookups.py",
+      "line": 536,
+      "code": "rhs = [r for r in self.rhs if r is not None]",
+      "stratum": "agree",
+      "id": "L005"
+    },
+    {
+      "repo": "redis",
+      "path": "src/cluster_asm.c",
+      "line": 1924,
+      "code": "\"server paused\";",
+      "stratum": "agree",
+      "id": "L006"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/models/query.py",
+      "line": 835,
+      "code": "\"the upsert.\"",
+      "stratum": "disagree",
+      "id": "L007"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/models/fields/related.py",
+      "line": 1180,
+      "code": "id=\"fields.W342\",",
+      "stratum": "disagree",
+      "id": "L008"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/backends/oracle/base.py",
+      "line": 41,
+      "code": "kernel32 = ctypes.CDLL(\"kernel32\")",
+      "stratum": "disagree",
+      "id": "L009"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/gis/gdal/prototypes/raster.py",
+      "line": 109,
+      "code": "delete_band_nodata_value = void_output(",
+      "stratum": "disagree",
+      "id": "L010"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/backends/postgresql/base.py",
+      "line": 335,
+      "code": "raise ImproperlyConfigured(",
+      "stratum": "disagree",
+      "id": "L011"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/admin/options.py",
+      "line": 247,
+      "code": "db_field.remote_field.model",
+      "stratum": "disagree",
+      "id": "L012"
+    },
+    {
+      "repo": "django",
+      "path": "django/utils/regex_helper.py",
+      "line": 153,
+      "code": "if terminal_char != \")\":",
+      "stratum": "disagree",
+      "id": "L013"
+    },
+    {
+      "repo": "redis",
+      "path": "src/server.c",
+      "line": 4162,
+      "code": "static long long prev_err_count = 0;",
+      "stratum": "agree",
+      "id": "L014"
+    },
+    {
+      "repo": "django",
+      "path": "django/utils/lorem_ipsum.py",
+      "line": 117,
+      "code": "\"quis\",",
+      "stratum": "disagree",
+      "id": "L015"
+    },
+    {
+      "repo": "redis",
+      "path": "src/sparsearray.c",
+      "line": 258,
+      "code": "arSlice *s = arAllocAndTrack(ar, arSparseAllocSize(cap));",
+      "stratum": "agree",
+      "id": "L016"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/gis/utils/layermapping.py",
+      "line": 489,
+      "code": "def verify_geom(self, geom, model_field):",
+      "stratum": "agree",
+      "id": "L017"
+    },
+    {
+      "repo": "django",
+      "path": "django/core/management/sql.py",
+      "line": 32,
+      "code": "models.signals.pre_migrate.send(",
+      "stratum": "agree",
+      "id": "L018"
+    },
+    {
+      "repo": "django",
+      "path": "django/http/response.py",
+      "line": 297,
+      "code": "return self.set_cookie(key, value, **kwargs)",
+      "stratum": "agree",
+      "id": "L019"
+    },
+    {
+      "repo": "redis",
+      "path": "src/server.h",
+      "line": 1079,
+      "code": "int options;    /* Module options and capabilities. */",
+      "stratum": "disagree",
+      "id": "L020"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/backends/base/client.py",
+      "line": 30,
+      "code": "env = {**os.environ, **env} if env else None",
+      "stratum": "agree",
+      "id": "L021"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/gis/gdal/raster/base.py",
+      "line": 53,
+      "code": "domain_meta[key] = val",
+      "stratum": "agree",
+      "id": "L022"
+    },
+    {
+      "repo": "redis",
+      "path": "src/chk.c",
+      "line": 615,
+      "code": "return i;",
+      "stratum": "agree",
+      "id": "L023"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/models/fields/related.py",
+      "line": 1058,
+      "code": "*super().check(**kwargs),",
+      "stratum": "agree",
+      "id": "L024"
+    },
+    {
+      "repo": "redis",
+      "path": "src/module.c",
+      "line": 13966,
+      "code": "for (int j = 0; cmd->history && cmd->history[j].since; j++) {",
+      "stratum": "disagree",
+      "id": "L025"
+    },
+    {
+      "repo": "redis",
+      "path": "src/redis-cli.c",
+      "line": 8316,
+      "code": "clusterManagerNode *n = ln->value;",
+      "stratum": "disagree",
+      "id": "L026"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/backends/postgresql/base.py",
+      "line": 252,
+      "code": "if settings_dict[\"NAME\"] == \"\" and not settings_dict[\"OPTIONS\"].get(\"service\"):",
+      "stratum": "agree",
+      "id": "L027"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/sites/shortcuts.py",
+      "line": 13,
+      "code": "if apps.is_installed(\"django.contrib.sites\"):",
+      "stratum": "disagree",
+      "id": "L028"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/contenttypes/forms.py",
+      "line": 86,
+      "code": "can_order=False,",
+      "stratum": "disagree",
+      "id": "L029"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/models/query.py",
+      "line": 308,
+      "code": "chunked_fetch=self.chunked_fetch,",
+      "stratum": "disagree",
+      "id": "L030"
+    },
+    {
+      "repo": "django",
+      "path": "django/core/files/images.py",
+      "line": 61,
+      "code": "if not data:",
+      "stratum": "disagree",
+      "id": "L031"
+    },
+    {
+      "repo": "redis",
+      "path": "src/script_lua.c",
+      "line": 1233,
+      "code": "luaLoadLib(lua, \"cmsgpack\", luaopen_cmsgpack);",
+      "stratum": "disagree",
+      "id": "L032"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/models/fields/related.py",
+      "line": 1674,
+      "code": "\"Django should use.\"",
+      "stratum": "disagree",
+      "id": "L033"
+    },
+    {
+      "repo": "django",
+      "path": "django/conf/global_settings.py",
+      "line": 55,
+      "code": "(\"ar\", gettext_noop(\"Arabic\")),",
+      "stratum": "disagree",
+      "id": "L034"
+    },
+    {
+      "repo": "redis",
+      "path": "src/redis-cli.c",
+      "line": 7205,
+      "code": "list *owners = listCreate();",
+      "stratum": "disagree",
+      "id": "L035"
+    },
+    {
+      "repo": "redis",
+      "path": "src/script_lua.c",
+      "line": 210,
+      "code": ".null_callback = redisProtocolToLuaType_Null,",
+      "stratum": "disagree",
+      "id": "L036"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/backends/mysql/schema.py",
+      "line": 41,
+      "code": "return \"ALTER TABLE %(table)s DROP CHECK %(name)s\"",
+      "stratum": "disagree",
+      "id": "L037"
+    },
+    {
+      "repo": "django",
+      "path": "django/http/response.py",
+      "line": 488,
+      "code": "\"This %s instance has no `text` attribute.\" % self.__class__.__name__",
+      "stratum": "agree",
+      "id": "L038"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/gis/utils/layermapping.py",
+      "line": 173,
+      "code": "self.transaction_decorator = None",
+      "stratum": "agree",
+      "id": "L039"
+    },
+    {
+      "repo": "django",
+      "path": "django/conf/global_settings.py",
+      "line": 17,
+      "code": "DEBUG = False",
+      "stratum": "agree",
+      "id": "L040"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/admin/options.py",
+      "line": 622,
+      "code": "def has_change_permission(self, request, obj=None):",
+      "stratum": "disagree",
+      "id": "L041"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/models/fields/related.py",
+      "line": 831,
+      "code": "ret = []",
+      "stratum": "agree",
+      "id": "L042"
+    },
+    {
+      "repo": "redis",
+      "path": "src/connection.h",
+      "line": 58,
+      "code": "aeFileProc *accept_handler;",
+      "stratum": "agree",
+      "id": "L043"
+    },
+    {
+      "repo": "django",
+      "path": "django/http/response.py",
+      "line": 190,
+      "code": "for key, value in self.headers.items()",
+      "stratum": "disagree",
+      "id": "L044"
+    },
+    {
+      "repo": "redis",
+      "path": "src/hyperloglog.c",
+      "line": 726,
+      "code": "prev = NULL; /* Points to previous opcode at the end of the loop. */",
+      "stratum": "disagree",
+      "id": "L045"
+    },
+    {
+      "repo": "redis",
+      "path": "src/quicklist.c",
+      "line": 2170,
+      "code": "for (int _i = 0; _i < (int)option_count; _i++) {",
+      "stratum": "agree",
+      "id": "L046"
+    },
+    {
+      "repo": "redis",
+      "path": "src/db.c",
+      "line": 3264,
+      "code": "int slot = getKeySlot(key);",
+      "stratum": "disagree",
+      "id": "L047"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/models/fields/tuple_lookups.py",
+      "line": 188,
+      "code": "return root.as_sql(compiler, connection)",
+      "stratum": "agree",
+      "id": "L048"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/admin/options.py",
+      "line": 350,
+      "code": "kwargs[\"queryset\"] = queryset",
+      "stratum": "disagree",
+      "id": "L049"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/models/fields/related.py",
+      "line": 1778,
+      "code": "\"where the field is attached to.\"",
+      "stratum": "disagree",
+      "id": "L050"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/models/fields/related.py",
+      "line": 2111,
+      "code": "self.remote_field.model == RECURSIVE_RELATIONSHIP_CONSTANT",
+      "stratum": "disagree",
+      "id": "L051"
+    },
+    {
+      "repo": "redis",
+      "path": "src/lolwut5.c",
+      "line": 72,
+      "code": "if (rand() % 2) r3 = -r3;",
+      "stratum": "disagree",
+      "id": "L052"
+    },
+    {
+      "repo": "redis",
+      "path": "src/redis-cli.c",
+      "line": 6523,
+      "code": "listRewind(cluster_manager.nodes, &li);",
+      "stratum": "disagree",
+      "id": "L053"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/gis/utils/layermapping.py",
+      "line": 324,
+      "code": "raise LayerMapError(\"No source reference system defined.\")",
+      "stratum": "disagree",
+      "id": "L054"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/admin/templatetags/admin_urls.py",
+      "line": 18,
+      "code": "return quote(value)",
+      "stratum": "agree",
+      "id": "L055"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/admin/options.py",
+      "line": 2310,
+      "code": "if changecount:",
+      "stratum": "disagree",
+      "id": "L056"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/gis/utils/layermapping.py",
+      "line": 385,
+      "code": "return {self.unique: kwargs[self.unique]}",
+      "stratum": "disagree",
+      "id": "L057"
+    },
+    {
+      "repo": "redis",
+      "path": "src/acl.c",
+      "line": 2920,
+      "code": "struct redisCommand *cmd = dictGetVal(de);",
+      "stratum": "disagree",
+      "id": "L058"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/models/query.py",
+      "line": 1575,
+      "code": "clone = self._chain()",
+      "stratum": "agree",
+      "id": "L059"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/auth/views.py",
+      "line": 336,
+      "code": "\"title\": _(\"Password reset unsuccessful\"),",
+      "stratum": "disagree",
+      "id": "L060"
+    }
+  ]
+}

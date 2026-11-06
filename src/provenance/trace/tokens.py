@@ -38,6 +38,9 @@ ID_PREFIX = b"\x00"
 # statement into an `if` body would look like no change at all.
 _BLOCK_OPEN = b"\x01{"
 _BLOCK_CLOSE = b"\x01}"
+# Line breaks end statements in Python, and sometimes in JavaScript. Without this marker,
+# `self.check` followed by `(a, b)` on the next line looks the same as `self.check(a, b)`.
+_STATEMENT_END = b"\x01;"
 
 _IDENTIFIER_TYPES = frozenset(
     {
@@ -292,6 +295,8 @@ def _kept_items(node: Node, node_type: str, language: str) -> list[Node | bytes]
             children = [c for c in children if not _is_empty_argument_list(c)]
         if node_type in ("module", "block"):
             return _with_canonical_imports(children)
+    if language == "javascript" and node_type in ("program", "statement_block"):
+        return _with_statement_ends(children)
     # Commas first: the closing bracket they sit against may be the one removed next.
     if language != "c":
         children = _without_trailing_comma(node, node_type, children)
@@ -315,13 +320,24 @@ def _with_canonical_imports(children: list[Node]) -> list[Node | bytes]:
     for child in children:
         if child.type in _PY_IMPORT_TYPES:
             run.extend(_import_entries(child))
-        elif child.type in _SKIP_TYPES:
+        elif child.type in _SKIP_TYPES or child.type == ";":
             continue
         else:
             items.extend(sorted(run))
             run = []
             items.append(child)
+            if not (child.type == "expression_statement" and _is_bare_string(child)):
+                items.append(_STATEMENT_END)
     items.extend(sorted(run))
+    return items
+
+
+def _with_statement_ends(children: list[Node]) -> list[Node | bytes]:
+    items: list[Node | bytes] = []
+    for child in children:
+        items.append(child)
+        if child.type not in _SKIP_TYPES and child.type not in ("{", "}", ";"):
+            items.append(_STATEMENT_END)
     return items
 
 
