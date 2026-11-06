@@ -1,0 +1,424 @@
+{
+  "repo": "django",
+  "rev": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
+  "seed": 7,
+  "algo_version": 4,
+  "class_counts": {
+    "cosmetic": 1054,
+    "logic": 23275,
+    "move": 9,
+    "rename": 84,
+    "unknown": 10682
+  },
+  "listed": [
+    {
+      "sha": "305757aec19c9d5111e4d76095ae0acd66163e4b",
+      "subject": "Applied Black's 2024 stable style.",
+      "kind": "logic",
+      "code_files": 204,
+      "non_logic_files": 163
+    },
+    {
+      "sha": "ca88caa1031c0de545d82de8d90dcae0e03651fb",
+      "subject": "Refs #33476 -- Used vertical hanging indentation for format lists with inline comments.",
+      "kind": "cosmetic",
+      "code_files": 37,
+      "non_logic_files": 37
+    },
+    {
+      "sha": "c5cd8783825b5f6384417dac5f3889b4210b7d08",
+      "subject": "Refs #33476 -- Refactored problematic code before reformatting by Black.",
+      "kind": "logic",
+      "code_files": 53,
+      "non_logic_files": 47
+    },
+    {
+      "sha": "9c19aff7c7561e3a82978a272ecdaad40dda5c00",
+      "subject": "Refs #33476 -- Reformatted code with Black.",
+      "kind": "logic",
+      "code_files": 1992,
+      "non_logic_files": 1987
+    },
+    {
+      "sha": "7119f40c9881666b6f9b5cf7df09ee1d21cc8344",
+      "subject": "Refs #33476 -- Refactored code to strictly match 88 characters line length.",
+      "kind": "logic",
+      "code_files": 404,
+      "non_logic_files": 349
+    },
+    {
+      "sha": "c18861804feb6a97afbeabb51be748dd60a04458",
+      "subject": "Fixed warnings per flake8 5.0.0.",
+      "kind": "logic",
+      "code_files": 6,
+      "non_logic_files": 1
+    },
+    {
+      "sha": "097e3a70c1481ee7b042b2edd91b2be86fb7b5b6",
+      "subject": "Refs #33476 -- Applied Black's 2023 stable style.",
+      "kind": "cosmetic",
+      "code_files": 237,
+      "non_logic_files": 237
+    },
+    {
+      "sha": "534ac4829764f317cf2fbc4a18354fcc998c1425",
+      "subject": "Refs #34140 -- Applied rst code-block to non-Python examples.",
+      "kind": "unknown",
+      "code_files": 0,
+      "non_logic_files": 0
+    },
+    {
+      "sha": "ba755ca13123d2691a0926ddb64e5d0a2906a880",
+      "subject": "Refs #34140 -- Corrected rst code-block and various formatting issues in docs.",
+      "kind": "unknown",
+      "code_files": 0,
+      "non_logic_files": 0
+    },
+    {
+      "sha": "14459f80ee3a9e005989db37c26fd13bb6d2fab2",
+      "subject": "Fixed #34140 -- Reformatted code blocks in docs with blacken-docs.",
+      "kind": "unknown",
+      "code_files": 0,
+      "non_logic_files": 0
+    },
+    {
+      "sha": "1ecf6889cabc9f3f60d3fdd651468cddd8f4da6e",
+      "subject": "Removed double spaces after periods and within phrases.",
+      "kind": "logic",
+      "code_files": 101,
+      "non_logic_files": 87
+    },
+    {
+      "sha": "69a93a88edb56ba47f624dac7a21aacc47ea474f",
+      "subject": "Refs #36500 -- Rewrapped long docstrings and block comments via a script.",
+      "kind": "logic",
+      "code_files": 378,
+      "non_logic_files": 376
+    },
+    {
+      "sha": "78298b51629e14c0e472898b635bc819d47b7f27",
+      "subject": "Refs #36500 -- Corrected rewrapped long lines fixed via a script.",
+      "kind": "cosmetic",
+      "code_files": 14,
+      "non_logic_files": 14
+    },
+    {
+      "sha": "f81e6e3a53ee36e3f730a71aa55a5744982dd016",
+      "subject": "Refs #36485 -- Rewrapped docs to 79 columns line length.",
+      "kind": "logic",
+      "code_files": 1,
+      "non_logic_files": 0
+    },
+    {
+      "sha": "b1e33ceceda1e75ff68c7deed8f6659683a195d3",
+      "subject": "Fixed #23395 -- Limited line lengths to 119 characters.",
+      "kind": "logic",
+      "code_files": 129,
+      "non_logic_files": 101
+    },
+    {
+      "sha": "c9178ef17a0e1070f5a25096d8e13385d404dc92",
+      "subject": "Limited lines to 119 characters in django/{contrib,db}.",
+      "kind": "logic",
+      "code_files": 10,
+      "non_logic_files": 7
+    },
+    {
+      "sha": "1101467ce0756272a54f4c7bc65c4c335a94111b",
+      "subject": "Limited lines to 119 characters in django/",
+      "kind": "logic",
+      "code_files": 110,
+      "non_logic_files": 101
+    },
+    {
+      "sha": "6cff02078799b7c683a0d39630d49ab4fe532e7c",
+      "subject": "Applied Black's 2026 stable style.",
+      "kind": "cosmetic",
+      "code_files": 40,
+      "non_logic_files": 40
+    },
+    {
+      "sha": "4286a23df64f6ce3b9b6ed097f4d1aac7d9e0de4",
+      "subject": "Refs #36485 -- Removed double spaces after periods in sentences.",
+      "kind": "unknown",
+      "code_files": 0,
+      "non_logic_files": 0
+    },
+    {
+      "sha": "241b8e1aab7fc71018a059467b2ba17bce6556cc",
+      "subject": "Formatted CSS files.",
+      "kind": "logic",
+      "code_files": 17,
+      "non_logic_files": 0
+    },
+    {
+      "sha": "fc0a0ebd4fe573299a5f978e77fa3bca8424f661",
+      "subject": "Formatted JavaScript files.",
+      "kind": "logic",
+      "code_files": 31,
+      "non_logic_files": 19
+    }
+  ],
+  "sampled_files": [
+    "django/contrib/gis/db/backends/utils.py",
+    "django/conf/locale/ta/__init__.py",
+    "django/contrib/gis/shortcuts.py",
+    "django/db/backends/oracle/schema.py",
+    "django/conf/locale/es/formats.py",
+    "django/conf/locale/fr_CH/__init__.py",
+    "django/utils/_os.py",
+    "django/core/checks/security/sessions.py",
+    "django/conf/locale/ig/__init__.py",
+    "django/contrib/gis/geos/collections.py",
+    "django/core/management/commands/flush.py",
+    "django/conf/locale/es_PR/formats.py",
+    "django/contrib/syndication/apps.py",
+    "django/contrib/auth/admin.py",
+    "django/conf/locale/en_AU/__init__.py",
+    "django/conf/locale/hr/__init__.py",
+    "django/contrib/postgres/fields/jsonb.py",
+    "django/contrib/messages/storage/session.py",
+    "django/conf/locale/fr_BE/formats.py",
+    "django/contrib/auth/migrations/0012_alter_user_first_name_max_length.py",
+    "django/conf/locale/hu/__init__.py",
+    "django/core/files/temp.py",
+    "django/contrib/postgres/aggregates/general.py",
+    "django/conf/locale/et/__init__.py",
+    "django/utils/connection.py",
+    "django/core/mail/backends/locmem.py",
+    "django/conf/locale/nb/__init__.py",
+    "django/contrib/auth/handlers/modwsgi.py",
+    "django/db/backends/dummy/__init__.py",
+    "django/db/backends/base/schema.py",
+    "django/conf/locale/eu/formats.py",
+    "django/core/management/commands/check.py",
+    "django/core/management/commands/loaddata.py",
+    "django/contrib/gis/sitemaps/kml.py",
+    "django/conf/locale/es_AR/__init__.py",
+    "django/contrib/auth/forms.py",
+    "django/conf/locale/eo/formats.py",
+    "django/core/handlers/base.py",
+    "django/utils/translation/reloader.py",
+    "django/conf/locale/pt_BR/__init__.py"
+  ],
+  "blame_effect": {
+    "totals": {
+      "lines": 5366,
+      "strongest_on_listed": 1220,
+      "hand_on_listed": 62,
+      "auto_on_listed": 93,
+      "auto_equals_hand": 5060
+    },
+    "seconds": {
+      "strongest": 30.717198792006457,
+      "hand": 22.371792164998624,
+      "auto": 24.674892962006197
+    }
+  },
+  "flagged": {
+    "flagged_total": 1147,
+    "flagged_not_on_list": 1143,
+    "review_sample": [
+      {
+        "sha": "984a57a9c9cba44fde61e21c08996dc678f13e81",
+        "kind": "cosmetic",
+        "subject": "Removed some commented code in the forms Media class."
+      },
+      {
+        "sha": "48a8b714d49d7a4ceee66473aea72c2d8c84a672",
+        "kind": "cosmetic",
+        "subject": "Fixed bad grammar in a comment."
+      },
+      {
+        "sha": "b3752d410ab15bafbb09e477c5f8696bb2d4c871",
+        "kind": "cosmetic",
+        "subject": "Fixed comments in en_GB and en_AU formats.py files."
+      },
+      {
+        "sha": "1979b1403adeb437831a1a8885353e158ec9ad55",
+        "kind": "cosmetic",
+        "subject": "Fixed docstring for django.core.exceptions module."
+      },
+      {
+        "sha": "25128856f51cd795d176c3da7808913a45e2b964",
+        "kind": "cosmetic",
+        "subject": "Fixed typo in utils/archive.py docstring"
+      },
+      {
+        "sha": "f5ff5010cd74500785a707ac70b51d292403cddc",
+        "kind": "cosmetic",
+        "subject": "Fixed #26483 -- Updated docs.python.org links to use Intersphinx."
+      },
+      {
+        "sha": "2ebccebf0609229317c2f5b9a76664dc216f27eb",
+        "kind": "cosmetic",
+        "subject": "Fixed typo in test docstring."
+      },
+      {
+        "sha": "a72eae0be7644fdfb75e28ad82c07d2db80210b4",
+        "kind": "cosmetic",
+        "subject": "Fixed #8728: Corrected some broken links in the documentation"
+      },
+      {
+        "sha": "1e63652e44f1c12c6e0fec6dacfae0c865b7cdbf",
+        "kind": "move",
+        "subject": "Renamed MySQL-specific dbshell test file."
+      },
+      {
+        "sha": "eafc0364764ba12babd76194d8e1f78b876471ec",
+        "kind": "cosmetic",
+        "subject": "Fixed #19577 - Added HTML escaping to admin examples."
+      },
+      {
+        "sha": "67e7dffe9543aff259f63c8f12d15642fe7be100",
+        "kind": "rename",
+        "subject": "Fixed typo in BulkInsertMapper constant name."
+      },
+      {
+        "sha": "13be3bfef1441f9f3c9eb3cad21b5ae158fdb874",
+        "kind": "cosmetic",
+        "subject": "Removed stale add_q() comment"
+      },
+      {
+        "sha": "2be6b526568aaaae5353a4a600a085d3c2135363",
+        "kind": "cosmetic",
+        "subject": "Fixed typos in flatpages_tests comments."
+      },
+      {
+        "sha": "c6dc7089a126ba59e712051a49af8d8c26653d3d",
+        "kind": "cosmetic",
+        "subject": "Refs #1834 -- Documented include_admin_script tag in admin interface. Thanks to Matias Hermanrud Fjeld."
+      },
+      {
+        "sha": "c07f9fef398a21a76d350e8b02b396b3e580b751",
+        "kind": "cosmetic",
+        "subject": "Corrected docstring in core.urlresolvers module."
+      },
+      {
+        "sha": "24a14860ced5c456522d69c16afd2c631cc0456f",
+        "kind": "cosmetic",
+        "subject": "Fixed line length in admin_views test_prepopulated_fields()."
+      },
+      {
+        "sha": "73bec372ee88cf89dce0de3d667b1f7d8291e5fa",
+        "kind": "cosmetic",
+        "subject": "Fixed #4897 -- Fixed minor typo in doctest comment."
+      },
+      {
+        "sha": "2d903929a70078cf1c50bf7b6e7718b1a4a691df",
+        "kind": "cosmetic",
+        "subject": "Fixed #20949 -- Typo #2 in docstring"
+      },
+      {
+        "sha": "fb16ee5a31256c1e230a697044c3ded2dbdec3e8",
+        "kind": "cosmetic",
+        "subject": "Remove commented-out print"
+      },
+      {
+        "sha": "c3a974c81ec9d9b102cc9bd10c23e5579c751df1",
+        "kind": "cosmetic",
+        "subject": "Amended comment to remove reference to the no longer used NullHandler"
+      },
+      {
+        "sha": "1f8c4ce60940deaf124eedc112fd9b5c1b317a4e",
+        "kind": "cosmetic",
+        "subject": "Fixed #8643 -- Corrected docstrings of `MultiPartParser`, thanks KayEss."
+      },
+      {
+        "sha": "3e820d10f81ea9d0576633734c2ebd2621575cbe",
+        "kind": "cosmetic",
+        "subject": "Refs #10743 -- Removed leftover comment in tests/admin_changelist/tests.py."
+      },
+      {
+        "sha": "6c994013e242bad67264d445b0bd4c0772bffdb4",
+        "kind": "cosmetic",
+        "subject": "Corrected TooManyFieldsSent doctring for GET requests."
+      },
+      {
+        "sha": "209de62d220baa3b4c7db582349a7a3765901a68",
+        "kind": "cosmetic",
+        "subject": "Fix Python 3.2 compatiblity by removing unicode literals."
+      },
+      {
+        "sha": "b4bb5cd0a31c6e9ebc2be9dff245f506940f9159",
+        "kind": "cosmetic",
+        "subject": "Fixed #23585 - Corrected internal comment."
+      },
+      {
+        "sha": "19ce1d493ae7cbc1e704d338077b1f5f5e5769c9",
+        "kind": "cosmetic",
+        "subject": "Fixed typo in django/db/backends/sqlite3/base.py comment."
+      },
+      {
+        "sha": "6b418348558e7efc5bac459989887138a3045886",
+        "kind": "cosmetic",
+        "subject": "Minor edits to Greatest/Least docs; refs #24767."
+      },
+      {
+        "sha": "189e7dd8023b75640c959bd1dbc0d664f0e283cd",
+        "kind": "cosmetic",
+        "subject": "Renumbered all the doctest examples so that they are ordered correctly on the doc pages."
+      },
+      {
+        "sha": "ffbee67f8e17e1cfffcaa0116c170141a7363dda",
+        "kind": "cosmetic",
+        "subject": "Fixed some comments referring to a nonexistent TestClient class."
+      },
+      {
+        "sha": "413735b239239bc8ff38ee893e8448daf9b2bff6",
+        "kind": "cosmetic",
+        "subject": "Fix a typo in a comment."
+      },
+      {
+        "sha": "8a2f04db914a66c4bfca7fc2f9a523c14dbbf3eb",
+        "kind": "cosmetic",
+        "subject": "typo: urlaprse -> urlparse"
+      },
+      {
+        "sha": "c12745f6826280acb637f9c43cd2c7c2ef3d8761",
+        "kind": "cosmetic",
+        "subject": "Fixed typo in django/db/backends/base/schema.py."
+      },
+      {
+        "sha": "474eeccb52416c24ed375c0026af54e586a67ff3",
+        "kind": "cosmetic",
+        "subject": "Fixed a typo (I guess)."
+      },
+      {
+        "sha": "f73f821143d5934780e3b76f90ff9a7110c509f7",
+        "kind": "cosmetic",
+        "subject": "Removed uneeded comment in DatabaseWrapper.check_constraints() on SQLite/MySQL backends."
+      },
+      {
+        "sha": "3c35825009540e222311d591c7330fa17dd76c99",
+        "kind": "cosmetic",
+        "subject": "Fixed typo in django/utils/crypto.py."
+      },
+      {
+        "sha": "90db4bb0d72e4731052bd33500840fff00834768",
+        "kind": "cosmetic",
+        "subject": "Corrected http.multipartparser.exhaust() docstring."
+      },
+      {
+        "sha": "575706331bec4bf58ce36a9540c4c61fca49025b",
+        "kind": "cosmetic",
+        "subject": "Cosmetic cleanups in tests/utils_tests/test_numberformat.py"
+      },
+      {
+        "sha": "3517550dacaed6933c390d2d1f7e78c67c04aec4",
+        "kind": "cosmetic",
+        "subject": "Fixed #5006 -- Fixed incorrect/outdated docstring for the 'if' template tag. Thanks, Thomas Petazzoni"
+      },
+      {
+        "sha": "5a5815d373c1b4af073d330e6d658fa8e739dbe8",
+        "kind": "cosmetic",
+        "subject": "Fixed incorrect docstring in cache tests (take two)"
+      },
+      {
+        "sha": "a96dbda6d35d33f77293b595a6506a600261f17c",
+        "kind": "cosmetic",
+        "subject": "Fixed flake8 error."
+      }
+    ]
+  }
+}

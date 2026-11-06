@@ -1,0 +1,23 @@
+# Local data: clones, databases, models
+data/
+eval/results/*.tmp
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+dist/
+
+# Secrets
+.env
+*.key
+
+# macOS
+.DS_Store
+
+# Personal and university documents kept in this folder
+*.docx
+*.pdf
+*.jpeg
