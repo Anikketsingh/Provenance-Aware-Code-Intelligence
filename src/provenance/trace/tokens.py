@@ -12,7 +12,7 @@ from pathlib import PurePosixPath
 import tree_sitter_c
 import tree_sitter_javascript
 import tree_sitter_python
-from tree_sitter import Language, Node, Parser
+from tree_sitter import Language, Node, Parser, Tree
 
 LANGUAGE_BY_SUFFIX = {
     ".c": "c",
@@ -139,9 +139,13 @@ def language_for(path: str) -> str | None:
     return LANGUAGE_BY_SUFFIX.get(PurePosixPath(path).suffix.lower())
 
 
+def parse(source: bytes, language: str) -> Tree:
+    return _parser(language).parse(source)
+
+
 def tokenize(source: bytes, language: str) -> list[bytes] | None:
     """Return normalised tokens, or None if the code has parse errors."""
-    root = _parser(language).parse(source).root_node
+    root = parse(source, language).root_node
     if root.has_error:
         return None
     tokens: list[bytes] = []
@@ -157,7 +161,7 @@ def bound_names(source: bytes, language: str) -> set[bytes]:
     """
     binders = _BINDERS[language]
     names: set[bytes] = set()
-    stack = [_parser(language).parse(source).root_node]
+    stack = [parse(source, language).root_node]
     while stack:
         node = stack.pop()
         stack.extend(node.children)

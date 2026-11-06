@@ -43,7 +43,7 @@ def test_logic_change_after_reformat_stops_at_logic(git_repo):
 
     chain = tracer.trace("a.py", 2)
     assert chain.origin == change
-    assert chain.stop_reason == "logic_change"
+    assert [hop.kind for hop in chain.hops] == [ChangeKind.LOGIC, ChangeKind.ORIGIN]
 
 
 def test_mixed_commit_is_not_ignored(git_repo):

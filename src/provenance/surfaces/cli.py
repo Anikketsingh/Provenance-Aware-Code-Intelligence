@@ -61,4 +61,6 @@ def why(repo: str, path: str, line: int, rev: str = "HEAD") -> None:
             when = store.commit_time(hop.commit)
             date = datetime.fromtimestamp(when, UTC).date() if when else "?"
             typer.echo(f"  {hop.kind:<9} {hop.commit[:10]}  {date}  {store.subject(hop.commit)}")
-        typer.echo(f"\nOrigin: {chain.origin[:10]} ({chain.stop_reason})")
+        typer.echo(f"\nLast logic change: {chain.origin[:10]}")
+        if chain.first_seen:
+            typer.echo(f"First appeared:    {chain.first_seen[:10]} ({chain.stop_reason})")

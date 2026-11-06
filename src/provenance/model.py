@@ -32,5 +32,6 @@ class Chain:
     query_line: int
     rev: str
     hops: tuple[Hop, ...]
-    origin: str | None  # None when tracing failed
-    stop_reason: str  # "logic_change", "root", "lost_line", "limit"
+    origin: str | None  # the last change to this line's logic, None when tracing failed
+    stop_reason: str  # "first_appearance", "root", "lost_line", "limit"
+    first_seen: str | None = None  # the commit where this logic first appeared
