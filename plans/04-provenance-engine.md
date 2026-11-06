@@ -28,28 +28,49 @@ What this tells us:
 5. **Django's list is free ground truth** for testing the classifier.
 6. **The gain will differ by repo.** Only about 3% of Redis `t_string.c` lines sit on commits with cosmetic-looking subjects (a crude keyword check). Results must be reported per repo, and Redis may show a small gain.
 
-### Measured on all of Django (7 Nov 2026)
+### Measured on the full histories (7 Nov 2026)
 
-This run covers all 35,104 commits at the current head, with algorithm version 4. Results are in `eval/results/ignore_list_django.json`.
+These results use algorithm version 6, with Django at `d9d05f1` and Redis at `5b69ba2`. The raw files are in `eval/results/`.
+
+| Measure | Django | Redis |
+|---|---:|---:|
+| Commits classified | 35,104 | 13,415 |
+| Whole commits found to be non-logic | 1,148 | 298 |
+| Classification time on the M1, 4 workers | 5.2 min | 2.8 min |
+| Logic lines where the strongest git flags and our method differ | **28.6%** | **0.29%** |
+
+**Compared with Django's hand-kept list:**
 
 | Measure | Result |
 |---|---|
-| Lines landing on a hand-listed commit, sample of 40 files (5,366 lines) | Strongest git flags **22.7%**, Django's list **1.2%**, ours **1.7%** |
-| Code files in listed commits that we skip | 3,566 of 3,764 (94.7%) |
-| Listed commits that are fully non-logic | 4 of 17 |
-| Full classification time on the M1 | About 5.4 minutes, 4 workers |
-| Database size | 62 MB, plus 290 MB for the clone |
+| Lines on a listed commit, 40 files: strongest flags, hand list, ours | 22.7%, 1.2%, **1.7%** |
+| Code files in listed commits that we skip | 3,603 of 3,764 (95.7%) |
+| Listed commits fully non-logic | 4 of 17 |
 
-Two points on reading these:
+**Checked against Python's own parser** (74,840 Django file changes):
 
-- **Accuracy against human labels is still unmeasured.** These figures only show that we match Django's list, and the annotated gold set is what will test true origins.
-- **Precision is spot-checked only.** A first sample showed 6 false positives, which led to the rules below. In the second run, 8 suspicious-looking commits were all correct. A formal review of a seeded sample is still to do.
+| Measure | Result |
+|---|---|
+| Cosmetic changes with an identical AST | 91.96% (9,793 of 10,649) |
+| The same, with import order treated as layout | **99.91%** (10,639 of 10,649) |
+| Renames that keep the same AST shape | 385 of 385 |
+| Equal-AST changes we correctly treat as non-logic | 98.9% |
+| Changes the parser couldn't read, mostly Python 2, so excluded | 6,586 (8.8%) |
 
-Some listed commits contain real refactoring, so 4 of 17 isn't simply a miss. It reflects the strict rule that one logic file makes a commit non-cosmetic overall.
+The 10 remaining disagreements were read by hand. All are docstring or import placement, with no change to behaviour.
+
+**Full engine on 300 random real lines:** no crashes. Median 0.03 s, 90th percentile 2.7–4.3 s, slowest 19.2 s. That slowest case misses the 10 s target.
+
+How to read these:
+
+- **They don't measure accuracy.** A difference between methods shows they disagree, not which one is right. Only the annotated gold set can show that.
+- **Redis barely changes at this layer.** Its flagged commits are mostly comment edits, which don't touch logic lines. Whether Layer C helps Redis is still unknown.
+- **The AST check covers Python only.** C and JavaScript have no equivalent check. The Redis review covered all 18 renames and 40 cosmetic commits, but read only the first 6 changed lines of each, and was done by Claude.
+- **Treating import order as layout is a choice.** It can matter when imports have side effects, so both figures are reported.
 
 ## 3. Algorithm
 
-The engine has three layers, cheapest first. Layers A and B are built. Layer C isn't yet.
+The engine has three layers, cheapest first. All three are built. Layer C has only been tested on small synthetic repos, and hasn't been checked against human labels.
 
 ### Layer A: Classify every file change
 
@@ -73,6 +94,7 @@ For each non-merge commit and each changed source file, parse the before and aft
 - **A rename must be of a name the file defines.** Otherwise `base64.encodestring` to `base64.b64encode`, a different function, looks like a rename.
 - **Doctests are code.** Strings containing `>>>` are kept.
 - **Python indentation is structure.** Tokens include block markers, so moving a statement into an `if` is seen as a change.
+- **Statements have boundaries.** Tokens mark where each statement ends, otherwise `self.check` followed by `(a, b)` on the next line matches `self.check(a, b)`.
 - **Changed imports are never renames.** `import json` to `import ujson` is a different module.
 
 Files with parse errors or unsupported languages default to `LOGIC`, so we never hide a real change by accident. This also means CSS and some JavaScript formatting commits are currently missed.
@@ -181,8 +203,8 @@ Each failed line gets one category, and the list grows as we see new kinds:
 | 3 | Synthetic test repos | Done |
 | 4 | Layer A: per-file classifier | Done on Django |
 | 5 | Layer B integration | Done |
-| 6 | Layer C: line mapping and hopping | 2–3 |
-| 7 | Baseline runner and metrics | 2–3 |
-| 8 | Failure analysis | 3 |
+| 6 | Layer C: line mapping and hopping | Done, not yet validated |
+| 7 | Baseline runner and metrics | Done, waiting for labels |
+| 8 | Failure analysis | Waiting for labels |
 
 If time runs out, Layers A and B alone still make a complete, publishable Project-I result. Layer C is the first thing to trim.

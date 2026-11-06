@@ -1,7 +1,7 @@
 """Pinned corpus versions and the commit each method blames for each line."""
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from provenance.config import Repo
@@ -34,8 +34,14 @@ class Baselines:
     store: Store
     rev: str
     listed: list[str]
+    _cache: dict[str, dict[str, list[BlameLine]]] = field(default_factory=dict)
 
     def blame_all(self, path: str) -> dict[str, list[BlameLine]]:
+        if path not in self._cache:
+            self._cache[path] = self._blame_methods(path)
+        return self._cache[path]
+
+    def _blame_methods(self, path: str) -> dict[str, list[BlameLine]]:
         git_dir, rev = self.repo.git_dir, self.rev
         results = {
             "B0": blame_file(git_dir, path, rev, flags=()),

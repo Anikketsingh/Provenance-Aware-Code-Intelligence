@@ -8,7 +8,7 @@
 - Everything runs on one 8 GB M1 MacBook Air.
 - That leaves little time, so Project-I focuses on line tracing, with **Django as the main repo** and Redis as the second.
 
-**Progress on 7 Nov:** the project skeleton, Layers A and B and the `why` command work on Django, with 109 tests passing. Next come Redis, the annotation rules and the gold set.
+**Progress on 7 Nov:** all three engine layers, the `why` command, the MCP server and the evaluation pipeline are built and run on Django and Redis, with 146 tests passing. **Annotation is the main task left.** See [the overnight report](../reports/2026-11-07-overnight-report.md).
 
 ## 2. Project-I target
 
@@ -33,22 +33,23 @@ The research plan's milestone is "working provenance engine with git blame compa
 
 ## 4. Two-week plan
 
-### Week 1: 8–14 Nov (build)
+### Week 1: 8–14 Nov (annotate)
 
 | Dates | Work | Done when |
 |---|---|---|
-| Done | Skeleton, git history, tokeniser, blame runner, classifier on Django | Tests pass, and first results are saved |
-| 8–10 Nov | Run on Redis, tune C rules, formal precision review | A seeded sample of flagged commits is reviewed by hand |
-| 10–14 Nov | Annotation rules, sampler, 20-line pilot, baseline runner | Rules are written, and disagreements are discussed |
+| Done | Engine, MCP server, evaluation pipeline, annotation packet | Saved and committed |
+| 8–9 Nov | Label the first 10 lines, then review `RULES.md` | Rules are settled |
+| 9–13 Nov | Label the other 50 lines, and get the 15 overlap lines labelled | `annotations.csv` is complete |
+| 13–14 Nov | Run `eval/score_gold.py`, and review wrong answers | First accuracy table exists |
 
-**Checkpoint, 14 Nov:** `provenance why` works on Django, and the ignore-list result is known. **Decide here whether Layer C is realistic.**
+**Checkpoint, 14 Nov:** real accuracy numbers. **Decide here whether Layer C goes in the headline result.**
 
 ### Week 2: 15–21 Nov (evaluate and report)
 
 | Dates | Work | Done when |
 |---|---|---|
-| 15–17 Nov | Main annotation pass, run on Redis | About 60 lines labelled |
-| 17–18 Nov | Baseline comparison, failure review | Final tables come from one frozen run |
+| 15–17 Nov | Fix what labels reveal, then freeze the code | No rule changes after this |
+| 17–18 Nov | Failure taxonomy and final frozen run | Final tables come from one frozen run |
 | 18–20 Nov | Report, slides, demo script | Dry run works, and a backup recording exists |
 
 ## 5. Later phases

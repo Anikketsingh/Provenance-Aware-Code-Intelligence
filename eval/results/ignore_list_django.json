@@ -2,10 +2,10 @@
   "repo": "django",
   "rev": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
   "seed": 7,
-  "algo_version": 5,
+  "algo_version": 6,
   "class_counts": {
-    "cosmetic": 1054,
-    "logic": 23275,
+    "cosmetic": 1055,
+    "logic": 23274,
     "move": 9,
     "rename": 84,
     "unknown": 10682
@@ -156,7 +156,7 @@
       "subject": "Formatted JavaScript files.",
       "kind": "logic",
       "code_files": 31,
-      "non_logic_files": 19
+      "non_logic_files": 18
     }
   ],
   "sampled_files": [
@@ -210,14 +210,14 @@
       "auto_equals_hand": 5063
     },
     "seconds": {
-      "strongest": 30.942227793988422,
-      "hand": 22.022915876004845,
-      "auto": 24.053043873995193
+      "strongest": 30.786162541997328,
+      "hand": 21.981684419995872,
+      "auto": 23.70824012700905
     }
   },
   "flagged": {
-    "flagged_total": 1147,
-    "flagged_not_on_list": 1143,
+    "flagged_total": 1148,
+    "flagged_not_on_list": 1144,
     "review_sample": [
       {
         "sha": "984a57a9c9cba44fde61e21c08996dc678f13e81",
@@ -360,9 +360,9 @@
         "subject": "Renumbered all the doctest examples so that they are ordered correctly on the doc pages."
       },
       {
-        "sha": "ffbee67f8e17e1cfffcaa0116c170141a7363dda",
+        "sha": "ffa8a9ab24c8db6ed3ddc6ca09e8e852c651244b",
         "kind": "cosmetic",
-        "subject": "Fixed some comments referring to a nonexistent TestClient class."
+        "subject": "Fixed python 3.2 compat."
       },
       {
         "sha": "413735b239239bc8ff38ee893e8448daf9b2bff6",

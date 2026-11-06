@@ -2,21 +2,21 @@
   "repo": "django",
   "file_changes": 74840,
   "table": {
-    "cosmetic/different": 11,
-    "cosmetic/same": 9785,
+    "cosmetic/different": 10,
+    "cosmetic/same": 9793,
     "cosmetic/same_after_imports": 846,
     "cosmetic/unparsable": 295,
-    "logic/different": 55723,
-    "logic/same": 126,
+    "logic/different": 55724,
+    "logic/same": 118,
     "logic/same_shape": 1378,
     "logic/unparsable": 6276,
     "rename/same_shape": 385,
     "rename/unparsable": 15
   },
-  "cosmetic_precision_strict": 0.9194700244314978,
-  "cosmetic_precision_imports_sorted": 0.998966359706822,
+  "cosmetic_precision_strict": 0.9196168654333741,
+  "cosmetic_precision_imports_sorted": 0.9990609446896422,
   "rename_same_shape": 1.0,
-  "recall_of_equal_changes": 0.9882866970344891,
+  "recall_of_equal_changes": 0.9890303988100771,
   "disputed": [
     [
       "d47409831fbd44739d261c32c53a094748028e4f",
@@ -31,6 +31,11 @@
     [
       "0d912258921a442c48d5787228db2db5af7e8fa5",
       "tests/admin_scripts/tests.py",
+      "cosmetic"
+    ],
+    [
+      "a2c4ad1dabf58130e0c97636dd401bb615f715ee",
+      "django/core/mail/message.py",
       "cosmetic"
     ],
     [
@@ -49,13 +54,8 @@
       "cosmetic"
     ],
     [
-      "430b819967054805c49c0a27fb9f039568ee240f",
-      "tests/regressiontests/model_regress/tests.py",
-      "cosmetic"
-    ],
-    [
-      "94af19c43fad3e42d64981e22fe15b844f1f9eb6",
-      "django/utils/log.py",
+      "6989b45c8dce0d3c50d1530fd65d388c7fde2a2a",
+      "tests/migrations/test_loader.py",
       "cosmetic"
     ],
     [
@@ -64,13 +64,8 @@
       "cosmetic"
     ],
     [
-      "a2c4ad1dabf58130e0c97636dd401bb615f715ee",
-      "django/core/mail/message.py",
-      "cosmetic"
-    ],
-    [
-      "6989b45c8dce0d3c50d1530fd65d388c7fde2a2a",
-      "tests/migrations/test_loader.py",
+      "94af19c43fad3e42d64981e22fe15b844f1f9eb6",
+      "django/utils/log.py",
       "cosmetic"
     ]
   ],
@@ -128,7 +123,7 @@
     ],
     [
       "c1bdfd6f6fff0844c17853972358a2300f6aac23",
-      "django/conf/locale/fr/formats.py",
+      "django/conf/locale/sv/formats.py",
       "logic"
     ],
     [
@@ -153,7 +148,7 @@
     ],
     [
       "c1bdfd6f6fff0844c17853972358a2300f6aac23",
-      "django/contrib/localflavor/de_CH/formats.py",
+      "django/conf/locale/ru/formats.py",
       "logic"
     ],
     [
@@ -173,7 +168,7 @@
     ],
     [
       "c1bdfd6f6fff0844c17853972358a2300f6aac23",
-      "django/conf/locale/sk/formats.py",
+      "django/conf/locale/nb/formats.py",
       "logic"
     ],
     [
@@ -187,8 +182,8 @@
       "logic"
     ],
     [
-      "430b819967054805c49c0a27fb9f039568ee240f",
-      "tests/regressiontests/delete_regress/tests.py",
+      "c1bdfd6f6fff0844c17853972358a2300f6aac23",
+      "django/conf/locale/sk/formats.py",
       "logic"
     ],
     [
@@ -227,13 +222,13 @@
       "logic"
     ],
     [
-      "430b819967054805c49c0a27fb9f039568ee240f",
-      "tests/regressiontests/introspection/tests.py",
+      "bc27405fc563acaaef08f47662e6597e9e1751a0",
+      "tests/regressiontests/forms/localflavor/__init__.py",
       "logic"
     ],
     [
       "c1bdfd6f6fff0844c17853972358a2300f6aac23",
-      "django/conf/locale/nn/formats.py",
+      "django/conf/locale/es_MX/formats.py",
       "logic"
     ],
     [
@@ -242,13 +237,8 @@
       "logic"
     ],
     [
-      "65ad1b1f8514eb3b464fca2913f68a906e934ed7",
-      "django/conf/locale/__init__.py",
-      "logic"
-    ],
-    [
-      "b67ab75e82ec59dd4eeca119eeaf570d7c88556c",
-      "django/contrib/gis/tests/layermap/tests.py",
+      "df2fd4e09b1d51e5154e607babf232610a0ec0c4",
+      "tests/view_tests/app2/__init__.py",
       "logic"
     ],
     [
@@ -263,17 +253,22 @@
     ],
     [
       "c1bdfd6f6fff0844c17853972358a2300f6aac23",
-      "django/conf/locale/nb/formats.py",
+      "django/conf/locale/cs/formats.py",
       "logic"
     ],
     [
-      "df2fd4e09b1d51e5154e607babf232610a0ec0c4",
-      "tests/distinct_on_fields/__init__.py",
+      "b289fcf1bfeaa717ed465b2529a275b61dc02d92",
+      "django/db/models/base.py",
       "logic"
     ],
     [
-      "1101467ce0756272a54f4c7bc65c4c335a94111b",
-      "django/contrib/gis/geos/polygon.py",
+      "9c19aff7c7561e3a82978a272ecdaad40dda5c00",
+      "tests/template_tests/filter_tests/test_addslashes.py",
+      "logic"
+    ],
+    [
+      "8119b679eb85cdc0ae3d321e54d06dd0200a1e82",
+      "django/template/defaultfilters.py",
       "logic"
     ]
   ]

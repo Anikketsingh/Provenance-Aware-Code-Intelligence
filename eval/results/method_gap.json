@@ -1,0 +1,45 @@
+{
+  "seed": 13,
+  "files": 40,
+  "repos": {
+    "django": {
+      "rev": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
+      "lines": 5529,
+      "share_B0_vs_B2": 0.12262615301139447,
+      "share_B2_vs_OursA": 0.2864894194248508,
+      "share_B3_vs_OursA": 0.028938325194429373,
+      "trace": {
+        "lines": 150,
+        "errors": [],
+        "stop_reasons": {
+          "first_appearance": 150
+        },
+        "mean_hops": 1.94,
+        "share_edited_after_first_seen": 0.32666666666666666,
+        "seconds_median": 0.02736893799919926,
+        "seconds_p90": 2.656997921202128,
+        "seconds_max": 7.039863083002274
+      }
+    },
+    "redis": {
+      "rev": "5b69ba2ce91fea8e9fc70ebac8ce341b37e75533",
+      "lines": 18750,
+      "share_B0_vs_B2": 0.14714666666666668,
+      "share_B2_vs_OursA": 0.00288,
+      "share_B3_vs_OursA": null,
+      "trace": {
+        "lines": 150,
+        "errors": [],
+        "stop_reasons": {
+          "first_appearance": 146,
+          "root": 4
+        },
+        "mean_hops": 1.38,
+        "share_edited_after_first_seen": 0.22666666666666666,
+        "seconds_median": 0.02587002099971869,
+        "seconds_p90": 4.285646879402338,
+        "seconds_max": 19.1583109159983
+      }
+    }
+  }
+}

@@ -1,6 +1,6 @@
 {
   "repo": "redis",
-  "date": "2026-11-08",
+  "date": "2026-11-07",
   "method": "eval/review_sample.py redis --cosmetic 40 --seed 11",
   "reviewer": "Claude. Needs confirming by a person before it goes in the report.",
   "limit": "Only the first 6 changed lines of each commit were read, so long commits were not read in full.",
