@@ -605,7 +605,7 @@ uv run provenance classify django</span></li>
     }
     for (const [title, gold, why] of sets) {
       parts.push(el("h3", { text: title }));
-      parts.push(el("p", { text: `${why} Scored on ${gold.labelled} labelled lines from Django and Redis, with ${gold.ambiguous} ambiguous lines left out. A method is right when it names the most recent commit that changed what the line does. Accuracy is weighted back to the real mix of lines, and the thin line on each bar is the 95% confidence range.` }));
+      parts.push(el("p", { text: `${why} Scored on ${gold.labelled} labelled lines from Django and Redis, with ${gold.ambiguous} ambiguous line${gold.ambiguous === 1 ? "" : "s"} left out. A method is right when it names the most recent commit that changed what the line does. Accuracy is weighted back to the real mix of lines, and the thin line on each bar is the 95% confidence range.` }));
       const bars = el("div", { class: "bars" });
       for (const [key, name, note] of METHODS) {
         const m = gold.methods[key];
