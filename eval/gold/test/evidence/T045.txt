@@ -1,0 +1,43 @@
+django/contrib/admin/options.py:2706
+model = None
+
+=== history of django/contrib/admin/options.py:2706 at d9d05f104e
+@@COMMIT a19ed8aea395e8e07164ff7d85bd7dff2f24edca  2008-07-18  Merged the newforms-admin branch into trunk.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- /dev/null
++++ b/django/contrib/admin/options.py
+@@ -0,0 +703,1 @@
++    model = None
+
+=== the same code already existed in a19ed8aea3^ at:
+  django/contrib/admin/views/doc.py:167  model = None
+  django/contrib/contenttypes/generic.py:219  def __init__(self, model=None, core_filters=None, instance=None, symmetrical=None,
+  django/db/models/fields/related.py:347  def __init__(self, model=None, core_filters=None, instance=None, symmetrical=None,
+  django/db/models/manager.py:30  self.model = None
+  django/db/models/manipulators.py:30  def __get__(self, instance, model=None):
+  django/db/models/query.py:121  def __init__(self, model=None, query=None):
+=== history of django/contrib/admin/views/doc.py:167 at a19ed8aea3
+@@COMMIT f69cf70ed813a8cd7e1f963a14ae39103e8d5265  2006-05-02  MERGED MAGIC-REMOVAL BRANCH TO TRUNK. This change is highly backwards-incompatible. Please read http://code.djangoproject.com/wiki/RemovingTheMagic for upgrade instructions.
+
+diff --git a/django/contrib/admin/views/doc.py b/django/contrib/admin/views/doc.py
+--- a/django/contrib/admin/views/doc.py
++++ b/django/contrib/admin/views/doc.py
+@@ -155,4 +157,1 @@
+-        model = meta.get_app(model)
+-    except ImportError:
+-        raise Http404
+-    opts = model.Klass._meta
++    model = None
+@@COMMIT ed114e15106192b22ebb78ef5bf5bce72b419d13  2005-07-13  Imported Django from private SVN repository (created from r. 8825)
+
+diff --git a/django/views/admin/doc.py b/django/views/admin/doc.py
+--- /dev/null
++++ b/django/views/admin/doc.py
+@@ -0,0 +190,4 @@
++        model = meta.get_app(model)
++    except ImportError:
++        raise Http404
++    opts = model.Klass._meta
+
+=== ed114e1510 added the line; the same code is not in its parent

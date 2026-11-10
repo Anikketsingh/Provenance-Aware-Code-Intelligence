@@ -1,0 +1,24 @@
+django/db/backends/postgresql/features.py:140
+expected_failures.update(
+
+=== history of django/db/backends/postgresql/features.py:140 at d9d05f104e
+@@COMMIT 2a636118dacdcda074c99ebd50311d64a8cca367  2025-08-19  Fixed #36564 -- Changed DEFAULT_AUTO_FIELD from AutoField to BigAutoField.
+
+diff --git a/django/db/backends/postgresql/features.py b/django/db/backends/postgresql/features.py
+--- a/django/db/backends/postgresql/features.py
++++ b/django/db/backends/postgresql/features.py
+@@ -126,0 +127,1 @@
++            expected_failures.update(
+
+=== the same code already existed in 2a636118da^ at:
+  django/db/backends/postgresql/features.py:117  expected_failures.update(
+=== history of django/db/backends/postgresql/features.py:117 at 2a636118da
+@@COMMIT 82dad11bfe45f96f15e2330f58f62919cab9f14c  2023-01-27  Refs #34255 -- Skipped test_group_by_nested_expression_with_params test on PostgreSQL when server-side binding cursors are used.
+
+diff --git a/django/db/backends/postgresql/features.py b/django/db/backends/postgresql/features.py
+--- a/django/db/backends/postgresql/features.py
++++ b/django/db/backends/postgresql/features.py
+@@ -88,0 +91,1 @@
++            expected_failures.update(
+
+=== 82dad11bfe added the line; the same code is not in its parent

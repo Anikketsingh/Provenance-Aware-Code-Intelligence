@@ -1,0 +1,37 @@
+django/utils/crypto.py:23
+def salted_hmac(key_salt, value, secret=None, *, algorithm=None):
+
+=== history of django/utils/crypto.py:23 at d9d05f104e
+@@COMMIT 0f4fff79d33b7cc84822e66bd1fc16caf8222e3a  2026-04-30  Fixed #37078 -- Deprecated SHA-1 default for salted_hmac() and base64_hmac() algorithm.
+
+diff --git a/django/utils/crypto.py b/django/utils/crypto.py
+--- a/django/utils/crypto.py
++++ b/django/utils/crypto.py
+@@ -19,1 +22,1 @@
+-def salted_hmac(key_salt, value, secret=None, *, algorithm="sha1"):
++def salted_hmac(key_salt, value, secret=None, *, algorithm=None):
+@@COMMIT 9c19aff7c7561e3a82978a272ecdaad40dda5c00  2022-02-03  Refs #33476 -- Reformatted code with Black.
+
+diff --git a/django/utils/crypto.py b/django/utils/crypto.py
+--- a/django/utils/crypto.py
++++ b/django/utils/crypto.py
+@@ -18,1 +19,1 @@
+-def salted_hmac(key_salt, value, secret=None, *, algorithm='sha1'):
++def salted_hmac(key_salt, value, secret=None, *, algorithm="sha1"):
+@@COMMIT 50cf183d219face91822c75fa0a15fe2fe3cb32d  2020-01-08  Refs #27468 -- Added algorithm parameter to django.utils.crypto.salted_hmac().
+
+diff --git a/django/utils/crypto.py b/django/utils/crypto.py
+--- a/django/utils/crypto.py
++++ b/django/utils/crypto.py
+@@ -12,1 +17,1 @@
+-def salted_hmac(key_salt, value, secret=None):
++def salted_hmac(key_salt, value, secret=None, *, algorithm='sha1'):
+@@COMMIT 45c7f427ce830dd1b2f636fb9c244fda9201cadb  2010-10-14  Fixed #14445 - Use HMAC and constant-time comparison functions where needed.
+
+diff --git a/django/utils/crypto.py b/django/utils/crypto.py
+--- /dev/null
++++ b/django/utils/crypto.py
+@@ -0,0 +10,1 @@
++def salted_hmac(key_salt, value, secret=None):
+
+=== 45c7f427ce added the line; the same code is not in its parent

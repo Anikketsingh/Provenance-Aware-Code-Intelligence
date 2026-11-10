@@ -1,0 +1,24 @@
+django/db/backends/mysql/features.py:16
+supports_regex_backreferencing = False
+
+=== history of django/db/backends/mysql/features.py:16 at d9d05f104e
+@@COMMIT 28308078f397d1de36fd0da417ac7da2544ba12d  2015-01-12  Fixed #22603 -- Reorganized classes in django.db.backends.
+
+diff --git a/django/db/backends/mysql/features.py b/django/db/backends/mysql/features.py
+--- /dev/null
++++ b/django/db/backends/mysql/features.py
+@@ -0,0 +22,1 @@
++    supports_regex_backreferencing = False
+
+=== the same code already existed in 28308078f3^ at:
+  django/db/backends/mysql/base.py:172  supports_regex_backreferencing = False
+=== history of django/db/backends/mysql/base.py:172 at 28308078f3
+@@COMMIT 121d2e36785dc0ce8e7d1c48883fc7b719b21afc  2010-10-11  Fixed #12991 -- Added unittest2 support. Thanks to PaulM for the draft patch, and to Luke, Karen, Justin, Alex, Łukasz Rekucki, and Chuck Harmston for their help testing and reviewing the final patch.
+
+diff --git a/django/db/backends/mysql/base.py b/django/db/backends/mysql/base.py
+--- a/django/db/backends/mysql/base.py
++++ b/django/db/backends/mysql/base.py
+@@ -127,0 +130,1 @@
++    supports_regex_backreferencing = False
+
+=== 121d2e3678 added the line; the same code is not in its parent

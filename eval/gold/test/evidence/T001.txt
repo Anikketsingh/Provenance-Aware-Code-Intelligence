@@ -1,0 +1,21 @@
+django/conf/global_settings.py:504
+SESSION_COOKIE_SAMESITE = "Lax"
+
+=== history of django/conf/global_settings.py:504 at d9d05f104e
+@@COMMIT 9c19aff7c7561e3a82978a272ecdaad40dda5c00  2022-02-03  Refs #33476 -- Reformatted code with Black.
+
+diff --git a/django/conf/global_settings.py b/django/conf/global_settings.py
+--- a/django/conf/global_settings.py
++++ b/django/conf/global_settings.py
+@@ -487,1 +487,1 @@
+-SESSION_COOKIE_SAMESITE = 'Lax'
++SESSION_COOKIE_SAMESITE = "Lax"
+@@COMMIT 9a56b4b13ed92d2d5bb00d6bdb905a73bc5f2f0a  2018-04-13  Fixed #27863 -- Added support for the SameSite cookie flag.
+
+diff --git a/django/conf/global_settings.py b/django/conf/global_settings.py
+--- a/django/conf/global_settings.py
++++ b/django/conf/global_settings.py
+@@ -464,0 +466,1 @@
++SESSION_COOKIE_SAMESITE = 'Lax'
+
+=== 9a56b4b13e added the line; the same code is not in its parent

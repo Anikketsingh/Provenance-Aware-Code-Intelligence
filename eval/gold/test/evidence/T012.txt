@@ -1,0 +1,13 @@
+django/db/models/fields/json.py:507
+JSONField.register_lookup(DataContains)
+
+=== history of django/db/models/fields/json.py:507 at d9d05f104e
+@@COMMIT 6789ded0a6ab797f0dcdfa6ad5d1cfa46e23abcd  2019-06-09  Fixed #12990, Refs #27694 -- Added JSONField model field.
+
+diff --git a/django/db/models/fields/json.py b/django/db/models/fields/json.py
+--- /dev/null
++++ b/django/db/models/fields/json.py
+@@ -0,0 +279,1 @@
++JSONField.register_lookup(DataContains)
+
+=== 6789ded0a6 added the line; the same code is not in its parent

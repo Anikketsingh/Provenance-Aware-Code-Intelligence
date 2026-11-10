@@ -1,0 +1,37 @@
+django/db/backends/mysql/features.py:13
+has_select_for_update_nowait = True
+
+=== history of django/db/backends/mysql/features.py:13 at d9d05f104e
+@@COMMIT b719688b21febd9a04c8623126558cd06cc27b80  2023-08-03  Fixed #34761 -- Dropped support for MySQL < 8.0.11.
+
+diff --git a/django/db/backends/mysql/features.py b/django/db/backends/mysql/features.py
+--- a/django/db/backends/mysql/features.py
++++ b/django/db/backends/mysql/features.py
+@@ -14,0 +14,1 @@
++    has_select_for_update_nowait = True
+
+=== the same code already existed in b719688b21^ at:
+  django/db/backends/oracle/features.py:14  has_select_for_update_nowait = True
+  django/db/backends/postgresql/features.py:20  has_select_for_update_nowait = True
+=== history of django/db/backends/oracle/features.py:14 at b719688b21
+@@COMMIT 28308078f397d1de36fd0da417ac7da2544ba12d  2015-01-12  Fixed #22603 -- Reorganized classes in django.db.backends.
+
+diff --git a/django/db/backends/oracle/features.py b/django/db/backends/oracle/features.py
+--- /dev/null
++++ b/django/db/backends/oracle/features.py
+@@ -0,0 +16,1 @@
++    has_select_for_update_nowait = True
+
+=== the same code already existed in 28308078f3^ at:
+  django/db/backends/oracle/base.py:102  has_select_for_update_nowait = True
+  django/db/backends/postgresql_psycopg2/base.py:54  has_select_for_update_nowait = True
+=== history of django/db/backends/oracle/base.py:102 at 28308078f3
+@@COMMIT 8f0f73c7b8b110489a1a127cc47e3cabb0eea646  2011-04-20  Fixed #2705: added a `select_for_update()` clause to querysets.
+
+diff --git a/django/db/backends/oracle/base.py b/django/db/backends/oracle/base.py
+--- a/django/db/backends/oracle/base.py
++++ b/django/db/backends/oracle/base.py
+@@ -73,0 +74,1 @@
++    has_select_for_update_nowait = True
+
+=== 8f0f73c7b8 added the line; the same code is not in its parent

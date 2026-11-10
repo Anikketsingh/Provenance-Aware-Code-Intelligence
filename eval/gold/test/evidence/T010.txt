@@ -1,0 +1,13 @@
+django/db/backends/postgresql/features.py:119
+"backends.base.test_base.ExecuteWrapperTests."
+
+=== history of django/db/backends/postgresql/features.py:119 at d9d05f104e
+@@COMMIT 4426b1a72dc289643e2ae8c190b8dc4b3a39daf7  2024-02-02  Fixed #35021 -- Fixed capturing queries when using client-side parameters binding with psycopg 3+.
+
+diff --git a/django/db/backends/postgresql/features.py b/django/db/backends/postgresql/features.py
+--- a/django/db/backends/postgresql/features.py
++++ b/django/db/backends/postgresql/features.py
+@@ -108,0 +112,1 @@
++                        "backends.base.test_base.ExecuteWrapperTests."
+
+=== 4426b1a72d added the line; the same code is not in its parent

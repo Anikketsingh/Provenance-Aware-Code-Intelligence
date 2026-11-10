@@ -1,0 +1,67 @@
+src/fwtree.c:92
+result = current;
+
+=== history of src/fwtree.c:92 at 5b69ba2ce9
+@@COMMIT 9b63e99d05118a337b701becf5e0e688e833515e  2025-09-11  Refactor HFE: Introduce Per-Slot Expiration Store (estore) (#14294)
+
+diff --git a/src/fwtree.c b/src/fwtree.c
+--- /dev/null
++++ b/src/fwtree.c
+@@ -0,0 +93,1 @@
++            result = current;
+
+=== the same code already existed in 9b63e99d05^ at:
+  src/kvstore.c:552  result = current;
+=== history of src/kvstore.c:552 at 9b63e99d05
+@@COMMIT 8cd62f82ca7a42755ea606e3bf8e28f244055152  2024-02-05  Refactor the per-slot dict-array db.c into a new kvstore data structure (#12822)
+
+diff --git a/src/kvstore.c b/src/kvstore.c
+--- /dev/null
++++ b/src/kvstore.c
+@@ -0,0 +493,1 @@
++            result = current;
+
+=== the same code already existed in 8cd62f82ca^ at:
+  src/db.c:541  result = current;
+=== history of src/db.c:541 at 8cd62f82ca
+@@COMMIT f7fa481156de051972dd49336fb04639bebdbe34  2023-10-27  Optimize finding the slot for a given key count in a fenwick tree (#12704)
+
+diff --git a/src/db.c b/src/db.c
+--- a/src/db.c
++++ b/src/db.c
+@@ -524,13 +527,1 @@
+-    int lo = 0, hi = CLUSTER_SLOTS - 1;
+-    /* We use binary search to find a slot, we are allowed to do this, because we have a quick way to find a total number of keys
+-     * up until certain slot, using binary index tree. */
+-    while (lo <= hi) {
+-        int mid = lo + (hi - lo) / 2;
+-        unsigned long keys_up_to_mid = cumulativeKeyCountRead(db, mid, keyType); /* Total number of keys up until a given slot (inclusive). */
+-        unsigned long keys_in_mid = dictSizebySlot(db, mid, keyType);
+-        if (target > keys_up_to_mid) { /* Target is to the right from mid. */
+-            lo = mid + 1;
+-        } else if (target <= keys_up_to_mid - keys_in_mid)  { /* Target is to the left from mid. */
+-            hi = mid - 1;
+-        } else { /* Located target. */
+-            return mid;
++            result = current;
+@@COMMIT 0270abda82555ddb3d4a1f5509600725408226ba  2023-10-14  Replace cluster metadata with slot specific dictionaries (#11695)
+
+diff --git a/src/db.c b/src/db.c
+--- a/src/db.c
++++ b/src/db.c
+@@ -356,0 +524,13 @@
++    int lo = 0, hi = CLUSTER_SLOTS - 1;
++    /* We use binary search to find a slot, we are allowed to do this, because we have a quick way to find a total number of keys
++     * up until certain slot, using binary index tree. */
++    while (lo <= hi) {
++        int mid = lo + (hi - lo) / 2;
++        unsigned long keys_up_to_mid = cumulativeKeyCountRead(db, mid, keyType); /* Total number of keys up until a given slot (inclusive). */
++        unsigned long keys_in_mid = dictSizebySlot(db, mid, keyType);
++        if (target > keys_up_to_mid) { /* Target is to the right from mid. */
++            lo = mid + 1;
++        } else if (target <= keys_up_to_mid - keys_in_mid)  { /* Target is to the left from mid. */
++            hi = mid - 1;
++        } else { /* Located target. */
++            return mid;
+
+=== 0270abda82 added the line; the same code is not in its parent

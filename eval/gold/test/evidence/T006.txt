@@ -1,0 +1,39 @@
+django/db/migrations/state.py:356
+field.to_fields = tuple(
+
+=== history of django/db/migrations/state.py:356 at d9d05f104e
+@@COMMIT 9c19aff7c7561e3a82978a272ecdaad40dda5c00  2022-02-03  Refs #33476 -- Reformatted code with Black.
+
+diff --git a/django/db/migrations/state.py b/django/db/migrations/state.py
+--- a/django/db/migrations/state.py
++++ b/django/db/migrations/state.py
+@@ -297,4 +309,1 @@
+-                    field.to_fields = tuple([
+-                        new_name if to_field_name == old_name else to_field_name
+-                        for to_field_name in to_fields
+-                    ])
++                    field.to_fields = tuple(
+@@COMMIT 503ee41497f346de27843a4ea976c57303c76558  2021-05-24  Refs #29898 -- Moved state_forwards()'s logic from migration operations to ProjectState.
+
+diff --git a/django/db/migrations/state.py b/django/db/migrations/state.py
+--- a/django/db/migrations/state.py
++++ b/django/db/migrations/state.py
+@@ -110,0 +253,4 @@
++                    field.to_fields = tuple([
++                        new_name if to_field_name == old_name else to_field_name
++                        for to_field_name in to_fields
++                    ])
+
+=== the same code already existed in 503ee41497^ at:
+  django/db/migrations/autodetector.py:951  new_field.to_fields = tuple([
+  django/db/migrations/operations/fields.py:342  field.to_fields = tuple([
+=== history of django/db/migrations/autodetector.py:951 at 503ee41497
+@@COMMIT dcdd219ee1e062dc6189f382e0298e0adf5d5ddf  2017-11-24  Fixed #25817 -- Made RenameField repoint to_field/to_fields references.
+
+diff --git a/django/db/migrations/autodetector.py b/django/db/migrations/autodetector.py
+--- a/django/db/migrations/autodetector.py
++++ b/django/db/migrations/autodetector.py
+@@ -898,0 +912,1 @@
++                    new_field.to_fields = tuple([
+
+=== dcdd219ee1 added the line; the same code is not in its parent

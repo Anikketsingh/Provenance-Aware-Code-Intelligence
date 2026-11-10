@@ -1,0 +1,470 @@
+django/db/backends/sqlite3/base.py:280
+violations = chain.from_iterable(
+
+=== history of django/db/backends/sqlite3/base.py:280 at d9d05f104e
+@@COMMIT 95a101a690402076321331d56e67d896e8f6dfbc  2022-12-08  Fixed #34201 -- Bumped minimum supported SQLite to 3.21.0.
+
+diff --git a/django/db/backends/sqlite3/base.py b/django/db/backends/sqlite3/base.py
+--- a/django/db/backends/sqlite3/base.py
++++ b/django/db/backends/sqlite3/base.py
+@@ -242,62 +246,1 @@
+-        if self.features.supports_pragma_foreign_key_check:
+-            with self.cursor() as cursor:
+-                if table_names is None:
+-                    violations = cursor.execute("PRAGMA foreign_key_check").fetchall()
+-                else:
+-                    violations = chain.from_iterable(
+-                        cursor.execute(
+-                            "PRAGMA foreign_key_check(%s)"
+-                            % self.ops.quote_name(table_name)
+-                        ).fetchall()
+-                        for table_name in table_names
+-                    )
+-                # See https://www.sqlite.org/pragma.html#pragma_foreign_key_check
+-                for (
+-                    table_name,
+-                    rowid,
+-                    referenced_table_name,
+-                    foreign_key_index,
+-                ) in violations:
+-                    foreign_key = cursor.execute(
+-                        "PRAGMA foreign_key_list(%s)" % self.ops.quote_name(table_name)
+-                    ).fetchall()[foreign_key_index]
+-                    column_name, referenced_column_name = foreign_key[3:5]
+-                    primary_key_column_name = self.introspection.get_primary_key_column(
+-                        cursor, table_name
+-                    )
+-                    primary_key_value, bad_value = cursor.execute(
+-                        "SELECT %s, %s FROM %s WHERE rowid = %%s"
+-                        % (
+-                            self.ops.quote_name(primary_key_column_name),
+-                            self.ops.quote_name(column_name),
+-                            self.ops.quote_name(table_name),
+-                        ),
+-                        (rowid,),
+-                    ).fetchone()
+-                    raise IntegrityError(
+-                        "The row in table '%s' with primary key '%s' has an "
+-                        "invalid foreign key: %s.%s contains a value '%s' that "
+-                        "does not have a corresponding value in %s.%s."
+-                        % (
+-                            table_name,
+-                            primary_key_value,
+-                            table_name,
+-                            column_name,
+-                            bad_value,
+-                            referenced_table_name,
+-                            referenced_column_name,
+-                        )
+-                    )
+-        else:
+-            with self.cursor() as cursor:
+-                if table_names is None:
+-                    table_names = self.introspection.table_names(cursor)
+-                for table_name in table_names:
+-                    primary_key_column_name = self.introspection.get_primary_key_column(
+-                        cursor, table_name
+-                    )
+-                    if not primary_key_column_name:
+-                        continue
+-                    relations = self.introspection.get_relations(cursor, table_name)
+-                    for column_name, (
+-                        referenced_column_name,
++                violations = chain.from_iterable(
+@@COMMIT 9c19aff7c7561e3a82978a272ecdaad40dda5c00  2022-02-03  Refs #33476 -- Reformatted code with Black.
+
+diff --git a/django/db/backends/sqlite3/base.py b/django/db/backends/sqlite3/base.py
+--- a/django/db/backends/sqlite3/base.py
++++ b/django/db/backends/sqlite3/base.py
+@@ -237,45 +238,62 @@
+         if self.features.supports_pragma_foreign_key_check:
+             with self.cursor() as cursor:
+                 if table_names is None:
+-                    violations = cursor.execute('PRAGMA foreign_key_check').fetchall()
++                    violations = cursor.execute("PRAGMA foreign_key_check").fetchall()
+                 else:
+                     violations = chain.from_iterable(
+                         cursor.execute(
+-                            'PRAGMA foreign_key_check(%s)'
++                            "PRAGMA foreign_key_check(%s)"
+                             % self.ops.quote_name(table_name)
+                         ).fetchall()
+                         for table_name in table_names
+                     )
+                 # See https://www.sqlite.org/pragma.html#pragma_foreign_key_check
+-                for table_name, rowid, referenced_table_name, foreign_key_index in violations:
++                for (
++                    table_name,
++                    rowid,
++                    referenced_table_name,
++                    foreign_key_index,
++                ) in violations:
+                     foreign_key = cursor.execute(
+-                        'PRAGMA foreign_key_list(%s)' % self.ops.quote_name(table_name)
++                        "PRAGMA foreign_key_list(%s)" % self.ops.quote_name(table_name)
+                     ).fetchall()[foreign_key_index]
+                     column_name, referenced_column_name = foreign_key[3:5]
+-                    primary_key_column_name = self.introspection.get_primary_key_column(cursor, table_name)
++                    primary_key_column_name = self.introspection.get_primary_key_column(
++                        cursor, table_name
++                    )
+                     primary_key_value, bad_value = cursor.execute(
+-                        'SELECT %s, %s FROM %s WHERE rowid = %%s' % (
++                        "SELECT %s, %s FROM %s WHERE rowid = %%s"
++                        % (
+                             self.ops.quote_name(primary_key_column_name),
+                             self.ops.quote_name(column_name),
+                             self.ops.quote_name(table_name),
+                         ),
+                         (rowid,),
+                     ).fetchone()
+                     raise IntegrityError(
+                         "The row in table '%s' with primary key '%s' has an "
+                         "invalid foreign key: %s.%s contains a value '%s' that "
+-                        "does not have a corresponding value in %s.%s." % (
+-                            table_name, primary_key_value, table_name, column_name,
+-                            bad_value, referenced_table_name, referenced_column_name
++                        "does not have a corresponding value in %s.%s."
++                        % (
++                            table_name,
++                            primary_key_value,
++                            table_name,
++                            column_name,
++                            bad_value,
++                            referenced_table_name,
++                            referenced_column_name,
+                         )
+                     )
+         else:
+             with self.cursor() as cursor:
+                 if table_names is None:
+                     table_names = self.introspection.table_names(cursor)
+                 for table_name in table_names:
+-                    primary_key_column_name = self.introspection.get_primary_key_column(cursor, table_name)
++                    primary_key_column_name = self.introspection.get_primary_key_column(
++                        cursor, table_name
++                    )
+                     if not primary_key_column_name:
+                         continue
+                     relations = self.introspection.get_relations(cursor, table_name)
+-                    for column_name, (referenced_column_name, referenced_table_name) in relations:
++                    for column_name, (
++                        referenced_column_name,
+@@COMMIT 0b95a96ee10d3e12aef01d449467bcf4641286b4  2021-11-10  Removed DatabaseIntrospection.get_key_columns().
+
+diff --git a/django/db/backends/sqlite3/base.py b/django/db/backends/sqlite3/base.py
+--- a/django/db/backends/sqlite3/base.py
++++ b/django/db/backends/sqlite3/base.py
+@@ -320,45 +320,45 @@
+         if self.features.supports_pragma_foreign_key_check:
+             with self.cursor() as cursor:
+                 if table_names is None:
+                     violations = cursor.execute('PRAGMA foreign_key_check').fetchall()
+                 else:
+                     violations = chain.from_iterable(
+                         cursor.execute(
+                             'PRAGMA foreign_key_check(%s)'
+                             % self.ops.quote_name(table_name)
+                         ).fetchall()
+                         for table_name in table_names
+                     )
+                 # See https://www.sqlite.org/pragma.html#pragma_foreign_key_check
+                 for table_name, rowid, referenced_table_name, foreign_key_index in violations:
+                     foreign_key = cursor.execute(
+                         'PRAGMA foreign_key_list(%s)' % self.ops.quote_name(table_name)
+                     ).fetchall()[foreign_key_index]
+                     column_name, referenced_column_name = foreign_key[3:5]
+                     primary_key_column_name = self.introspection.get_primary_key_column(cursor, table_name)
+                     primary_key_value, bad_value = cursor.execute(
+                         'SELECT %s, %s FROM %s WHERE rowid = %%s' % (
+                             self.ops.quote_name(primary_key_column_name),
+                             self.ops.quote_name(column_name),
+                             self.ops.quote_name(table_name),
+                         ),
+                         (rowid,),
+                     ).fetchone()
+                     raise IntegrityError(
+                         "The row in table '%s' with primary key '%s' has an "
+                         "invalid foreign key: %s.%s contains a value '%s' that "
+                         "does not have a corresponding value in %s.%s." % (
+                             table_name, primary_key_value, table_name, column_name,
+                             bad_value, referenced_table_name, referenced_column_name
+                         )
+                     )
+         else:
+             with self.cursor() as cursor:
+                 if table_names is None:
+                     table_names = self.introspection.table_names(cursor)
+                 for table_name in table_names:
+                     primary_key_column_name = self.introspection.get_primary_key_column(cursor, table_name)
+                     if not primary_key_column_name:
+                         continue
+-                    key_columns = self.introspection.get_key_columns(cursor, table_name)
+-                    for column_name, referenced_table_name, referenced_column_name in key_columns:
++                    relations = self.introspection.get_relations(cursor, table_name)
++                    for column_name, (referenced_column_name, referenced_table_name) in relations:
+@@COMMIT 270072c4c231acd72a03534357a4aa59010e76ff  2020-12-28  Fixed #32158 -- Fixed loaddata crash on SQLite when table/column names are SQL keywords.
+
+diff --git a/django/db/backends/sqlite3/base.py b/django/db/backends/sqlite3/base.py
+--- a/django/db/backends/sqlite3/base.py
++++ b/django/db/backends/sqlite3/base.py
+@@ -324,40 +324,45 @@
+         if self.features.supports_pragma_foreign_key_check:
+             with self.cursor() as cursor:
+                 if table_names is None:
+                     violations = cursor.execute('PRAGMA foreign_key_check').fetchall()
+                 else:
+                     violations = chain.from_iterable(
+-                        cursor.execute('PRAGMA foreign_key_check(%s)' % table_name).fetchall()
++                        cursor.execute(
++                            'PRAGMA foreign_key_check(%s)'
++                            % self.ops.quote_name(table_name)
++                        ).fetchall()
+                         for table_name in table_names
+                     )
+                 # See https://www.sqlite.org/pragma.html#pragma_foreign_key_check
+                 for table_name, rowid, referenced_table_name, foreign_key_index in violations:
+                     foreign_key = cursor.execute(
+-                        'PRAGMA foreign_key_list(%s)' % table_name
++                        'PRAGMA foreign_key_list(%s)' % self.ops.quote_name(table_name)
+                     ).fetchall()[foreign_key_index]
+                     column_name, referenced_column_name = foreign_key[3:5]
+                     primary_key_column_name = self.introspection.get_primary_key_column(cursor, table_name)
+                     primary_key_value, bad_value = cursor.execute(
+                         'SELECT %s, %s FROM %s WHERE rowid = %%s' % (
+-                            primary_key_column_name, column_name, table_name
++                            self.ops.quote_name(primary_key_column_name),
++                            self.ops.quote_name(column_name),
++                            self.ops.quote_name(table_name),
+                         ),
+                         (rowid,),
+                     ).fetchone()
+                     raise IntegrityError(
+                         "The row in table '%s' with primary key '%s' has an "
+                         "invalid foreign key: %s.%s contains a value '%s' that "
+                         "does not have a corresponding value in %s.%s." % (
+                             table_name, primary_key_value, table_name, column_name,
+                             bad_value, referenced_table_name, referenced_column_name
+                         )
+                     )
+         else:
+             with self.cursor() as cursor:
+                 if table_names is None:
+                     table_names = self.introspection.table_names(cursor)
+                 for table_name in table_names:
+                     primary_key_column_name = self.introspection.get_primary_key_column(cursor, table_name)
+                     if not primary_key_column_name:
+                         continue
+                     key_columns = self.introspection.get_key_columns(cursor, table_name)
+                     for column_name, referenced_table_name, referenced_column_name in key_columns:
+@@COMMIT 3259983f569151232d8e3b0c3d0de3a858c2b265  2020-02-03  Fixed #31233 -- Closed database connections and cursors after use.
+
+diff --git a/django/db/backends/sqlite3/base.py b/django/db/backends/sqlite3/base.py
+--- a/django/db/backends/sqlite3/base.py
++++ b/django/db/backends/sqlite3/base.py
+@@ -309,40 +310,40 @@
+         if self.features.supports_pragma_foreign_key_check:
+             with self.cursor() as cursor:
+                 if table_names is None:
+-                    violations = self.cursor().execute('PRAGMA foreign_key_check').fetchall()
++                    violations = cursor.execute('PRAGMA foreign_key_check').fetchall()
+                 else:
+                     violations = chain.from_iterable(
+                         cursor.execute('PRAGMA foreign_key_check(%s)' % table_name).fetchall()
+                         for table_name in table_names
+                     )
+                 # See https://www.sqlite.org/pragma.html#pragma_foreign_key_check
+                 for table_name, rowid, referenced_table_name, foreign_key_index in violations:
+                     foreign_key = cursor.execute(
+                         'PRAGMA foreign_key_list(%s)' % table_name
+                     ).fetchall()[foreign_key_index]
+                     column_name, referenced_column_name = foreign_key[3:5]
+                     primary_key_column_name = self.introspection.get_primary_key_column(cursor, table_name)
+                     primary_key_value, bad_value = cursor.execute(
+                         'SELECT %s, %s FROM %s WHERE rowid = %%s' % (
+                             primary_key_column_name, column_name, table_name
+                         ),
+                         (rowid,),
+                     ).fetchone()
+                     raise IntegrityError(
+                         "The row in table '%s' with primary key '%s' has an "
+                         "invalid foreign key: %s.%s contains a value '%s' that "
+                         "does not have a corresponding value in %s.%s." % (
+                             table_name, primary_key_value, table_name, column_name,
+                             bad_value, referenced_table_name, referenced_column_name
+                         )
+                     )
+         else:
+             with self.cursor() as cursor:
+                 if table_names is None:
+                     table_names = self.introspection.table_names(cursor)
+                 for table_name in table_names:
+                     primary_key_column_name = self.introspection.get_primary_key_column(cursor, table_name)
+                     if not primary_key_column_name:
+                         continue
+                     key_columns = self.introspection.get_key_columns(cursor, table_name)
+                     for column_name, referenced_table_name, referenced_column_name in key_columns:
+@@COMMIT 335c9c94acf263901fb023404408880245b0c4b4  2019-08-20  Simplified imports from django.db and django.contrib.gis.db.
+
+diff --git a/django/db/backends/sqlite3/base.py b/django/db/backends/sqlite3/base.py
+--- a/django/db/backends/sqlite3/base.py
++++ b/django/db/backends/sqlite3/base.py
+@@ -309,40 +309,40 @@
+         if self.features.supports_pragma_foreign_key_check:
+             with self.cursor() as cursor:
+                 if table_names is None:
+                     violations = self.cursor().execute('PRAGMA foreign_key_check').fetchall()
+                 else:
+                     violations = chain.from_iterable(
+                         cursor.execute('PRAGMA foreign_key_check(%s)' % table_name).fetchall()
+                         for table_name in table_names
+                     )
+                 # See https://www.sqlite.org/pragma.html#pragma_foreign_key_check
+                 for table_name, rowid, referenced_table_name, foreign_key_index in violations:
+                     foreign_key = cursor.execute(
+                         'PRAGMA foreign_key_list(%s)' % table_name
+                     ).fetchall()[foreign_key_index]
+                     column_name, referenced_column_name = foreign_key[3:5]
+                     primary_key_column_name = self.introspection.get_primary_key_column(cursor, table_name)
+                     primary_key_value, bad_value = cursor.execute(
+                         'SELECT %s, %s FROM %s WHERE rowid = %%s' % (
+                             primary_key_column_name, column_name, table_name
+                         ),
+                         (rowid,),
+                     ).fetchone()
+-                    raise utils.IntegrityError(
++                    raise IntegrityError(
+                         "The row in table '%s' with primary key '%s' has an "
+                         "invalid foreign key: %s.%s contains a value '%s' that "
+                         "does not have a corresponding value in %s.%s." % (
+                             table_name, primary_key_value, table_name, column_name,
+                             bad_value, referenced_table_name, referenced_column_name
+                         )
+                     )
+         else:
+             with self.cursor() as cursor:
+                 if table_names is None:
+                     table_names = self.introspection.table_names(cursor)
+                 for table_name in table_names:
+                     primary_key_column_name = self.introspection.get_primary_key_column(cursor, table_name)
+                     if not primary_key_column_name:
+                         continue
+                     key_columns = self.introspection.get_key_columns(cursor, table_name)
+                     for column_name, referenced_table_name, referenced_column_name in key_columns:
+@@COMMIT 6b9bd0933e0ce7e9bfcb2bcc5c8a6dc3486b4257  2018-12-21  Refs #29928 -- Added supports_pragma_foreign_key_check SQLite feature flag.
+
+diff --git a/django/db/backends/sqlite3/base.py b/django/db/backends/sqlite3/base.py
+--- a/django/db/backends/sqlite3/base.py
++++ b/django/db/backends/sqlite3/base.py
+@@ -270,40 +270,40 @@
+-        if Database.sqlite_version_info >= (3, 20, 0):
++        if self.features.supports_pragma_foreign_key_check:
+             with self.cursor() as cursor:
+                 if table_names is None:
+                     violations = self.cursor().execute('PRAGMA foreign_key_check').fetchall()
+                 else:
+                     violations = chain.from_iterable(
+                         cursor.execute('PRAGMA foreign_key_check(%s)' % table_name).fetchall()
+                         for table_name in table_names
+                     )
+                 # See https://www.sqlite.org/pragma.html#pragma_foreign_key_check
+                 for table_name, rowid, referenced_table_name, foreign_key_index in violations:
+                     foreign_key = cursor.execute(
+                         'PRAGMA foreign_key_list(%s)' % table_name
+                     ).fetchall()[foreign_key_index]
+                     column_name, referenced_column_name = foreign_key[3:5]
+                     primary_key_column_name = self.introspection.get_primary_key_column(cursor, table_name)
+                     primary_key_value, bad_value = cursor.execute(
+                         'SELECT %s, %s FROM %s WHERE rowid = %%s' % (
+                             primary_key_column_name, column_name, table_name
+                         ),
+                         (rowid,),
+                     ).fetchone()
+                     raise utils.IntegrityError(
+                         "The row in table '%s' with primary key '%s' has an "
+                         "invalid foreign key: %s.%s contains a value '%s' that "
+                         "does not have a corresponding value in %s.%s." % (
+                             table_name, primary_key_value, table_name, column_name,
+                             bad_value, referenced_table_name, referenced_column_name
+                         )
+                     )
+         else:
+             with self.cursor() as cursor:
+                 if table_names is None:
+                     table_names = self.introspection.table_names(cursor)
+                 for table_name in table_names:
+                     primary_key_column_name = self.introspection.get_primary_key_column(cursor, table_name)
+                     if not primary_key_column_name:
+                         continue
+                     key_columns = self.introspection.get_key_columns(cursor, table_name)
+                     for column_name, referenced_table_name, referenced_column_name in key_columns:
+@@COMMIT a939d630a429abb53002a09fc04785445fc64bb4  2018-12-11  Refs #29928 -- Implemented fast constraint checking on SQLite 3.20+.
+
+diff --git a/django/db/backends/sqlite3/base.py b/django/db/backends/sqlite3/base.py
+--- a/django/db/backends/sqlite3/base.py
++++ b/django/db/backends/sqlite3/base.py
+@@ -269,29 +270,40 @@
+-        with self.cursor() as cursor:
+-            if table_names is None:
+-                table_names = self.introspection.table_names(cursor)
+-            for table_name in table_names:
+-                primary_key_column_name = self.introspection.get_primary_key_column(cursor, table_name)
+-                if not primary_key_column_name:
+-                    continue
+-                key_columns = self.introspection.get_key_columns(cursor, table_name)
+-                for column_name, referenced_table_name, referenced_column_name in key_columns:
+-                    cursor.execute(
+-                        """
+-                        SELECT REFERRING.`%s`, REFERRING.`%s` FROM `%s` as REFERRING
+-                        LEFT JOIN `%s` as REFERRED
+-                        ON (REFERRING.`%s` = REFERRED.`%s`)
+-                        WHERE REFERRING.`%s` IS NOT NULL AND REFERRED.`%s` IS NULL
+-                        """
+-                        % (
+-                            primary_key_column_name, column_name, table_name,
+-                            referenced_table_name, column_name, referenced_column_name,
+-                            column_name, referenced_column_name,
++        if Database.sqlite_version_info >= (3, 20, 0):
++            with self.cursor() as cursor:
++                if table_names is None:
++                    violations = self.cursor().execute('PRAGMA foreign_key_check').fetchall()
++                else:
++                    violations = chain.from_iterable(
++                        cursor.execute('PRAGMA foreign_key_check(%s)' % table_name).fetchall()
++                        for table_name in table_names
++                    )
++                # See https://www.sqlite.org/pragma.html#pragma_foreign_key_check
++                for table_name, rowid, referenced_table_name, foreign_key_index in violations:
++                    foreign_key = cursor.execute(
++                        'PRAGMA foreign_key_list(%s)' % table_name
++                    ).fetchall()[foreign_key_index]
++                    column_name, referenced_column_name = foreign_key[3:5]
++                    primary_key_column_name = self.introspection.get_primary_key_column(cursor, table_name)
++                    primary_key_value, bad_value = cursor.execute(
++                        'SELECT %s, %s FROM %s WHERE rowid = %%s' % (
++                            primary_key_column_name, column_name, table_name
++                        ),
++                        (rowid,),
++                    ).fetchone()
++                    raise utils.IntegrityError(
++                        "The row in table '%s' with primary key '%s' has an "
++                        "invalid foreign key: %s.%s contains a value '%s' that "
++                        "does not have a corresponding value in %s.%s." % (
++                            table_name, primary_key_value, table_name, column_name,
++                            bad_value, referenced_table_name, referenced_column_name
+                         )
+                     )
+-                    for bad_row in cursor.fetchall():
+-                        raise utils.IntegrityError(
+-                            "The row in table '%s' with primary key '%s' has an "
+-                            "invalid foreign key: %s.%s contains a value '%s' that "
+-                            "does not have a corresponding value in %s.%s." % (
+-                                table_name, bad_row[0], table_name, column_name,
+-                                bad_row[1], referenced_table_name, referenced_column_name,
++        else:
++            with self.cursor() as cursor:
++                if table_names is None:
++                    table_names = self.introspection.table_names(cursor)
++                for table_name in table_names:
++                    primary_key_column_name = self.introspec
+... (cut)

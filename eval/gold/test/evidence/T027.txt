@@ -1,0 +1,67 @@
+src/t_set.c:2634
+zfree(ps);
+
+=== history of src/t_set.c:2634 at 5b69ba2ce9
+@@COMMIT 4e472a1a7fc0dc2c7da2b48ac7342e9385b4f92a  2022-11-09  Listpack encoding for sets (#11290)
+
+diff --git a/src/t_set.c b/src/t_set.c
+--- a/src/t_set.c
++++ b/src/t_set.c
+@@ -556,6 +855,1 @@
+-        while(remaining--) {
+-            encoding = setTypeRandomElement(set,&sdsele,&llele);
+-            if (encoding == OBJ_ENCODING_INTSET) {
+-                sdsele = sdsfromlonglong(llele);
+-            } else {
+-                sdsele = sdsdup(sdsele);
++            zfree(ps);
+@@COMMIT 86d48efbfd40cba447025c36ac6b0c5507b032fd  2015-07-31  Lazyfree: Convert Sets to use plains SDS (several commits squashed).
+
+diff --git a/src/t_set.c b/src/t_set.c
+--- a/src/t_set.c
++++ b/src/t_set.c
+@@ -512,6 +505,6 @@
+         while(remaining--) {
+-            encoding = setTypeRandomElement(set,&objele,&llele);
++            encoding = setTypeRandomElement(set,&sdsele,&llele);
+             if (encoding == OBJ_ENCODING_INTSET) {
+-                objele = createStringObjectFromLongLong(llele);
++                sdsele = sdsfromlonglong(llele);
+             } else {
+-                incrRefCount(objele);
++                sdsele = sdsdup(sdsele);
+@@COMMIT 14ff572482cfe02c5ac61a1816cb8099d458e499  2015-07-26  RDMF: OBJ_ macros for object related stuff.
+
+diff --git a/src/t_set.c b/src/t_set.c
+--- a/src/t_set.c
++++ b/src/t_set.c
+@@ -512,6 +512,6 @@
+         while(remaining--) {
+             encoding = setTypeRandomElement(set,&objele,&llele);
+-            if (encoding == REDIS_ENCODING_INTSET) {
++            if (encoding == OBJ_ENCODING_INTSET) {
+                 objele = createStringObjectFromLongLong(llele);
+             } else {
+                 incrRefCount(objele);
+@@COMMIT 9feee428f25a5681a06cd13ed1c4cc644759e719  2015-02-10  SPOP: reimplemented for speed and better distribution.
+
+diff --git a/src/t_set.c b/src/t_set.c
+--- a/src/t_set.c
++++ b/src/t_set.c
+@@ -585,1 +498,6 @@
+-        decrRefCount(propargv[0]);
++        while(remaining--) {
++            encoding = setTypeRandomElement(set,&objele,&llele);
++            if (encoding == REDIS_ENCODING_INTSET) {
++                objele = createStringObjectFromLongLong(llele);
++            } else {
++                incrRefCount(objele);
+@@COMMIT cc7f0434b5c590e5a61c3cefa6ed9fb193d021dd  2015-02-09  Change alsoPropagate() behavior to make it more usable.
+
+diff --git a/src/t_set.c b/src/t_set.c
+--- a/src/t_set.c
++++ b/src/t_set.c
+@@ -588,0 +585,1 @@
++        decrRefCount(propargv[0]);
+
+=== cc7f0434b5 added the line; the same code is not in its parent

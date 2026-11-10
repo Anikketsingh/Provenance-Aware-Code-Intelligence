@@ -1,0 +1,61 @@
+id,repo,path,line,code,last_logic_change,first_appearance,ambiguous,notes
+T001,django,django/conf/global_settings.py,504,"SESSION_COOKIE_SAMESITE = ""Lax""",9a56b4b13e,9a56b4b13e,no,Black changed quotes only
+T002,redis,src/t_zset.c,1627,unsigned char *zl = lpNew(0);,3ca6972ecd,a669d5e999,no,ziplistNew -> lpNew is a different call; 81d653f5dc moved the line a few lines down in the same branch
+T003,django,django/conf/global_settings.py,118,"(""mr"", gettext_noop(""Marathi"")),",1c660d0de2,1c660d0de2,no,Black changed quotes only
+T004,redis,src/t_zset.c,1542,while (eptr != NULL) {,81d653f5dc,81d653f5dc,no,"new loop in 81d653f5dc; 5b69ba2ce9 removed the surrounding if/else, which the rules treat as non-logic"
+T005,django,django/db/migrations/graph.py,335,"def __contains__(self, node):",64887c644a,64887c644a,no,
+T006,django,django/db/migrations/state.py,356,field.to_fields = tuple(,dcdd219ee1,dcdd219ee1,no,moved by f5ede1cb6d and 503ee41497 (operations -> ProjectState); Black split
+T007,django,django/contrib/sessions/backends/file.py,52,session_key = self._get_or_create_session_key(),bda21e2b9d,bcf7e9a9fe,no,self.session_key -> self._get_or_create_session_key() is a different call
+T008,django,django/db/backends/postgresql/features.py,140,expected_failures.update(,2a636118da,2a636118da,no,new block; the same call text exists in an older block
+T009,django,django/contrib/admin/options.py,2194,media = self.media + admin_form.media,a19ed8aea3,a19ed8aea3,no,import: newforms-admin merge; cd11664066 renamed a local variable
+T010,django,django/db/backends/postgresql/features.py,119,"""backends.base.test_base.ExecuteWrapperTests.""",4426b1a72d,4426b1a72d,no,
+T011,redis,src/t_stream.c,1757,"si->lp_ele = lpNext(si->lp,si->lp_ele);",a58733cacf,a58733cacf,no,new code; the same statement exists elsewhere in the file
+T012,django,django/db/models/fields/json.py,507,JSONField.register_lookup(DataContains),6789ded0a6,6789ded0a6,no,new file for the cross-database JSONField
+T013,redis,src/cluster.h,123,"int clusterNodeCoversSlot(clusterNode *n, int slot);",33ef6a3003,0270abda82,no,function renamed (API rename counts as logic per rules)
+T014,django,django/contrib/admin/options.py,2618,"""pagination_required"": paginator.count > 100,",ac5cc6cf01,ac5cc6cf01,no,Black changed quotes only
+T015,django,django/db/backends/postgresql/client.py,53,"env[""PGPASSFILE""] = str(passfile)",8380fe08a0,8380fe08a0,no,Black changed quotes only
+T016,redis,src/acl.c,2100,open_bracket_start = j;,55c81f2cd3,55c81f2cd3,no,new selector parsing code
+T017,redis,src/t_set.c,3936,const setTypeOps *ops = setTypeGetOps(set->encoding);,a76a3689a0,a76a3689a0,no,new code; same statement used in other functions
+T018,redis,src/server.c,2726,val = server.oom_score_adj_values[process_class];,61954951ed,2530dc0ebd,no,"0e5b813ef9 wrapped it in an if, which the rules treat as non-logic"
+T019,redis,src/zset_btree.c,2524,"zbtScoreLeafScoreBytes(leaf->n.count, leaf->score_bits) +",81d653f5dc,81d653f5dc,no,new file
+T020,redis,src/defrag.c,794,struct zskiplistNode *newheader;,5ab6a54cc6,5ab6a54cc6,no,be1b4aa9aa moved the declaration within defrag.c
+T021,django,django/contrib/admin/options.py,1361,bit = unescape_string_literal(bit),26a413507a,26a413507a,no,new statement; git paired it with an unrelated line
+T022,django,django/contrib/gis/utils/ogrinspect.py,199,"ogr_fields, layer.field_widths, layer.field_precisions, layer.field_types",79e68c225b,79e68c225b,no,"import: gis branch merge; izip -> zip changed the call on the line above, not these arguments"
+T023,django,django/db/models/options.py,984,for constraint in self.constraints,d270c10a72,d270c10a72,no,
+T024,redis,src/module.c,8469,"vsnprintf(msg + name_len, sizeof(msg) - name_len, fmt, ap);",715794b829,715794b829,no,a1b1fd4f39 moved it within module.c
+T025,redis,src/t_set.c,2637,const int keepExpire = setTypeHasExpireSupport(set);,a76a3689a0,a76a3689a0,no,new code
+T026,django,django/test/utils.py,223,"keepdb=keepdb,",b7aa7c4ab4,b7aa7c4ab4,no,"added the keepdb argument; later commits split, moved to test/utils.py, or wrapped it"
+T027,redis,src/t_set.c,2634,zfree(ps);,4e472a1a7f,4e472a1a7f,no,
+T028,django,django/contrib/postgres/fields/ranges.py,270,"""smallint"": ""int4range"",",5d674eac87,5d674eac87,no,Black changed quotes only
+T029,django,django/contrib/syndication/views.py,120,return {},a2be52fd2a,a2be52fd2a,no,c4c27d8a04 moved it from feeds.py to views.py
+T030,django,django/db/models/options.py,220,if not self.abstract:,9e35c8b2e3,febe136d4c,no,"hard: getattr(cls._meta, 'abstract', False) -> self.abstract counted as a different call"
+T031,django,django/db/models/functions/window.py,5,"""CumeDist"",",d549b88050,d549b88050,no,Black split only
+T032,django,django/contrib/auth/password_validation.py,245,"return Path(__file__).resolve().parent / ""common-passwords.txt.gz""",9ee693bd6c,1daae25bdc,no,class attribute became a deferred return; earlier commits also changed the path expression
+T033,django,django/test/utils.py,934,"""APP_DIRS"": True,",2133f3157e,2133f3157e,no,Black split only
+T034,redis,src/t_stream.c,5673,"addReplyStreamID(c,&s->last_id);",b4ba5ac840,b4ba5ac840,no,1e2aee3919 moved it into the new XINFO reply function
+T035,redis,src/defrag.c,216,return newptr;,60adba48aa,60adba48aa,no,new wrapper function for the DEBUG_DEFRAG build
+T036,django,django/db/migrations/state.py,409,except LookupError:,1aa3e09c20,1aa3e09c20,no,
+T037,redis,src/t_list.c,1307,robj *o;,4409877e19,4409877e19,no,e2641e09cc moved it from redis.c
+T038,django,django/db/backends/mysql/features.py,16,supports_regex_backreferencing = False,121d2e3678,121d2e3678,no,28308078f3 moved it to features.py
+T039,redis,src/debug.c,1958,"(unsigned long) uc->uc_mcontext.__gregs[25],",ef4bb4e374,ef4bb4e374,no,
+T040,django,django/contrib/auth/migrations/0001_initial.py,132,models.CharField(,b341f33697,b341f33697,no,Black split only; migration files never change
+T041,django,django/db/models/fields/files.py,207,instance.__dict__[self.field.attname] = attr,8deb6bb1fc,7899568e01,yes,8deb6bb1fc added a second copy of an existing statement in a new branch (the original stayed); the earlier copy was last changed in a93425a37f
+T042,redis,src/endianconv.c,81,return v;,5653847714,5653847714,no,7a3e372025 renamed endian.c to endianconv.c
+T043,redis,src/pubsub.c,502,"dictSetVal(type.clientPubSubChannels(c), client_de, NULL);",43c88eb451,befec3cd91,no,dictSetKeyAtLink -> dictSetVal is a different call; the insert was rewritten several times since PUBSUB was added
+T044,django,django/utils/crypto.py,23,"def salted_hmac(key_salt, value, secret=None, *, algorithm=None):",0f4fff79d3,45c7f427ce,no,default algorithm changed from sha1 to None
+T045,django,django/contrib/admin/options.py,2706,model = None,a19ed8aea3,a19ed8aea3,no,import: newforms-admin merge
+T046,django,django/contrib/contenttypes/fields.py,852,"async def aget_or_create(self, **kwargs):",7b94847e38,7b94847e38,no,
+T047,django,django/db/backends/mysql/features.py,13,has_select_for_update_nowait = True,b719688b21,a7bc1aea03,no,version-dependent property replaced by a constant True
+T048,django,django/db/models/functions/window.py,81,"""%s requires a non-null source expression."" % self.__class__.__name__",d549b88050,d549b88050,no,Black split only
+T049,django,django/test/client.py,887,"self._login(user, backend)",b643386668,b44dee16e6,no,backend argument added; fc0fa72ff4 moved it
+T050,django,django/contrib/postgres/fields/ranges.py,250,"isinstance(self.rhs, models.Expression)",6b048b364c,6b048b364c,no,the isinstance() part is unchanged; 7991111af1 changed the rest of the condition
+T051,django,django/utils/dateparse.py,101,return datetime.time(**kw),9b1cb755a2,9b1cb755a2,no,f35ab74752 only re-indented it into a fallback branch
+T052,redis,src/fwtree.c,92,result = current;,f7fa481156,f7fa481156,no,moved by 8cd62f82ca (db.c -> kvstore.c) and 9b63e99d05 (-> fwtree.c)
+T053,django,django/db/models/fields/json.py,530,previous = previous.lhs,33ea472f69,33ea472f69,no,6789ded0a6 moved it from contrib/postgres/fields/jsonb.py
+T054,django,django/db/backends/sqlite3/base.py,280,violations = chain.from_iterable(,a939d630a4,a939d630a4,no,95a101a690 removed the surrounding feature check (unwrapping)
+T055,django,django/contrib/postgres/fields/ranges.py,196,"return ""numrange""",6de7f9ec60,6de7f9ec60,no,Black changed quotes only
+T056,django,django/utils/lorem_ipsum.py,152,"""ab"",",d22e39c10d,d22e39c10d,no,later commits only re-wrapped the word list
+T057,redis,src/module.c,15686,struct redisCommand *cmd;,7d117d7591,7d117d7591,no,new function; common declaration
+T058,django,django/core/management/commands/sqlmigrate.py,69,"target = (app_label, migration.name)",e12fea24f0,efd1e6096e,no,list of one target became a tuple; f17b24e407 re-indented it
+T059,django,django/db/backends/ddl_references.py,36,"def rename_column_references(self, table, old_column, new_column):",b50815ee41,b50815ee41,no,
+T060,django,django/contrib/admin/options.py,1191,return action.plural_description % model_format_dict(self.opts),f30acb184f,f30acb184f,no,new code using plural_description

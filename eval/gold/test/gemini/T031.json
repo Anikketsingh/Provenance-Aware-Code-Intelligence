@@ -1,0 +1,5 @@
+{
+  "id": "T031",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"d549b88050\", \"first_appearance\": \"d549b88050\", \"ambiguous\": \"no\", \"notes\": \"Reformatting by Black split the __all__ list across lines without changing logic.\"}\n```"
+}

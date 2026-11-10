@@ -1,0 +1,36 @@
+django/db/migrations/state.py:409
+except LookupError:
+
+=== history of django/db/migrations/state.py:409 at d9d05f104e
+@@COMMIT 1aa3e09c2043c88a760e8b73fb95dc8f1ffef50e  2014-11-05  Fixed #23745 -- Reused states as much as possible in migrations
+
+diff --git a/django/db/migrations/state.py b/django/db/migrations/state.py
+--- a/django/db/migrations/state.py
++++ b/django/db/migrations/state.py
+@@ -33,2 +56,1 @@
+-    def add_model_state(self, model_state):
+-        self.models[(model_state.app_label, model_state.name.lower())] = model_state
++            except LookupError:
+@@COMMIT 38a8cf1cdccb937297c7735aa73f6c02d468e7df  2013-05-18  Fix state tests a little
+
+diff --git a/django/db/migrations/state.py b/django/db/migrations/state.py
+--- a/django/db/migrations/state.py
++++ b/django/db/migrations/state.py
+@@ -17,0 +17,2 @@
++    def add_model_state(self, model_state):
++        self.models[(model_state.app_label, model_state.name.lower())] = model_state
+
+=== the same code already existed in 38a8cf1cdc^ at:
+  django/core/handlers/wsgi.py:150  except LookupError:
+  django/utils/translation/trans_real.py:415  except LookupError:
+  django/utils/translation/trans_real.py:452  except LookupError:
+=== history of django/core/handlers/wsgi.py:150 at 38a8cf1cdc
+@@COMMIT 6de6988f9990b4b53f5a20bfc3811b3cc49291c5  2012-10-29  Fixed #5076 -- Properly decode POSTs with non-utf-8 payload encoding
+
+diff --git a/django/core/handlers/wsgi.py b/django/core/handlers/wsgi.py
+--- a/django/core/handlers/wsgi.py
++++ b/django/core/handlers/wsgi.py
+@@ -147,0 +152,1 @@
++            except LookupError:
+
+=== 6de6988f99 added the line; the same code is not in its parent

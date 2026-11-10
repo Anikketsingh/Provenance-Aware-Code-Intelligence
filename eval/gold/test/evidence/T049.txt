@@ -1,0 +1,46 @@
+django/test/client.py:887
+self._login(user, backend)
+
+=== history of django/test/client.py:887 at d9d05f104e
+@@COMMIT fc0fa72ff4cdbf5861a366e31cb8bbacd44da22d  2020-02-12  Fixed #31224 -- Added support for asynchronous views and middleware.
+
+diff --git a/django/test/client.py b/django/test/client.py
+--- a/django/test/client.py
++++ b/django/test/client.py
+@@ -424,1 +610,1 @@
+-class Client(RequestFactory):
++        self._login(user, backend)
+@@COMMIT eec45e8b710b97201db106a6460fe051f8917833  2010-10-12  Fixed #9002 -- Added a RequestFactory. This allows you to create request instances so you can unit test views as standalone functions. Thanks to Simon Willison for the suggestion and snippet on which this patch was originally based.
+
+diff --git a/django/test/client.py b/django/test/client.py
+--- a/django/test/client.py
++++ b/django/test/client.py
+@@ -159,1 +317,1 @@
+-class Client(object):
++class Client(RequestFactory):
+@@COMMIT eeb230aa1c105a224fbc2ee03a1b9c5319594252  2008-09-17  Fixed #9117: Made the test client a new-style class. Thanks to Jan Oberst for the report.
+
+diff --git a/django/test/client.py b/django/test/client.py
+--- a/django/test/client.py
++++ b/django/test/client.py
+@@ -137,2 +138,1 @@
+-    
+-class Client:
++class Client(object):
+@@COMMIT 9dabd1f8ff7760f28bd1dcfa8b83ae6b1c0b79aa  2008-07-07  Fixed #7651: uploading multiple files with the same name now work. Also, in order to test the problem the test client now handles uploading multiple files at once. Patch from Mike Axiak.
+
+diff --git a/django/test/client.py b/django/test/client.py
+--- a/django/test/client.py
++++ b/django/test/client.py
+@@ -126,1 +138,2 @@
++    
+ class Client:
+@@COMMIT 7dce86ce0220ffb9f3f579cbd1e881e988764c9d  2006-08-27  Refs #2333 - Added test framework. This includes doctest and unittest finders, Django-specific doctest and unittest wrappers, and a pseudo-client that can be used to stimulate and test views.
+
+diff --git a/django/test/client.py b/django/test/client.py
+--- /dev/null
++++ b/django/test/client.py
+@@ -0,0 +80,1 @@
++class Client:
+
+=== 7dce86ce02 added the line; the same code is not in its parent

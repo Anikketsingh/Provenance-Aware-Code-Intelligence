@@ -1,0 +1,13 @@
+src/t_set.c:2637
+const int keepExpire = setTypeHasExpireSupport(set);
+
+=== history of src/t_set.c:2637 at 5b69ba2ce9
+@@COMMIT a76a3689a0706dcec7955051e09bdba8dc7cefd8  2026-10-28  Set member expiration (#15938)
+
+diff --git a/src/t_set.c b/src/t_set.c
+--- a/src/t_set.c
++++ b/src/t_set.c
+@@ -750,0 +2637,1 @@
++            const int keepExpire = setTypeHasExpireSupport(set);
+
+=== a76a3689a0 added the line; the same code is not in its parent

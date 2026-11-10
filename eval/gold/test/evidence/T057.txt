@@ -1,0 +1,63 @@
+src/module.c:15686
+struct redisCommand *cmd;
+
+=== history of src/module.c:15686 at 5b69ba2ce9
+@@COMMIT 7d117d7591656e947f526f5d5f8a022b88b38ad9  2020-10-05  Modules: add RM_GetCommandKeys().
+
+diff --git a/src/module.c b/src/module.c
+--- a/src/module.c
++++ b/src/module.c
+@@ -7890,0 +7907,1 @@
++    struct redisCommand *cmd;
+
+=== the same code already existed in 7d117d7591^ at:
+  src/acl.c:612  struct redisCommand *cmd;
+  src/aof.c:772  struct redisCommand *cmd;
+  src/module.c:1669  struct redisCommand *cmd;
+  src/module.c:3377  struct redisCommand *cmd;
+  src/module.c:4231  struct redisCommand *cmd;
+  src/scripting.c:477  struct redisCommand *cmd;
+=== history of src/acl.c:612 at 7d117d7591
+@@COMMIT 4078755ddb69b3ed62579d08a0bea60f34da3e65  2019-01-18  ACL: setting single commands ACLs implementation.
+
+diff --git a/src/acl.c b/src/acl.c
+--- a/src/acl.c
++++ b/src/acl.c
+@@ -118,0 +160,1 @@
++    struct redisCommand *cmd;
+
+=== the same code already existed in 4078755ddb^ at:
+  src/aof.c:736  struct redisCommand *cmd;
+  src/module.c:1280  struct redisCommand *cmd;
+  src/module.c:2682  struct redisCommand *cmd;
+  src/module.c:3345  struct redisCommand *cmd;
+  src/scripting.c:368  struct redisCommand *cmd;
+  src/server.c:2295  struct redisCommand *cmd;
+=== history of src/aof.c:736 at 4078755ddb
+@@COMMIT e2641e09cc0daf44f63f654230f72d22acf3a9af  2010-06-22  redis.c split into many different C files.
+
+diff --git a/src/aof.c b/src/aof.c
+--- /dev/null
++++ b/src/aof.c
+@@ -0,0 +234,1 @@
++        struct redisCommand *cmd;
+
+=== the same code already existed in e2641e09cc^ at:
+  redis.c:315  struct redisCommand *cmd;
+  redis.c:1651  struct redisCommand *cmd;
+  redis.c:2382  struct redisCommand *cmd;
+  redis.c:8039  struct redisCommand *cmd;
+  redis.c:8944  struct redisCommand *cmd;
+=== history of redis.c:315 at e2641e09cc
+@@COMMIT 6e4698826f2673a83792d02f9554812cfdac6a5f  2009-12-27  MULTI/EXEC first implementation
+
+diff --git a/redis.c b/redis.c
+--- a/redis.c
++++ b/redis.c
+@@ -233,0 +238,1 @@
++    struct redisCommand *cmd;
+
+=== the same code already existed in 6e4698826f^ at:
+  redis.c:1634  struct redisCommand *cmd;
+  redis.c:5835  struct redisCommand *cmd;
+=== stopped after several hops

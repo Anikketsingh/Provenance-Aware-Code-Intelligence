@@ -1,0 +1,5 @@
+{
+  "id": "T042",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"7a3e372025\", \"first_appearance\": \"7a3e372025\", \"ambiguous\": \"no\", \"notes\": \"Line added in a file rename commit whose prior history is not in the log.\"}\n```"
+}

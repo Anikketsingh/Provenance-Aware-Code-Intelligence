@@ -1,0 +1,29 @@
+src/t_list.c:1307
+robj *o;
+
+=== history of src/t_list.c:1307 at 5b69ba2ce9
+@@COMMIT e2641e09cc0daf44f63f654230f72d22acf3a9af  2010-06-22  redis.c split into many different C files.
+
+diff --git a/src/t_list.c b/src/t_list.c
+--- /dev/null
++++ b/src/t_list.c
+@@ -0,0 +775,1 @@
++    robj *o;
+
+=== the same code already existed in e2641e09cc^ at:
+  redis.c:2157  robj *o;
+  redis.c:2182  robj *o;
+  redis.c:2249  robj *o;
+  redis.c:3004  robj *o;
+  redis.c:3037  robj *o;
+  redis.c:4506  robj *o;
+=== history of redis.c:2157 at e2641e09cc
+@@COMMIT ed9b544e10b84cd43348ddfab7068b610a5df1f7  2009-03-22  first commit
+
+diff --git a/redis.c b/redis.c
+--- /dev/null
++++ b/redis.c
+@@ -0,0 +933,1 @@
++    robj *o;
+
+=== ed9b544e10 added the line; the same code is not in its parent

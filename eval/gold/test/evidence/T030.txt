@@ -1,0 +1,39 @@
+django/db/models/options.py:220
+if not self.abstract:
+
+=== history of django/db/models/options.py:220 at d9d05f104e
+@@COMMIT 9e35c8b2e37ab228b169e63a71f7221e4e85f3da  2024-03-07  Refs #30397 -- Optimized interpolation of index and constraint names a bit.
+
+diff --git a/django/db/models/options.py b/django/db/models/options.py
+--- a/django/db/models/options.py
++++ b/django/db/models/options.py
+@@ -206,4 +206,1 @@
+-            if not getattr(cls._meta, "abstract", False):
+-                for attr_name in {"constraints", "indexes"}:
+-                    objs = getattr(self, attr_name, [])
+-                    setattr(self, attr_name, self._format_names_with_class(cls, objs))
++            if not self.abstract:
+@@COMMIT 9c19aff7c7561e3a82978a272ecdaad40dda5c00  2022-02-03  Refs #33476 -- Reformatted code with Black.
+
+diff --git a/django/db/models/options.py b/django/db/models/options.py
+--- a/django/db/models/options.py
++++ b/django/db/models/options.py
+@@ -180,4 +205,4 @@
+-            if not getattr(cls._meta, 'abstract', False):
+-                for attr_name in {'constraints', 'indexes'}:
++            if not getattr(cls._meta, "abstract", False):
++                for attr_name in {"constraints", "indexes"}:
+                     objs = getattr(self, attr_name, [])
+                     setattr(self, attr_name, self._format_names_with_class(cls, objs))
+@@COMMIT febe136d4c3310ec8901abecca3ea5ba2be3952c  2019-07-05  Fixed #30397 -- Added app_label/class interpolation for names of indexes and constraints.
+
+diff --git a/django/db/models/options.py b/django/db/models/options.py
+--- a/django/db/models/options.py
++++ b/django/db/models/options.py
+@@ -183,0 +185,4 @@
++            if not getattr(cls._meta, 'abstract', False):
++                for attr_name in {'constraints', 'indexes'}:
++                    objs = getattr(self, attr_name, [])
++                    setattr(self, attr_name, self._format_names_with_class(cls, objs))
+
+=== febe136d4c added the line; the same code is not in its parent

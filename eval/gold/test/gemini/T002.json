@@ -1,0 +1,5 @@
+{
+  "id": "T002",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\n  \"last_logic_change\": \"3ca6972ecd\",\n  \"first_appearance\": \"a669d5e999\",\n  \"ambiguous\": \"no\",\n  \"notes\": \"Code moved in 81d653f5dc; ziplist was replaced with listpack in 3ca6972ecd, originally added in a669d5e999.\"\n}\n```"
+}

@@ -1,0 +1,5 @@
+{
+  "id": "T007",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"bda21e2b9d\", \"first_appearance\": \"bcf7e9a9fe\", \"ambiguous\": \"no\", \"notes\": \"Attribute access replaced by method call; statement first added when file backend was created.\"}\n```"
+}

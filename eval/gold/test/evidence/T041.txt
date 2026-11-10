@@ -1,0 +1,42 @@
+django/db/models/fields/files.py:207
+instance.__dict__[self.field.attname] = attr
+
+=== history of django/db/models/fields/files.py:207 at d9d05f104e
+@@COMMIT 8deb6bb1fc427762d56646bf7306cbd11fb5bb68  2024-08-05  Fixed #35657 -- Made FileField handle db_default values.
+
+diff --git a/django/db/models/fields/files.py b/django/db/models/fields/files.py
+--- a/django/db/models/fields/files.py
++++ b/django/db/models/fields/files.py
+@@ -200,0 +205,1 @@
++            instance.__dict__[self.field.attname] = attr
+
+=== the same code already existed in 8deb6bb1fc^ at:
+  django/db/models/fields/files.py:198  instance.__dict__[self.field.attname] = attr
+=== history of django/db/models/fields/files.py:198 at 8deb6bb1fc
+@@COMMIT a93425a37f4defdb31d4ca96bb3bf6da21f0b5ce  2020-06-12  Fixed #31701 -- Made FileDescriptor subclass DeferredAttribute.
+
+diff --git a/django/db/models/fields/files.py b/django/db/models/fields/files.py
+--- a/django/db/models/fields/files.py
++++ b/django/db/models/fields/files.py
+@@ -189,1 +185,1 @@
+-            instance.__dict__[self.field.name] = attr
++            instance.__dict__[self.field.attname] = attr
+@@COMMIT 2b0903b2c4b6f5534e88d25254c6dcf02cc9d485  2009-05-11  Fixed #10404: ImageField height_field and width_field options no longer depend on putting the image field after the height/width fields as they did after r9766.
+
+diff --git a/django/db/models/fields/files.py b/django/db/models/fields/files.py
+--- a/django/db/models/fields/files.py
++++ b/django/db/models/fields/files.py
+@@ -146,2 +185,1 @@
+-            # Create a new instance of FieldFile, based on a given file name
+-            instance.__dict__[self.field.name] = self.field.attr_class(instance, self.field, file)
++            instance.__dict__[self.field.name] = attr
+@@COMMIT 7899568e01fc9c68afe995fa71de915dd9fcdd76  2008-08-08  File storage refactoring, adding far more flexibility to Django's file handling. The new files.txt document has details of the new features.
+
+diff --git a/django/db/models/fields/files.py b/django/db/models/fields/files.py
+--- /dev/null
++++ b/django/db/models/fields/files.py
+@@ -0,0 +113,2 @@
++            # Create a new instance of FieldFile, based on a given file name
++            instance.__dict__[self.field.name] = self.field.attr_class(instance, self.field, file)
+
+=== 7899568e01 added the line; the same code is not in its parent

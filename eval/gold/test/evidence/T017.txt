@@ -1,0 +1,584 @@
+src/t_set.c:3936
+const setTypeOps *ops = setTypeGetOps(set->encoding);
+
+=== history of src/t_set.c:3936 at 5b69ba2ce9
+@@COMMIT a76a3689a0706dcec7955051e09bdba8dc7cefd8  2026-10-28  Set member expiration (#15938)
+
+diff --git a/src/t_set.c b/src/t_set.c
+--- a/src/t_set.c
++++ b/src/t_set.c
+@@ -1794,0 +3936,1 @@
++            const setTypeOps *ops = setTypeGetOps(set->encoding);
+
+=== the same code already existed in a76a3689a0^ at:
+  src/t_set.c:150  const setTypeOps *ops = setTypeGetOps(set->encoding);
+=== history of src/t_set.c:150 at a76a3689a0
+@@COMMIT 38087a9f7f900eeb490297096c6a24b85f8e7d97  2026-10-11  Refactor t_set.c: dispatch per-encoding logic via setTypeOps (#15766)
+
+diff --git a/src/t_set.c b/src/t_set.c
+--- a/src/t_set.c
++++ b/src/t_set.c
+@@ -141,93 +150,1 @@
+-    serverAssert(str);
+-    if (set->encoding == OBJ_ENCODING_HT) {
+-        /* Avoid duping the string if it is an sds string. */
+-        sds sdsval = str_is_sds ? (sds)str : sdsnewlen(str, len);
+-        dict *ht = set->ptr;
+-        dictEntryLink bucket, link = dictFindLink(ht, sdsval, &bucket);
+-        if (link == NULL) {
+-            /* Key doesn't already exist in the set. Add it but dup the key. */
+-            if (sdsval == str) sdsval = sdsdup(sdsval);
+-            dictSetKeyAtLink(ht, sdsval, &bucket, 1);
+-            *htGetMetadataSize(ht) += sdsAllocSize(sdsval);
+-            return 1;
+-        } else if (sdsval != str) {
+-            /* String is already a member. Free our temporary sds copy. */
+-            sdsfree(sdsval);
+-            return 0;
+-        }
+-    } else if (set->encoding == OBJ_ENCODING_LISTPACK) {
+-        unsigned char *lp = set->ptr;
+-        unsigned char *p = lpFirst(lp);
+-        if (p != NULL)
+-            p = lpFind(lp, p, (unsigned char*)str, len, 0);
+-        if (p == NULL) {
+-            /* Not found.  */
+-            if (lpLength(lp) < server.set_max_listpack_entries &&
+-                len <= server.set_max_listpack_value &&
+-                lpSafeToAdd(lp, len))
+-            {
+-                if (str == tmpbuf) {
+-                    /* This came in as integer so we can avoid parsing it again.
+-                     * TODO: Create and use lpFindInteger; don't go via string. */
+-                    lp = lpAppendInteger(lp, llval);
+-                } else {
+-                    lp = lpAppend(lp, (unsigned char*)str, len);
+-                }
+-                set->ptr = lp;
+-            } else {
+-                /* Size limit is reached. Convert to hashtable and add. */
+-                setTypeConvertAndExpand(set, OBJ_ENCODING_HT, lpLength(lp) + 1, 1);
+-                sds newval = sdsnewlen(str,len);
+-                serverAssert(dictAdd(set->ptr,newval,NULL) == DICT_OK);
+-                *htGetMetadataSize(set->ptr) += sdsAllocSize(newval);
+-            }
+-            return 1;
+-        }
+-    } else if (set->encoding == OBJ_ENCODING_INTSET) {
+-        long long value;
+-        if (string2ll(str, len, &value)) {
+-            uint8_t success = 0;
+-            set->ptr = intsetAdd(set->ptr,value,&success);
+-            if (success) {
+-                maybeConvertIntset(set);
+-                return 1;
+-            }
+-        } else {
+-            /* Check if listpack encoding is safe not to cross any threshold. */
+-            size_t maxelelen = 0, totsize = 0;
+-            unsigned long n = intsetLen(set->ptr);
+-            if (n != 0) {
+-                size_t elelen1 = sdigits10(intsetMax(set->ptr));
+-                size_t elelen2 = sdigits10(intsetMin(set->ptr));
+-                maxelelen = max(elelen1, elelen2);
+-                size_t s1 = lpEstimateBytesRepeatedInteger(intsetMax(set->ptr), n);
+-                size_t s2 = lpEstimateBytesRepeatedInteger(intsetMin(set->ptr), n);
+-                totsize = max(s1, s2);
+-            }
+-            if (intsetLen((const intset*)set->ptr) < server.set_max_listpack_entries &&
+-                len <= server.set_max_listpack_value &&
+-                maxelelen <= server.set_max_listpack_value &&
+-                lpSafeToAdd(NULL, totsize + len))
+-            {
+-                /* In the "safe to add" check above we assumed all elements in
+-                 * the intset are of size maxelelen. This is an upper bound. */
+-                setTypeConvertAndExpand(set, OBJ_ENCODING_LISTPACK,
+-                                        intsetLen(set->ptr) + 1, 1);
+-                unsigned char *lp = set->ptr;
+-                lp = lpAppend(lp, (unsigned char *)str, len);
+-                lp = lpShrinkToFit(lp);
+-                set->ptr = lp;
+-                return 1;
+-            } else {
+-                setTypeConvertAndExpand(set, OBJ_ENCODING_HT,
+-                                        intsetLen(set->ptr) + 1, 1);
+-                /* The set *was* an intset and this value is not integer
+-                 * encodable, so dictAdd should always work. */
+-                sds newval = sdsnewlen(str,len);
+-                serverAssert(dictAdd(set->ptr,newval,NULL) == DICT_OK);
+-                *htGetMetadataSize(set->ptr) += sdsAllocSize(newval);
+-                return 1;
+-            }
+-        }
+-    } else {
+-        serverPanic("Unknown set encoding");
++    const setTypeOps *ops = setTypeGetOps(set->encoding);
+@@COMMIT 04f738fb5e47432a7d9a859f0f2afb7acd9b4f92  2025-10-23  Add per key memory accounting (#14363)
+
+diff --git a/src/t_set.c b/src/t_set.c
+--- a/src/t_set.c
++++ b/src/t_set.c
+@@ -125,88 +125,93 @@
+     serverAssert(str);
+     if (set->encoding == OBJ_ENCODING_HT) {
+         /* Avoid duping the string if it is an sds string. */
+         sds sdsval = str_is_sds ? (sds)str : sdsnewlen(str, len);
+         dict *ht = set->ptr;
+         dictEntryLink bucket, link = dictFindLink(ht, sdsval, &bucket);
+         if (link == NULL) {
+             /* Key doesn't already exist in the set. Add it but dup the key. */
+             if (sdsval == str) sdsval = sdsdup(sdsval);
+             dictSetKeyAtLink(ht, sdsval, &bucket, 1);
++            *htGetMetadataSize(ht) += sdsAllocSize(sdsval);
+             return 1;
+         } else if (sdsval != str) {
+             /* String is already a member. Free our temporary sds copy. */
+             sdsfree(sdsval);
+             return 0;
+         }
+     } else if (set->encoding == OBJ_ENCODING_LISTPACK) {
+         unsigned char *lp = set->ptr;
+         unsigned char *p = lpFirst(lp);
+         if (p != NULL)
+             p = lpFind(lp, p, (unsigned char*)str, len, 0);
+         if (p == NULL) {
+             /* Not found.  */
+             if (lpLength(lp) < server.set_max_listpack_entries &&
+                 len <= server.set_max_listpack_value &&
+                 lpSafeToAdd(lp, len))
+             {
+                 if (str == tmpbuf) {
+                     /* This came in as integer so we can avoid parsing it again.
+                      * TODO: Create and use lpFindInteger; don't go via string. */
+                     lp = lpAppendInteger(lp, llval);
+                 } else {
+                     lp = lpAppend(lp, (unsigned char*)str, len);
+                 }
+                 set->ptr = lp;
+             } else {
+                 /* Size limit is reached. Convert to hashtable and add. */
+                 setTypeConvertAndExpand(set, OBJ_ENCODING_HT, lpLength(lp) + 1, 1);
+-                serverAssert(dictAdd(set->ptr,sdsnewlen(str,len),NULL) == DICT_OK);
++                sds newval = sdsnewlen(str,len);
++                serverAssert(dictAdd(set->ptr,newval,NULL) == DICT_OK);
++                *htGetMetadataSize(set->ptr) += sdsAllocSize(newval);
+             }
+             return 1;
+         }
+     } else if (set->encoding == OBJ_ENCODING_INTSET) {
+         long long value;
+         if (string2ll(str, len, &value)) {
+             uint8_t success = 0;
+             set->ptr = intsetAdd(set->ptr,value,&success);
+             if (success) {
+                 maybeConvertIntset(set);
+                 return 1;
+             }
+         } else {
+             /* Check if listpack encoding is safe not to cross any threshold. */
+             size_t maxelelen = 0, totsize = 0;
+             unsigned long n = intsetLen(set->ptr);
+             if (n != 0) {
+                 size_t elelen1 = sdigits10(intsetMax(set->ptr));
+                 size_t elelen2 = sdigits10(intsetMin(set->ptr));
+                 maxelelen = max(elelen1, elelen2);
+                 size_t s1 = lpEstimateBytesRepeatedInteger(intsetMax(set->ptr), n);
+                 size_t s2 = lpEstimateBytesRepeatedInteger(intsetMin(set->ptr), n);
+                 totsize = max(s1, s2);
+             }
+             if (intsetLen((const intset*)set->ptr) < server.set_max_listpack_entries &&
+                 len <= server.set_max_listpack_value &&
+                 maxelelen <= server.set_max_listpack_value &&
+                 lpSafeToAdd(NULL, totsize + len))
+             {
+                 /* In the "safe to add" check above we assumed all elements in
+                  * the intset are of size maxelelen. This is an upper bound. */
+                 setTypeConvertAndExpand(set, OBJ_ENCODING_LISTPACK,
+                                         intsetLen(set->ptr) + 1, 1);
+                 unsigned char *lp = set->ptr;
+                 lp = lpAppend(lp, (unsigned char *)str, len);
+                 lp = lpShrinkToFit(lp);
+                 set->ptr = lp;
+                 return 1;
+             } else {
+                 setTypeConvertAndExpand(set, OBJ_ENCODING_HT,
+                                         intsetLen(set->ptr) + 1, 1);
+                 /* The set *was* an intset and this value is not integer
+                  * encodable, so dictAdd should always work. */
+-                serverAssert(dictAdd(set->ptr,sdsnewlen(str,len),NULL) == DICT_OK);
++                sds newval = sdsnewlen(str,len);
++                serverAssert(dictAdd(set->ptr,newval,NULL) == DICT_OK);
++                *htGetMetadataSize(set->ptr) += sdsAllocSize(newval);
+                 return 1;
+             }
+         }
+     } else {
+         serverPanic("Unknown set encoding");
+@@COMMIT e1789e43687108a41cfa8e77d09138e2a296fb89  2025-05-12  keyspace - Unify key and value & use dict no_value=1 (#13806)
+
+diff --git a/src/t_set.c b/src/t_set.c
+--- a/src/t_set.c
++++ b/src/t_set.c
+@@ -125,87 +125,88 @@
+     serverAssert(str);
+     if (set->encoding == OBJ_ENCODING_HT) {
+         /* Avoid duping the string if it is an sds string. */
+         sds sdsval = str_is_sds ? (sds)str : sdsnewlen(str, len);
+         dict *ht = set->ptr;
+-        void *position = dictFindPositionForInsert(ht, sdsval, NULL);
+-        if (position) {
++        dictEntryLink bucket, link = dictFindLink(ht, sdsval, &bucket);
++        if (link == NULL) {
+             /* Key doesn't already exist in the set. Add it but dup the key. */
+             if (sdsval == str) sdsval = sdsdup(sdsval);
+-            dictInsertAtPosition(ht, sdsval, position);
++            dictSetKeyAtLink(ht, sdsval, &bucket, 1);
++            return 1;
+         } else if (sdsval != str) {
+             /* String is already a member. Free our temporary sds copy. */
+             sdsfree(sdsval);
++            return 0;
+         }
+-        return (position != NULL);
+     } else if (set->encoding == OBJ_ENCODING_LISTPACK) {
+         unsigned char *lp = set->ptr;
+         unsigned char *p = lpFirst(lp);
+         if (p != NULL)
+             p = lpFind(lp, p, (unsigned char*)str, len, 0);
+         if (p == NULL) {
+             /* Not found.  */
+             if (lpLength(lp) < server.set_max_listpack_entries &&
+                 len <= server.set_max_listpack_value &&
+                 lpSafeToAdd(lp, len))
+             {
+                 if (str == tmpbuf) {
+                     /* This came in as integer so we can avoid parsing it again.
+                      * TODO: Create and use lpFindInteger; don't go via string. */
+                     lp = lpAppendInteger(lp, llval);
+                 } else {
+                     lp = lpAppend(lp, (unsigned char*)str, len);
+                 }
+                 set->ptr = lp;
+             } else {
+                 /* Size limit is reached. Convert to hashtable and add. */
+                 setTypeConvertAndExpand(set, OBJ_ENCODING_HT, lpLength(lp) + 1, 1);
+                 serverAssert(dictAdd(set->ptr,sdsnewlen(str,len),NULL) == DICT_OK);
+             }
+             return 1;
+         }
+     } else if (set->encoding == OBJ_ENCODING_INTSET) {
+         long long value;
+         if (string2ll(str, len, &value)) {
+             uint8_t success = 0;
+             set->ptr = intsetAdd(set->ptr,value,&success);
+             if (success) {
+                 maybeConvertIntset(set);
+                 return 1;
+             }
+         } else {
+             /* Check if listpack encoding is safe not to cross any threshold. */
+             size_t maxelelen = 0, totsize = 0;
+             unsigned long n = intsetLen(set->ptr);
+             if (n != 0) {
+                 size_t elelen1 = sdigits10(intsetMax(set->ptr));
+                 size_t elelen2 = sdigits10(intsetMin(set->ptr));
+                 maxelelen = max(elelen1, elelen2);
+                 size_t s1 = lpEstimateBytesRepeatedInteger(intsetMax(set->ptr), n);
+                 size_t s2 = lpEstimateBytesRepeatedInteger(intsetMin(set->ptr), n);
+                 totsize = max(s1, s2);
+             }
+             if (intsetLen((const intset*)set->ptr) < server.set_max_listpack_entries &&
+                 len <= server.set_max_listpack_value &&
+                 maxelelen <= server.set_max_listpack_value &&
+                 lpSafeToAdd(NULL, totsize + len))
+             {
+                 /* In the "safe to add" check above we assumed all elements in
+                  * the intset are of size maxelelen. This is an upper bound. */
+                 setTypeConvertAndExpand(set, OBJ_ENCODING_LISTPACK,
+                                         intsetLen(set->ptr) + 1, 1);
+                 unsigned char *lp = set->ptr;
+                 lp = lpAppend(lp, (unsigned char *)str, len);
+                 lp = lpShrinkToFit(lp);
+                 set->ptr = lp;
+                 return 1;
+             } else {
+                 setTypeConvertAndExpand(set, OBJ_ENCODING_HT,
+                                         intsetLen(set->ptr) + 1, 1);
+                 /* The set *was* an intset and this value is not integer
+                  * encodable, so dictAdd should always work. */
+                 serverAssert(dictAdd(set->ptr,sdsnewlen(str,len),NULL) == DICT_OK);
+                 return 1;
+             }
+         }
+     } else {
+         serverPanic("Unknown set encoding");
+@@COMMIT f3f6f7c0d66f136146a912e06c8fbe31ecfbc977  2023-01-20  Key as dict entry - memory optimization for sets (#11595)
+
+diff --git a/src/t_set.c b/src/t_set.c
+--- a/src/t_set.c
++++ b/src/t_set.c
+@@ -120,88 +120,87 @@
+     serverAssert(str);
+     if (set->encoding == OBJ_ENCODING_HT) {
+         /* Avoid duping the string if it is an sds string. */
+         sds sdsval = str_is_sds ? (sds)str : sdsnewlen(str, len);
+         dict *ht = set->ptr;
+-        dictEntry *de = dictAddRaw(ht,sdsval,NULL);
+-        if (de && sdsval == str) {
+-            /* String was added but we don't own this sds string. Dup it and
+-             * replace it in the dict entry. */
+-            dictSetKey(ht,de,sdsdup((sds)str));
+-            dictSetVal(ht,de,NULL);
+-        } else if (!de && sdsval != str) {
+-            /* String was already a member. Free our temporary sds copy. */
++        void *position = dictFindPositionForInsert(ht, sdsval, NULL);
++        if (position) {
++            /* Key doesn't already exist in the set. Add it but dup the key. */
++            if (sdsval == str) sdsval = sdsdup(sdsval);
++            dictInsertAtPosition(ht, sdsval, position);
++        } else if (sdsval != str) {
++            /* String is already a member. Free our temporary sds copy. */
+             sdsfree(sdsval);
+         }
+-        return (de != NULL);
++        return (position != NULL);
+     } else if (set->encoding == OBJ_ENCODING_LISTPACK) {
+         unsigned char *lp = set->ptr;
+         unsigned char *p = lpFirst(lp);
+         if (p != NULL)
+             p = lpFind(lp, p, (unsigned char*)str, len, 0);
+         if (p == NULL) {
+             /* Not found.  */
+             if (lpLength(lp) < server.set_max_listpack_entries &&
+                 len <= server.set_max_listpack_value &&
+                 lpSafeToAdd(lp, len))
+             {
+                 if (str == tmpbuf) {
+                     /* This came in as integer so we can avoid parsing it again.
+                      * TODO: Create and use lpFindInteger; don't go via string. */
+                     lp = lpAppendInteger(lp, llval);
+                 } else {
+                     lp = lpAppend(lp, (unsigned char*)str, len);
+                 }
+                 set->ptr = lp;
+             } else {
+                 /* Size limit is reached. Convert to hashtable and add. */
+                 setTypeConvertAndExpand(set, OBJ_ENCODING_HT, lpLength(lp) + 1, 1);
+                 serverAssert(dictAdd(set->ptr,sdsnewlen(str,len),NULL) == DICT_OK);
+             }
+             return 1;
+         }
+     } else if (set->encoding == OBJ_ENCODING_INTSET) {
+         long long value;
+         if (string2ll(str, len, &value)) {
+             uint8_t success = 0;
+             set->ptr = intsetAdd(set->ptr,value,&success);
+             if (success) {
+                 maybeConvertIntset(set);
+                 return 1;
+             }
+         } else {
+             /* Check if listpack encoding is safe not to cross any threshold. */
+             size_t maxelelen = 0, totsize = 0;
+             unsigned long n = intsetLen(set->ptr);
+             if (n != 0) {
+                 size_t elelen1 = sdigits10(intsetMax(set->ptr));
+                 size_t elelen2 = sdigits10(intsetMin(set->ptr));
+                 maxelelen = max(elelen1, elelen2);
+                 size_t s1 = lpEstimateBytesRepeatedInteger(intsetMax(set->ptr), n);
+                 size_t s2 = lpEstimateBytesRepeatedInteger(intsetMin(set->ptr), n);
+                 totsize = max(s1, s2);
+             }
+             if (intsetLen((const intset*)set->ptr) < server.set_max_listpack_entries &&
+                 len <= server.set_max_listpack_value &&
+                 maxelelen <= server.set_max_listpack_value &&
+                 lpSafeToAdd(NULL, totsize + len))
+             {
+                 /* In the "safe to add" check above we assumed all elements in
+                  * the intset are of size maxelelen. This is an upper bound. */
+                 setTypeConvertAndExpand(set, OBJ_ENCODING_LISTPACK,
+                                         intsetLen(set->ptr) + 1, 1);
+                 unsigned char *lp = set->ptr;
+                 lp = lpAppend(lp, (unsigned char *)str, len);
+                 lp = lpShrinkToFit(lp);
+                 set->ptr = lp;
+                 return 1;
+             } else {
+                 setTypeConvertAndExpand(set, OBJ_ENCODING_HT,
+                                         intsetLen(set->ptr) + 1, 1);
+                 /* The set *was* an intset and this value is not integer
+                  * encodable, so dictAdd should always work. */
+                 serverAssert(dictAdd(set->ptr,sdsnewlen(str,len),NULL) == DICT_OK);
+                 return 1;
+             }
+         }
+     } else {
+         serverPanic("Unknown set encoding");
+@@COMMIT 8a315fc285fc54c678b97107a02ee1627f2c1ebf  2022-12-06  When converting a set to dict, presize for one more element to be added (#11559)
+
+diff --git a/src/t_set.c b/src/t_set.c
+--- a/src/t_set.c
++++ b/src/t_set.c
+@@ -125,77 +125,88 @@
+     serverAssert(str);
+     if (set->encoding == OBJ_ENCODING_HT) {
+         /* Avoid duping the string if it is an sds string. */
+         sds sdsval = str_is_sds ? (sds)str : sdsnewlen(str, len);
+         dict *ht = set->ptr;
+         dictEntry *de = dictAddRaw(ht,sdsval,NULL);
+         if (de && sdsval == str) {
+             /* String was added but we don't own this sds string. Dup it and
+              * replace it in the dict entry. */
+             dictSetKey(ht,de,sdsdup((sds)str));
+             dictSetVal(ht,de,NULL);
+         } else if (!de && sdsval != str) {
+             /* String was already a member. Free our temporary sds copy. */
+             sdsfree(sdsval);
+         }
+         return (de != NULL);
+     } else if (set->encoding == OBJ_ENCODING_LISTPACK) {
+         unsigned char *lp = set->ptr;
+         unsigned char *p = lpFirst(lp);
+         if (p != NULL)
+             p = lpFind(lp, p, (unsigned char*)str, len, 0);
+         if (p == NULL) {
+             /* Not found.  */
+             if (lpLength(lp) < server.set_max_listpack_entries &&
+                 len <= server.set_max_listpack_value &&
+                 lpSafeToAdd(lp, len))
+             {
+                 if (str == tmpbuf) {
+                     /* This came in as integer so we can avoid parsing it again.
+                      * TODO: Create and use lpFindInteger; don't go via string. */
+                     lp = lpAppendInteger(lp, llval);
+                 } else {
+                     lp = lpAppend(lp, (unsigned char*)str, len);
+                 }
+                 set->ptr = lp;
+             } else {
+                 /* Size limit is reached. Convert to hashtable and add. */
+-                setTypeConvert(set, OBJ_ENCODING_HT);
++                setTypeConvertAndExpand(set, OBJ_ENCODING_HT, lpLength(lp) + 1, 1);
+                 serverAssert(dictAdd(set->ptr,sdsnewlen(str,len),NULL) == DICT_OK);
+             }
+             return 1;
+         }
+     } else if (set->encoding == OBJ_ENCODING_INTSET) {
+         long long value;
+         if (string2ll(str, len, &value)) {
+             uint8_t success = 0;
+             set->ptr = intsetAdd(set->ptr,value,&success);
+             if (success) {
+                 maybeConvertIntset(set);
+                 return 1;
+             }
+         } else {
+-            size_t maxelelen = intsetLen(set->ptr) == 0 ?
+-                0 : max(sdigits10(intsetMax(set->ptr)),
+-                        sdigits10(intsetMin(set->ptr)));
++            /* Check if listpack encoding is safe not to cross any threshold. */
++            size_t maxelelen = 0, totsize = 0;
++            unsigned long n = intsetLen(set->ptr);
++            if (n != 0) {
++                size_t elelen1 = sdigits10(intsetMax(set->ptr));
++                size_t elelen2 = sdigits10(intsetMin(set->ptr));
++                maxelelen = max(elelen1, elelen2);
++                size_t s1 = lpEstimateBytesRepeatedInteger(intsetMax(set->ptr), n);
++                size_t s2 = lpEstimateBytesRepeatedInteger(intsetMin(set->ptr), n);
++                totsize = max(s1, s2);
++            }
+             if (intsetLen((const intset*)set->ptr) < server.set_max_listpack_entries &&
+                 len <= server.set_max_listpack_value &&
+                 maxelelen <= server.set_max_listpack_value &&
+-                lpSafeToAdd(NULL, maxelelen * intsetLen(set->ptr) + len))
++                lpSafeToAdd(NULL, totsize + len))
+             {
+                 /* In the "safe to add" check above we assumed all elements in
+                  * the intset are of size maxelelen. This is an upper bound. */
+-                setTypeConvert(set, OBJ_ENCODING_LISTPACK);
++                setTypeConvertAndExpand(set, OBJ_ENCODING_LISTPACK,
++                                        intsetLen(set->ptr) + 1, 1);
+                 unsigned char *lp = set->ptr;
+                 lp = lpAppend(lp, (unsigned char *)str, len);
++                lp = lpShrinkToFit(lp);
+                 set->ptr = lp;
+                 return 1;
+             } else {
+-                setTypeConvert(set, OBJ_ENCODING_HT);
++                setTypeConvertAndExpand(set, OBJ_ENCODING_HT,
++                                        intsetLen(set->ptr) + 1, 1);
+                 /* The set *was* an intset and this value is not integer
+                  * encodable, so dictAdd should always work. */
+                 serverAssert(dictAdd(set->ptr,sdsnewlen(str,len),NULL) == DICT_OK);
+                 return 1;
+             }
+         }
+     } else {
+         serverPanic("Unknown set encoding");
+@@COMMIT 4e472a1a7fc0dc2c7da2b48ac7342e9385b4f92a  2022-11-09  Listpack encoding for sets (#11290)
+
+diff --git a/src/t_set.c b/src/t_set.c
+--- a/src/t_set.c
++++ b/src/t_set.c
+@@ -53,34 +125,77 @@
+-    long long llval;
+-    if (subject->encoding == OBJ_ENCODING_HT) {
+-        dict *ht = subject->ptr;
+-        dictEntry *de = dictAddRaw(ht,value,NULL);
+-        if (de) {
+-            dictSetKey(ht,de,sdsdup(value));
++    serverAssert(str);
++    if (set->encoding == OBJ_ENCODING_HT) {
++        /* Avoid duping the string if it is an sds string. */
++        sds sdsval = str_is_sds ? (sds)str : sdsnewlen(str, len);
++        dict *ht = set->ptr;
++        dictEntry *de = dictAddRaw(ht,sdsval,NULL);
++        if (de && sdsval == str) {
++            /* String was added but we don't own this sds string. Dup it and
++             * replace it in the dict entry. */
++            dictSetKey(ht,de,sdsdup((sds)str));
+             dictSetVal(ht,de,NULL);
++        } else if (!de && sdsval != str) {
++            /* String was already a member. Free our temporary sds copy. */
++            sdsfree(sdsval);
++        }
++        return (de != NULL);
++    } else if (set->encoding == OBJ_ENCODING_LISTPACK) {
++        unsigned char *lp = set->ptr;
++        unsigned char *p = lpFirst(lp);
++        if (p != NULL)
++            p = lpFind(lp, p, (unsigned char*)str, len, 0);
++        if (p == NULL) {
++            /* Not found.  */
++            if (lpLength(lp) < server.set_max_listpack_entries &&
++                len <= server.set_max_listpack_value &&
++                lpSafeToAdd(lp, len))
++            {
++                if (str == tmpbuf) {
++                    /* This came in as integer so we can avoid parsing it again.
++                     * TODO: Create and use lpFindInteger; don't go via string. */
++                    lp = lpAppendInteger(lp, llval);
++                } else {
++                    lp = lpAppend(lp, (unsigned char*)str, len);
++                }
++                set->ptr = lp;
++            } else {
++                /* Size limit is reached. Convert to hashtable and add. */
++                setTypeConvert(set, OBJ_ENCODING_HT);
++                serverAssert(dictAdd(set->ptr,sdsnewlen(str,len),NULL) == DICT_OK);
++            }
+             return 1;
+         }
+-    } else if (subject->encoding == OBJ_ENCODING_INTSET) {
+-        if (isSdsRepresentableAsLongLong(value,&llval) == C_OK) {
++    } else if (set->encoding == OBJ_ENCODING_INTSET) {
++        long long value;
++        if (string2ll(str, len, &value)) {
+             uint8_t success = 0;
+-            subject->ptr = intsetAdd(subject->ptr,llval,&success);
++            set->ptr = intsetAdd(set->ptr,value,&success);
+             if (success) {
+-                /* Convert to regular set when the intset contains
+-                 * too many entries. */
+-          
+... (cut)

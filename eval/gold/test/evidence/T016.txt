@@ -1,0 +1,57 @@
+src/acl.c:2100
+open_bracket_start = j;
+
+=== history of src/acl.c:2100 at 5b69ba2ce9
+@@COMMIT 55c81f2cd3da82f9f570000875e006b9046ddef3  2022-01-20  ACL V2 - Selectors and key based permissions (#9974)
+
+diff --git a/src/acl.c b/src/acl.c
+--- a/src/acl.c
++++ b/src/acl.c
+@@ -1430,9 +1891,1 @@
+- * idx and count are the index and count of channel arguments from the
+- * command. The literal argument controls whether the user's ACL channels are 
+- * evaluated as literal values or matched as glob-like patterns.
+- *
+- * If the user can execute the command ACL_OK is returned, otherwise 
+- * ACL_DENIED_CHANNEL. */
+-int ACLCheckPubsubPerm(const user *u, robj **argv, int idx, int count, int literal, int *idxptr) {
+-    /* If there is no associated user, the connection can run anything. */
+-    if (u == NULL) return ACL_OK;
++            open_bracket_start = j;
+@@COMMIT a56d4533b72db8aa147be090c4c1d2bc548b9408  2021-09-23  Adding ACL support for modules (#9309)
+
+diff --git a/src/acl.c b/src/acl.c
+--- a/src/acl.c
++++ b/src/acl.c
+@@ -1348,11 +1357,9 @@
+  * idx and count are the index and count of channel arguments from the
+  * command. The literal argument controls whether the user's ACL channels are 
+  * evaluated as literal values or matched as glob-like patterns.
+  *
+  * If the user can execute the command ACL_OK is returned, otherwise 
+  * ACL_DENIED_CHANNEL. */
+-int ACLCheckPubsubPerm(client *c, int idx, int count, int literal, int *idxptr) {
+-    user *u = c->user;
+-
++int ACLCheckPubsubPerm(const user *u, robj **argv, int idx, int count, int literal, int *idxptr) {
+     /* If there is no associated user, the connection can run anything. */
+     if (u == NULL) return ACL_OK;
+@@COMMIT c1b1e8c329567e90ec0edcb8c176e9f58a7d7435  2020-12-01  Adds pub/sub channel patterns to ACL (#7993)
+
+diff --git a/src/acl.c b/src/acl.c
+--- a/src/acl.c
++++ b/src/acl.c
+@@ -1196,0 +1340,11 @@
++ * idx and count are the index and count of channel arguments from the
++ * command. The literal argument controls whether the user's ACL channels are 
++ * evaluated as literal values or matched as glob-like patterns.
++ *
++ * If the user can execute the command ACL_OK is returned, otherwise 
++ * ACL_DENIED_CHANNEL. */
++int ACLCheckPubsubPerm(client *c, int idx, int count, int literal, int *idxptr) {
++    user *u = c->user;
++
++    /* If there is no associated user, the connection can run anything. */
++    if (u == NULL) return ACL_OK;
+
+=== c1b1e8c329 added the line; the same code is not in its parent

@@ -1,0 +1,39 @@
+src/server.c:2726
+val = server.oom_score_adj_values[process_class];
+
+=== history of src/server.c:2726 at 5b69ba2ce9
+@@COMMIT 0e5b813ef94b373f82bc75efcf3405f2c81af3dc  2021-12-01  Multiparam config set (#9748)
+
+diff --git a/src/server.c b/src/server.c
+--- a/src/server.c
++++ b/src/server.c
+@@ -3853,5 +3852,1 @@
+-    val = server.oom_score_adj_values[process_class];
+-    if (server.oom_score_adj == OOM_SCORE_RELATIVE)
+-        val += server.oom_score_adj_base;
+-    if (val > 1000) val = 1000;
+-    if (val < -1000) val = -1000;
++        val = server.oom_score_adj_values[process_class];
+@@COMMIT 61954951edbda670bfbae8be0147daa64df95f26  2020-11-22  Fix oom-score-adj-values range, abs options, and bug when used in config file (#8046)
+
+diff --git a/src/server.c b/src/server.c
+--- a/src/server.c
++++ b/src/server.c
+@@ -2681,3 +2681,5 @@
+-    val = server.oom_score_adj_base + server.oom_score_adj_values[process_class];
++    val = server.oom_score_adj_values[process_class];
++    if (server.oom_score_adj == OOM_SCORE_RELATIVE)
++        val += server.oom_score_adj_base;
+     if (val > 1000) val = 1000;
+     if (val < -1000) val = -1000;
+@@COMMIT 2530dc0ebd8be8d792f4673073401377cd5bdc42  2020-08-12  Add oom-score-adj configuration option to control Linux OOM killer. (#1690)
+
+diff --git a/src/server.c b/src/server.c
+--- a/src/server.c
++++ b/src/server.c
+@@ -2530,0 +2565,3 @@
++    val = server.oom_score_adj_base + server.oom_score_adj_values[process_class];
++    if (val > 1000) val = 1000;
++    if (val < -1000) val = -1000;
+
+=== 2530dc0ebd added the line; the same code is not in its parent

@@ -144,7 +144,13 @@ class RepoView:
 def load_results() -> dict:
     """Headline numbers from the saved evaluation runs, without per-line detail."""
     found = {}
-    for name in ("gold_scores", "method_gap", "ignore_list_django", "ast_oracle_django"):
+    for name in (
+        "gold_scores",
+        "gold_scores_test",
+        "method_gap",
+        "ignore_list_django",
+        "ast_oracle_django",
+    ):
         path = RESULTS_DIR / f"{name}.json"
         try:
             data = json.loads(path.read_text())

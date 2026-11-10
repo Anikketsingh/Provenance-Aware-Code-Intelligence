@@ -1,0 +1,5 @@
+{
+  "id": "T009",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"a19ed8aea3\", \"first_appearance\": \"a19ed8aea3\", \"ambiguous\": \"no\", \"notes\": \"Renaming local variable adminForm to admin_form is not a logic change.\"}\n```"
+}

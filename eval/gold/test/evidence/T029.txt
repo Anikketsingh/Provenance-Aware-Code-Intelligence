@@ -1,0 +1,67 @@
+django/contrib/syndication/views.py:120
+return {}
+
+=== history of django/contrib/syndication/views.py:120 at d9d05f104e
+@@COMMIT c4c27d8a04c9125cfbc5c3611557d8e5d3845b0d  2010-01-28  Fixed #6188, #6304, #6618, #6969, #8758, #8989, #10334, #11069, #11973 and #12403 -- Modified the syndication framework to use class-based views. Thanks to Ben Firshman for his work on this patch.
+
+diff --git a/django/contrib/syndication/views.py b/django/contrib/syndication/views.py
+--- a/django/contrib/syndication/views.py
++++ b/django/contrib/syndication/views.py
+@@ -3,0 +84,1 @@
++        return {}
+
+=== the same code already existed in c4c27d8a04^ at:
+  django/contrib/sessions/backends/base.py:102  return {}
+  django/contrib/sessions/backends/cache.py:17  return {}
+  django/contrib/sessions/backends/db.py:26  return {}
+  django/contrib/sessions/models.py:67  return {}
+  django/contrib/syndication/feeds.py:68  return {}
+  django/contrib/syndication/feeds.py:75  return {}
+=== history of django/contrib/sessions/backends/base.py:102 at c4c27d8a04
+@@COMMIT bcf7e9a9fe037eff4d5dea0cdd8c35104590e1a8  2007-09-15  Fixed #2066: session data can now be stored in the cache or on the filesystem. This should be fully backwards-compatible (the database cache store is still the default). A big thanks to John D'Agostino for the bulk of this code.
+
+diff --git a/django/contrib/sessions/backends/base.py b/django/contrib/sessions/backends/base.py
+--- /dev/null
++++ b/django/contrib/sessions/backends/base.py
+@@ -0,0 +79,1 @@
++            return {}
+
+=== the same code already existed in bcf7e9a9fe^ at:
+  django/contrib/sessions/models.py:93  return {}
+  django/core/cache/backends/dummy.py:19  return {}
+  django/db/models/query.py:315  return {}
+  django/http/__init__.py:235  return {}
+  django/newforms/fields.py:102  return {}
+  django/test/client.py:138  return {}
+=== history of django/contrib/sessions/models.py:93 at bcf7e9a9fe
+@@COMMIT f69cf70ed813a8cd7e1f963a14ae39103e8d5265  2006-05-02  MERGED MAGIC-REMOVAL BRANCH TO TRUNK. This change is highly backwards-incompatible. Please read http://code.djangoproject.com/wiki/RemovingTheMagic for upgrade instructions.
+
+diff --git a/django/contrib/sessions/models.py b/django/contrib/sessions/models.py
+--- /dev/null
++++ b/django/contrib/sessions/models.py
+@@ -0,0 +55,1 @@
++            return {}
+
+=== the same code already existed in f69cf70ed8^ at:
+  django/models/core.py:93  return {}
+  django/utils/httpwrappers.py:138  return {}
+=== history of django/models/core.py:93 at f69cf70ed8
+@@COMMIT 557aa1572ce6b6e5428021c937fdef298dea700e  2005-11-06  Fixed #741 -- Made models.core.Session.get_decoded() fault-tolerant, in case of funky pickled data. Thanks, kieranholland
+
+diff --git a/django/models/core.py b/django/models/core.py
+--- a/django/models/core.py
++++ b/django/models/core.py
+@@ -135,1 +139,1 @@
+-        return pickle.loads(pickled)
++            return {}
+@@COMMIT 07889c13a63eeb3e8a73f1e02a21227def3ae548  2005-08-16  Fixed #1 -- Added anonymous session support via middleware and request.session. Removed the former request.session, which wasn't being used anyway. Removed auth.Session model. See the BackwardsIncompatibleChanges wiki page for IMPORTANT notes on code you'll have to change and a DB table you'll have to create.
+
+diff --git a/django/models/core.py b/django/models/core.py
+--- a/django/models/core.py
++++ b/django/models/core.py
+@@ -106,0 +131,1 @@
++        return pickle.loads(pickled)
+
+=== the same code already existed in 07889c13a6^ at:
+  django/utils/httpwrappers.py:122  return {}
+=== stopped after several hops

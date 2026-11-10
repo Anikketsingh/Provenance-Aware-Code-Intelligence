@@ -1,0 +1,33 @@
+src/module.c:8469
+vsnprintf(msg + name_len, sizeof(msg) - name_len, fmt, ap);
+
+=== history of src/module.c:8469 at 5b69ba2ce9
+@@COMMIT a1b1fd4f392c59c5fc194e66856e1cb8d6a4f932  2016-10-02  Modules: API to log from module I/O callbacks.
+
+diff --git a/src/module.c b/src/module.c
+--- a/src/module.c
++++ b/src/module.c
+@@ -2911,1 +2929,1 @@
+-/* Produces a log message to the standard Redis log, the format accepts
++    vsnprintf(msg + name_len, sizeof(msg) - name_len, fmt, ap);
+@@COMMIT 4b12c6a3600eb2f8bfb8e440db5a526054bd2d9b  2016-06-23  Modules: changes to logging function.
+
+diff --git a/src/module.c b/src/module.c
+--- a/src/module.c
++++ b/src/module.c
+@@ -2775,3 +2775,1 @@
+-/* Produces a log message to the standard Redis log. */
+-void RM_Log(RedisModuleCtx *ctx, int level, const char *fmt, ...)
+-{
++/* Produces a log message to the standard Redis log, the format accepts
+@@COMMIT 715794b82976511786307b9e14165f1efbb28240  2016-06-15  Add RedisModule_Log() logging API function.
+
+diff --git a/src/module.c b/src/module.c
+--- a/src/module.c
++++ b/src/module.c
+@@ -2772,0 +2775,3 @@
++/* Produces a log message to the standard Redis log. */
++void RM_Log(RedisModuleCtx *ctx, int level, const char *fmt, ...)
++{
+
+=== 715794b829 added the line; the same code is not in its parent

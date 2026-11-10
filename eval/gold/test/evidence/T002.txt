@@ -1,0 +1,51 @@
+src/t_zset.c:1627
+unsigned char *zl = lpNew(0);
+
+=== history of src/t_zset.c:1627 at 5b69ba2ce9
+@@COMMIT 81d653f5dc8d472a0d4f7dd328be720021580731  2026-10-23  Reduce large sorted set memory with a packed B+ tree (#15635)
+
+diff --git a/src/t_zset.c b/src/t_zset.c
+--- a/src/t_zset.c
++++ b/src/t_zset.c
+@@ -1499,0 +1694,1 @@
++        unsigned char *zl = lpNew(0);
+
+=== the same code already existed in 81d653f5dc^ at:
+  src/object.c:496  unsigned char *zl = lpNew(0);
+  src/t_zset.c:1492  unsigned char *zl = lpNew(0);
+=== history of src/object.c:496 at 81d653f5dc
+@@COMMIT 02fd76b97cbc5b8ad6f4c81c8538f02c76cbed46  2021-08-10  Replace all usage of ziplist with listpack for t_hash (#8887)
+
+diff --git a/src/object.c b/src/object.c
+--- a/src/object.c
++++ b/src/object.c
+@@ -258,1 +258,1 @@
+-    unsigned char *zl = ziplistNew();
++    unsigned char *zl = lpNew(0);
+@@COMMIT ebd85e9a455df689c9be02a93354f580df4cafd8  2012-01-02  Encode small hashes with a ziplist
+
+diff --git a/src/object.c b/src/object.c
+--- a/src/object.c
++++ b/src/object.c
+@@ -98,6 +98,1 @@
+-    /* All the Hashes start as zipmaps. Will be automatically converted
+-     * into hash tables if there are enough elements or big elements
+-     * inside. */
+-    unsigned char *zm = zipmapNew();
+-    robj *o = createObject(REDIS_HASH,zm);
+-    o->encoding = REDIS_ENCODING_ZIPMAP;
++    unsigned char *zl = ziplistNew();
+@@COMMIT e2641e09cc0daf44f63f654230f72d22acf3a9af  2010-06-22  redis.c split into many different C files.
+
+diff --git a/src/object.c b/src/object.c
+--- /dev/null
++++ b/src/object.c
+@@ -0,0 +80,6 @@
++    /* All the Hashes start as zipmaps. Will be automatically converted
++     * into hash tables if there are enough elements or big elements
++     * inside. */
++    unsigned char *zm = zipmapNew();
++    robj *o = createObject(REDIS_HASH,zm);
++    o->encoding = REDIS_ENCODING_ZIPMAP;
+
+=== e2641e09cc added the line; the same code is not in its parent

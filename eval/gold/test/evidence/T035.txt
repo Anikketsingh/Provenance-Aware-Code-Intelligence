@@ -1,0 +1,40 @@
+src/defrag.c:216
+return newptr;
+
+=== history of src/defrag.c:216 at 5b69ba2ce9
+@@COMMIT 60adba48aa122427dc7ae50e981cff3c84b46954  2025-09-10  Introduce DEBUG_DEFRAG compilation option to allow run test with activedefrag when allocator is not jemalloc (#14326)
+
+diff --git a/src/defrag.c b/src/defrag.c
+--- a/src/defrag.c
++++ b/src/defrag.c
+@@ -191,0 +211,1 @@
++    return newptr;
+
+=== the same code already existed in 60adba48aa^ at:
+  src/defrag.c:162  return newptr;
+  src/defrag.c:178  return newptr;
+  src/kvstore.c:985  return newptr;
+  src/zmalloc.c:229  return newptr;
+  src/zmalloc.c:372  return newptr;
+  src/zmalloc.c:385  return newptr;
+=== history of src/defrag.c:162 at 60adba48aa
+@@COMMIT 7aa9e6d2ae1d500d8ba900b239207143993ecc3e  2016-12-30  active memory defragmentation
+
+diff --git a/src/defrag.c b/src/defrag.c
+--- /dev/null
++++ b/src/defrag.c
+@@ -0,0 +73,1 @@
++    return newptr;
+
+=== the same code already existed in 7aa9e6d2ae^ at:
+  src/zmalloc.c:147  return newptr;
+=== history of src/zmalloc.c:147 at 7aa9e6d2ae
+@@COMMIT ec93bba353113cb81dc97a738dc94de03f16b143  2009-06-04  macosx specific zmalloc.c, uses malloc_size function in order to avoid to waste memory and time to put an additional header
+
+diff --git a/zmalloc.c b/zmalloc.c
+--- a/zmalloc.c
++++ b/zmalloc.c
+@@ -51,0 +71,1 @@
++    return newptr;
+
+=== ec93bba353 added the line; the same code is not in its parent

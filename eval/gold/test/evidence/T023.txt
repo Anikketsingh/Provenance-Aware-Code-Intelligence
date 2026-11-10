@@ -1,0 +1,13 @@
+django/db/models/options.py:984
+for constraint in self.constraints
+
+=== history of django/db/models/options.py:984 at d9d05f104e
+@@COMMIT d270c10a723ca04e467e08d6d8b38ae392191f2d  2020-02-19  Refs #31187 -- Added total_unique_constraints property to model's Options.
+
+diff --git a/django/db/models/options.py b/django/db/models/options.py
+--- a/django/db/models/options.py
++++ b/django/db/models/options.py
+@@ -831,0 +838,1 @@
++            for constraint in self.constraints
+
+=== d270c10a72 added the line; the same code is not in its parent

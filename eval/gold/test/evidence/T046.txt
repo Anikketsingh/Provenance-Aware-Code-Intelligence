@@ -1,0 +1,13 @@
+django/contrib/contenttypes/fields.py:852
+async def aget_or_create(self, **kwargs):
+
+=== history of django/contrib/contenttypes/fields.py:852 at d9d05f104e
+@@COMMIT 7b94847e384b1a8c05a7d4c8778958c0290bdf9a  2022-11-04  Fixed #34139 -- Fixed acreate(), aget_or_create(), and aupdate_or_create() methods for related managers.
+
+diff --git a/django/contrib/contenttypes/fields.py b/django/contrib/contenttypes/fields.py
+--- a/django/contrib/contenttypes/fields.py
++++ b/django/contrib/contenttypes/fields.py
+@@ -758,0 +765,1 @@
++        async def aget_or_create(self, **kwargs):
+
+=== 7b94847e38 added the line; the same code is not in its parent

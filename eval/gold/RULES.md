@@ -66,4 +66,9 @@ These examples are generic, so they don't hint at the answer for any sampled lin
 
 `annotations.csv` is the result. **These are AI labels.** Any person can still settle the disputed lines by answering `check_sheet.csv` and running `uv run python eval/check_sheet.py --apply`.
 
-**Test set** (`eval/gold/test`, lines T001–T060). This was drawn on 10 Nov with a new seed, excluding every development line, after the method was frozen. It's labelled the same way, and only scored once.
+**Test set** (`eval/gold/test`, lines T001–T060). This was drawn on 10 Nov with a new seed, excluding every development line, after the method was frozen in commit `c84fa8e`. It was committed before any labelling, and scored once.
+
+- **Claude** labelled every line, helped by `eval/label_helper.py`. The helper gathers git's line history and follows code back across moves, using only git and never the method.
+- **Gemini** labelled the same lines blind and agreed on 52 of 60. All 8 disagreements were code moved between files or functions, which the packet hides.
+- **After the check-sheet round**, the two agreed on all 60.
+- **One line is ambiguous:** T041 is a copy of an existing statement, the same judgement call as L050.

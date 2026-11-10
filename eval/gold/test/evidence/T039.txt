@@ -1,0 +1,13 @@
+src/debug.c:1958
+(unsigned long) uc->uc_mcontext.__gregs[25],
+
+=== history of src/debug.c:1958 at 5b69ba2ce9
+@@COMMIT ef4bb4e37490b7441657d8e8e36feb885144772e  2023-06-27  Add RISC-V debug support (#12349)
+
+diff --git a/src/debug.c b/src/debug.c
+--- a/src/debug.c
++++ b/src/debug.c
+@@ -1455,0 +1491,1 @@
++        (unsigned long) uc->uc_mcontext.__gregs[25],
+
+=== ef4bb4e374 added the line; the same code is not in its parent

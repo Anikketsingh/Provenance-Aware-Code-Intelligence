@@ -1,0 +1,5 @@
+{
+  "id": "T023",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"d270c10a72\", \"first_appearance\": \"d270c10a72\", \"ambiguous\": \"no\", \"notes\": \"Line added when total_unique_constraints was introduced and never modified.\"}\n```"
+}

@@ -1,0 +1,21 @@
+django/db/backends/postgresql/client.py:53
+env["PGPASSFILE"] = str(passfile)
+
+=== history of django/db/backends/postgresql/client.py:53 at d9d05f104e
+@@COMMIT 9c19aff7c7561e3a82978a272ecdaad40dda5c00  2022-02-03  Refs #33476 -- Reformatted code with Black.
+
+diff --git a/django/db/backends/postgresql/client.py b/django/db/backends/postgresql/client.py
+--- a/django/db/backends/postgresql/client.py
++++ b/django/db/backends/postgresql/client.py
+@@ -53,1 +53,1 @@
+-            env['PGPASSFILE'] = str(passfile)
++            env["PGPASSFILE"] = str(passfile)
+@@COMMIT 8380fe08a025bd41b242c545f7c1b4f333274cbc  2021-02-24  Fixed #32456 -- Added dbshell support for specifying a password file on PostgreSQL.
+
+diff --git a/django/db/backends/postgresql/client.py b/django/db/backends/postgresql/client.py
+--- a/django/db/backends/postgresql/client.py
++++ b/django/db/backends/postgresql/client.py
+@@ -51,0 +53,1 @@
++            env['PGPASSFILE'] = str(passfile)
+
+=== 8380fe08a0 added the line; the same code is not in its parent

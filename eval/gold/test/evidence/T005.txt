@@ -1,0 +1,13 @@
+django/db/migrations/graph.py:335
+def __contains__(self, node):
+
+=== history of django/db/migrations/graph.py:335 at d9d05f104e
+@@COMMIT 64887c644a8fe1004a15e27087d4e27c95c90fcd  2014-01-08  Fixed #21142: Dependency failures on unmigrated apps.
+
+diff --git a/django/db/migrations/graph.py b/django/db/migrations/graph.py
+--- a/django/db/migrations/graph.py
++++ b/django/db/migrations/graph.py
+@@ -148,0 +148,1 @@
++    def __contains__(self, node):
+
+=== 64887c644a added the line; the same code is not in its parent

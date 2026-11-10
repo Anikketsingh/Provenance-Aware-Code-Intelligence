@@ -1,0 +1,21 @@
+src/cluster.h:123
+int clusterNodeCoversSlot(clusterNode *n, int slot);
+
+=== history of src/cluster.h:123 at 5b69ba2ce9
+@@COMMIT 33ef6a30039692ee3a106d058e2e9df1c7198ecf  2023-11-01  Cluster refactor: s/clusterNodeGetSlotBit/clusterNodeCoversSlot/
+
+diff --git a/src/cluster.h b/src/cluster.h
+--- a/src/cluster.h
++++ b/src/cluster.h
+@@ -59,1 +59,1 @@
+-int clusterNodeGetSlotBit(clusterNode *n, int slot);
++int clusterNodeCoversSlot(clusterNode *n, int slot);
+@@COMMIT 0270abda82555ddb3d4a1f5509600725408226ba  2023-10-14  Replace cluster metadata with slot specific dictionaries (#11695)
+
+diff --git a/src/cluster.h b/src/cluster.h
+--- a/src/cluster.h
++++ b/src/cluster.h
+@@ -442,0 +415,1 @@
++int clusterNodeGetSlotBit(clusterNode *n, int slot);
+
+=== 0270abda82 added the line; the same code is not in its parent

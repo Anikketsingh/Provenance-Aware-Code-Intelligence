@@ -1,0 +1,44 @@
+django/contrib/postgres/fields/ranges.py:270
+"smallint": "int4range",
+
+=== history of django/contrib/postgres/fields/ranges.py:270 at d9d05f104e
+@@COMMIT 9c19aff7c7561e3a82978a272ecdaad40dda5c00  2022-02-03  Refs #33476 -- Reformatted code with Black.
+
+diff --git a/django/contrib/postgres/fields/ranges.py b/django/contrib/postgres/fields/ranges.py
+--- a/django/contrib/postgres/fields/ranges.py
++++ b/django/contrib/postgres/fields/ranges.py
+@@ -237,7 +249,1 @@
+-        'smallint': 'int4range',
+-        'integer': 'int4range',
+-        'bigint': 'int8range',
+-        'double precision': 'numrange',
+-        'numeric': 'numrange',
+-        'date': 'daterange',
+-        'timestamp with time zone': 'tstzrange',
++        "smallint": "int4range",
+@@COMMIT 5d674eac871a306405b0fbbaeb17bbeba9c68bf3  2019-12-05  Fixed #31039 -- Added support for contained_by lookup with AutoFields, SmallIntegerField, and DecimalField.
+
+diff --git a/django/contrib/postgres/fields/ranges.py b/django/contrib/postgres/fields/ranges.py
+--- a/django/contrib/postgres/fields/ranges.py
++++ b/django/contrib/postgres/fields/ranges.py
+@@ -202,5 +202,7 @@
++        'smallint': 'int4range',
+         'integer': 'int4range',
+         'bigint': 'int8range',
+         'double precision': 'numrange',
++        'numeric': 'numrange',
+         'date': 'daterange',
+         'timestamp with time zone': 'tstzrange',
+@@COMMIT 7bda2d8ebc7833747363ac837fecb6535c817dcd  2015-05-21  Fixed #24837 -- field__contained_by=Range
+
+diff --git a/django/contrib/postgres/fields/ranges.py b/django/contrib/postgres/fields/ranges.py
+--- a/django/contrib/postgres/fields/ranges.py
++++ b/django/contrib/postgres/fields/ranges.py
+@@ -101,0 +104,5 @@
++        'integer': 'int4range',
++        'bigint': 'int8range',
++        'double precision': 'numrange',
++        'date': 'daterange',
++        'timestamp with time zone': 'tstzrange',
+
+=== 7bda2d8ebc added the line; the same code is not in its parent

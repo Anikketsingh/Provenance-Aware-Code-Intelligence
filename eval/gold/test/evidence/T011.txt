@@ -1,0 +1,26 @@
+src/t_stream.c:1757
+si->lp_ele = lpNext(si->lp,si->lp_ele);
+
+=== history of src/t_stream.c:1757 at 5b69ba2ce9
+@@COMMIT a58733cacf45259b3e18fc68724950aceb86831d  2017-09-14  Streams: stream iteration refactoring, WIP 2.
+
+diff --git a/src/t_stream.c b/src/t_stream.c
+--- a/src/t_stream.c
++++ b/src/t_stream.c
+@@ -306,0 +322,1 @@
++    si->lp_ele = lpNext(si->lp,si->lp_ele);
+
+=== the same code already existed in a58733cacf^ at:
+  src/t_stream.c:284  si->lp_ele = lpNext(si->lp,si->lp_ele);
+  src/t_stream.c:296  si->lp_ele = lpNext(si->lp,si->lp_ele);
+  src/t_stream.c:298  si->lp_ele = lpNext(si->lp,si->lp_ele);
+=== history of src/t_stream.c:284 at a58733cacf
+@@COMMIT b1ec3336337eabbd28b90832cebcaac4ffb69410  2017-09-13  Streams: stream iteration refactoring, WIP 1.
+
+diff --git a/src/t_stream.c b/src/t_stream.c
+--- a/src/t_stream.c
++++ b/src/t_stream.c
+@@ -199,0 +284,1 @@
++            si->lp_ele = lpNext(si->lp,si->lp_ele);
+
+=== b1ec333633 added the line; the same code is not in its parent

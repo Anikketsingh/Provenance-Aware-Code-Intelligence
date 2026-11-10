@@ -1,0 +1,5 @@
+{
+  "id": "T006",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\n  \"last_logic_change\": \"dcdd219ee1\",\n  \"first_appearance\": \"dcdd219ee1\",\n  \"ambiguous\": \"no\",\n  \"notes\": \"Moved from migration operations in 503ee41497 and reformatted by Black in 9c19aff7c7 without logic changes.\"\n}\n```"
+}

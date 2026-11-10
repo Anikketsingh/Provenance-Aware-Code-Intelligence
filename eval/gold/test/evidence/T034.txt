@@ -1,0 +1,24 @@
+src/t_stream.c:5673
+addReplyStreamID(c,&s->last_id);
+
+=== history of src/t_stream.c:5673 at 5b69ba2ce9
+@@COMMIT 1e2aee39192c8839170743d324c799860dc38c8c  2020-04-22  Extend XINFO STREAM output
+
+diff --git a/src/t_stream.c b/src/t_stream.c
+--- a/src/t_stream.c
++++ b/src/t_stream.c
+@@ -2478,0 +2522,1 @@
++    addReplyStreamID(c,&s->last_id);
+
+=== the same code already existed in 1e2aee3919^ at:
+  src/t_stream.c:2579  addReplyStreamID(c,&s->last_id);
+=== history of src/t_stream.c:2579 at 1e2aee3919
+@@COMMIT b4ba5ac8408ef46c3a0b593a2d3cf6d74f33a1ce  2018-07-16  Streams: show last id for streams and groups
+
+diff --git a/src/t_stream.c b/src/t_stream.c
+--- a/src/t_stream.c
++++ b/src/t_stream.c
+@@ -2302,0 +2305,1 @@
++        addReplyStreamID(c,&s->last_id);
+
+=== b4ba5ac840 added the line; the same code is not in its parent

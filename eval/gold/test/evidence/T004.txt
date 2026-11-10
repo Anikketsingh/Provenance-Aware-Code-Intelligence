@@ -1,0 +1,171 @@
+src/t_zset.c:1542
+while (eptr != NULL) {
+
+=== history of src/t_zset.c:1542 at 5b69ba2ce9
+@@COMMIT 5b69ba2ce91fea8e9fc70ebac8ce341b37e75533  2026-11-06  Always check for duplicates when converting a listpack zset to a btree (#16164)
+
+diff --git a/src/t_zset.c b/src/t_zset.c
+--- a/src/t_zset.c
++++ b/src/t_zset.c
+@@ -1582,44 +1542,1 @@
+-            if (zzlIsSortedNoDup(zl)) {
+-                /* Uncorrupted listpack (the common case, verified above):
+-                 * known sorted and duplicate-free, so every insert can use
+-                 * the descent-free append path -- no per-element duplicate
+-                 * search, and no separate full-tree descent to insert.
+-                 * Batched: buf is a per-iteration stack scratch reused every
+-                 * loop pass, so raw's bytes are only valid until the next
+-                 * zzlDecodeElement() call -- zbtreeAppendBatchAdd() copies
+-                 * them out synchronously before returning, same contract the
+-                 * unbatched zbtreeInsertNewAppend() call it replaces had. */
+-                zbtreeAppendBatch *batch = zbtreeAppendBatchCreate(bt);
+-                while (eptr != NULL) {
+-                    score = zzlGetScore(sptr);
+-                    serverAssert(!isnan(score));
+-                    char buf[LONG_STR_SIZE];
+-                    size_t rawlen;
+-                    const unsigned char *raw = zzlDecodeElement(eptr, buf, sizeof(buf), &rawlen);
+-                    zbtreeAppendBatchAdd(batch, score, raw, rawlen);
+-                    zzlNext(zl,&eptr,&sptr);
+-                }
+-                zbtreeAppendBatchFinish(batch);
+-            } else {
+-                while (eptr != NULL) {
+-                    score = zzlGetScore(sptr);
+-                    serverAssert(!isnan(score));
+-                    vstr = lpGetValue(eptr,&vlen,&vlong);
+-                    char buf[LONG_STR_SIZE];
+-                    const unsigned char *raw;
+-                    size_t rawlen;
+-                    if (vstr == NULL) {
+-                        rawlen = ll2string(buf,sizeof(buf),vlong);
+-                        raw = (unsigned char *)buf;
+-                    } else {
+-                        raw = vstr;
+-                        rawlen = vlen;
+-                    }
+-                    /* A corrupt listpack may contain a duplicate. dictAdd()
+-                     * used to catch this when the target was always a
+-                     * skiplist. */
+-                    int duplicate = zbtreeScoreRaw(bt,raw,rawlen,NULL);
+-                    serverAssert(!duplicate);
+-                    zbtreeInsertNewRaw(bt,score,raw,rawlen,NULL);
+-                    zzlNext(zl,&eptr,&sptr);
+-                }
++            while (eptr != NULL) {
+@@COMMIT 81d653f5dc8d472a0d4f7dd328be720021580731  2026-10-23  Reduce large sorted set memory with a packed B+ tree (#15635)
+
+diff --git a/src/t_zset.c b/src/t_zset.c
+--- a/src/t_zset.c
++++ b/src/t_zset.c
+@@ -1458,0 +1575,44 @@
++            if (zzlIsSortedNoDup(zl)) {
++                /* Uncorrupted listpack (the common case, verified above):
++                 * known sorted and duplicate-free, so every insert can use
++                 * the descent-free append path -- no per-element duplicate
++                 * search, and no separate full-tree descent to insert.
++                 * Batched: buf is a per-iteration stack scratch reused every
++                 * loop pass, so raw's bytes are only valid until the next
++                 * zzlDecodeElement() call -- zbtreeAppendBatchAdd() copies
++                 * them out synchronously before returning, same contract the
++                 * unbatched zbtreeInsertNewAppend() call it replaces had. */
++                zbtreeAppendBatch *batch = zbtreeAppendBatchCreate(bt);
++                while (eptr != NULL) {
++                    score = zzlGetScore(sptr);
++                    serverAssert(!isnan(score));
++                    char buf[LONG_STR_SIZE];
++                    size_t rawlen;
++                    const unsigned char *raw = zzlDecodeElement(eptr, buf, sizeof(buf), &rawlen);
++                    zbtreeAppendBatchAdd(batch, score, raw, rawlen);
++                    zzlNext(zl,&eptr,&sptr);
++                }
++                zbtreeAppendBatchFinish(batch);
++            } else {
++                while (eptr != NULL) {
++                    score = zzlGetScore(sptr);
++                    serverAssert(!isnan(score));
++                    vstr = lpGetValue(eptr,&vlen,&vlong);
++                    char buf[LONG_STR_SIZE];
++                    const unsigned char *raw;
++                    size_t rawlen;
++                    if (vstr == NULL) {
++                        rawlen = ll2string(buf,sizeof(buf),vlong);
++                        raw = (unsigned char *)buf;
++                    } else {
++                        raw = vstr;
++                        rawlen = vlen;
++                    }
++                    /* A corrupt listpack may contain a duplicate. dictAdd()
++                     * used to catch this when the target was always a
++                     * skiplist. */
++                    int duplicate = zbtreeScoreRaw(bt,raw,rawlen,NULL);
++                    serverAssert(!duplicate);
++                    zbtreeInsertNewRaw(bt,score,raw,rawlen,NULL);
++                    zzlNext(zl,&eptr,&sptr);
++                }
+
+=== the same code already existed in 81d653f5dc^ at:
+  src/aof.c:2354  while (eptr != NULL) {
+  src/debug.c:310  while (eptr != NULL) {
+  src/listpack.c:3548  while (eptr != NULL) {
+  src/listpack.c:3560  while (eptr != NULL) {
+  src/listpack.c:3574  while (eptr != NULL) {
+  src/t_zset.c:1085  while (eptr != NULL) {
+=== history of src/aof.c:2354 at 81d653f5dc
+@@COMMIT 7df9b1412bb829eaff986f930ad35b814cb7b460  2011-12-12  Sorted Set type AOF rewrite using variadic ZADD.
+
+diff --git a/src/aof.c b/src/aof.c
+--- a/src/aof.c
++++ b/src/aof.c
+@@ -529,0 +547,1 @@
++        while (eptr != NULL) {
+
+=== the same code already existed in 7df9b1412b^ at:
+  src/aof.c:611  while (eptr != NULL) {
+  src/debug.c:145  while (eptr != NULL) {
+  src/t_zset.c:523  while (eptr != NULL) {
+  src/t_zset.c:551  while (eptr != NULL) {
+  src/t_zset.c:579  while (eptr != NULL) {
+  src/t_zset.c:641  while (eptr != NULL) {
+=== history of src/aof.c:611 at 7df9b1412b
+@@COMMIT dddf5335f47d62d5e74308faff8dcb5d0575286c  2011-03-14  Fix DEBUG DIGEST, SORT and AOF rewrite
+
+diff --git a/src/aof.c b/src/aof.c
+--- a/src/aof.c
++++ b/src/aof.c
+@@ -432,13 +447,1 @@
+-                zset *zs = o->ptr;
+-                dictIterator *di = dictGetIterator(zs->dict);
+-                dictEntry *de;
+-
+-                while((de = dictNext(di)) != NULL) {
+-                    char cmd[]="*4\r\n$4\r\nZADD\r\n";
+-                    robj *eleobj = dictGetEntryKey(de);
+-                    double *score = dictGetEntryVal(de);
+-
+-                    if (fwrite(cmd,sizeof(cmd)-1,1,fp) == 0) goto werr;
+-                    if (fwriteBulkObject(fp,&key) == 0) goto werr;
+-                    if (fwriteBulkDouble(fp,*score) == 0) goto werr;
+-                    if (fwriteBulkObject(fp,eleobj) == 0) goto werr;
++                    while (eptr != NULL) {
+@@COMMIT e2641e09cc0daf44f63f654230f72d22acf3a9af  2010-06-22  redis.c split into many different C files.
+
+diff --git a/src/aof.c b/src/aof.c
+--- /dev/null
++++ b/src/aof.c
+@@ -0,0 +476,13 @@
++                zset *zs = o->ptr;
++                dictIterator *di = dictGetIterator(zs->dict);
++                dictEntry *de;
++
++                while((de = dictNext(di)) != NULL) {
++                    char cmd[]="*4\r\n$4\r\nZADD\r\n";
++                    robj *eleobj = dictGetEntryKey(de);
++                    double *score = dictGetEntryVal(de);
++
++                    if (fwrite(cmd,sizeof(cmd)-1,1,fp) == 0) goto werr;
++                    if (fwriteBulkObject(fp,&key) == 0) goto werr;
++                    if (fwriteBulkDouble(fp,*score) == 0) goto werr;
++                    if (fwriteBulkObject(fp,eleobj) == 0) goto werr;
+
+=== e2641e09cc added the line; the same code is not in its parent

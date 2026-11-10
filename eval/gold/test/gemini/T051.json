@@ -1,0 +1,5 @@
+{
+  "id": "T051",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"9b1cb755a2\", \"first_appearance\": \"9b1cb755a2\", \"ambiguous\": \"no\", \"notes\": \"Line was re-indented in f35ab74752 but its logic has not changed since introduction.\"}\n```"
+}

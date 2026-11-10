@@ -1,0 +1,13 @@
+src/zset_btree.c:2524
+zbtScoreLeafScoreBytes(leaf->n.count, leaf->score_bits) +
+
+=== history of src/zset_btree.c:2524 at 5b69ba2ce9
+@@COMMIT 81d653f5dc8d472a0d4f7dd328be720021580731  2026-10-23  Reduce large sorted set memory with a packed B+ tree (#15635)
+
+diff --git a/src/zset_btree.c b/src/zset_btree.c
+--- /dev/null
++++ b/src/zset_btree.c
+@@ -0,0 +2524,1 @@
++           zbtScoreLeafScoreBytes(leaf->n.count, leaf->score_bits) +
+
+=== 81d653f5dc added the line; the same code is not in its parent

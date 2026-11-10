@@ -1,0 +1,13 @@
+django/db/backends/ddl_references.py:36
+def rename_column_references(self, table, old_column, new_column):
+
+=== history of django/db/backends/ddl_references.py:36 at d9d05f104e
+@@COMMIT b50815ee418b38e719476c2d5f6e2bc69f686927  2016-05-24  Refs #25530 -- Renamed deferred SQL references on rename operation.
+
+diff --git a/django/db/backends/ddl_references.py b/django/db/backends/ddl_references.py
+--- a/django/db/backends/ddl_references.py
++++ b/django/db/backends/ddl_references.py
+@@ -22,0 +28,1 @@
++    def rename_column_references(self, table, old_column, new_column):
+
+=== b50815ee41 added the line; the same code is not in its parent

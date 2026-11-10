@@ -63,11 +63,26 @@ The full tracer beat B2 on 18 lines and lost on none (McNemar p < 0.001). **The 
 
 Crawl Redis, Django and React, including Trac. Extend tracing to JavaScript and PostgreSQL. Build Layer C if it was skipped. Grow the gold set towards 250 lines.
 
-### Phase II: January to March 2027
+### Phase II: started 10 Nov 2026, main work January to March 2027
+
+**Already started:**
+
+- Commit-message links: `provenance link`. Django has 21,215 commits linked to tickets, and Redis has 4,638 linked to PRs.
+- A polite Trac fetcher: `provenance fetch-tickets`. 302 tickets are stored so far.
+- A tested GitHub GraphQL crawler, which needs a `GITHUB_TOKEN`.
+- Links and ticket titles in the MCP replies, the `why` command and the UI.
+
+**Next, in order:**
+
+1. Crawl Redis PRs and issues, then Django PRs. This needs a read-only GitHub token from Aniket.
+2. Fetch Trac comments, then the remaining linked tickets overnight.
+3. Build a search index over ticket and PR text: SQLite FTS5 first, embeddings second.
+4. Have Gemini write cited explanations, and abstain when the evidence is weak.
+5. Build the protective-code detector and the CI check.
 
 | Month | Goal |
 |---|---|
-| January | Graph, indexing, leak-proof benchmark builder |
+| January | Finish crawls, indexing, leak-proof benchmark builder |
 | February | Causal ranker, model bake-off, MCP tools, protective detector |
 | March | Abstention, GitHub Action. **Integrated system by mid-March** |
 

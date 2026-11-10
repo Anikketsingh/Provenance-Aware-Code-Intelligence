@@ -1,0 +1,21 @@
+django/contrib/admin/options.py:1361
+bit = unescape_string_literal(bit)
+
+=== history of django/contrib/admin/options.py:1361 at d9d05f104e
+@@COMMIT 26a413507abb38f7eee4cf62f2ee9727fdc7bf8d  2020-05-26  Fixed #6933 -- Added support for searching against quoted phrases in ModelAdmin.search_fields.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -1025,1 +1029,1 @@
+-            for bit in search_term.split():
++                    bit = unescape_string_literal(bit)
+@@COMMIT 470a9bb22d4471744e5c20af5d755b232312d58c  2013-08-04  Moved get_search_results from BaseModelAdmin to ModelAdmin.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -778,0 +770,1 @@
++            for bit in search_term.split():
+
+=== 470a9bb22d added the line; the same code is not in its parent

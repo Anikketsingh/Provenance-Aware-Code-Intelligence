@@ -1,0 +1,75 @@
+django/contrib/auth/password_validation.py:245
+return Path(__file__).resolve().parent / "common-passwords.txt.gz"
+
+=== history of django/contrib/auth/password_validation.py:245 at d9d05f104e
+@@COMMIT 9c19aff7c7561e3a82978a272ecdaad40dda5c00  2022-02-03  Refs #33476 -- Reformatted code with Black.
+
+diff --git a/django/contrib/auth/password_validation.py b/django/contrib/auth/password_validation.py
+--- a/django/contrib/auth/password_validation.py
++++ b/django/contrib/auth/password_validation.py
+@@ -209,1 +225,1 @@
+-        return Path(__file__).resolve().parent / 'common-passwords.txt.gz'
++        return Path(__file__).resolve().parent / "common-passwords.txt.gz"
+@@COMMIT 9ee693bd6cf4074f04ec51c6f3cfe87cad392f12  2021-01-04  Fixed #32316 -- Deferred accessing __file__.
+
+diff --git a/django/contrib/auth/password_validation.py b/django/contrib/auth/password_validation.py
+--- a/django/contrib/auth/password_validation.py
++++ b/django/contrib/auth/password_validation.py
+@@ -170,1 +173,1 @@
+-    DEFAULT_PASSWORD_LIST_PATH = Path(__file__).resolve().parent / 'common-passwords.txt.gz'
++        return Path(__file__).resolve().parent / 'common-passwords.txt.gz'
+@@COMMIT e39e727ded673e74016b5d3658d23cbe20234d11  2020-08-28  Fixed #31912 -- Removed strict=True in Path.resolve() in project template and CommonPasswordValidator.
+
+diff --git a/django/contrib/auth/password_validation.py b/django/contrib/auth/password_validation.py
+--- a/django/contrib/auth/password_validation.py
++++ b/django/contrib/auth/password_validation.py
+@@ -170,1 +170,1 @@
+-    DEFAULT_PASSWORD_LIST_PATH = Path(__file__).resolve(strict=True).parent / 'common-passwords.txt.gz'
++    DEFAULT_PASSWORD_LIST_PATH = Path(__file__).resolve().parent / 'common-passwords.txt.gz'
+@@COMMIT edeec1247e52de6fc32cee93e96d4ce36003ea4b  2019-11-01  Passed strict=True to Path.resolve() to enforce that the path must exist.
+
+diff --git a/django/contrib/auth/password_validation.py b/django/contrib/auth/password_validation.py
+--- a/django/contrib/auth/password_validation.py
++++ b/django/contrib/auth/password_validation.py
+@@ -170,1 +170,1 @@
+-    DEFAULT_PASSWORD_LIST_PATH = Path(__file__).resolve().parent / 'common-passwords.txt.gz'
++    DEFAULT_PASSWORD_LIST_PATH = Path(__file__).resolve(strict=True).parent / 'common-passwords.txt.gz'
+@@COMMIT 11b8c30b9e02ef6ecb996ad3280979dfeab700fa  2017-07-21  Ref #23919 -- Replaced some os.path usage with pathlib.Path.
+
+diff --git a/django/contrib/auth/password_validation.py b/django/contrib/auth/password_validation.py
+--- a/django/contrib/auth/password_validation.py
++++ b/django/contrib/auth/password_validation.py
+@@ -168,3 +168,1 @@
+-    DEFAULT_PASSWORD_LIST_PATH = os.path.join(
+-        os.path.dirname(os.path.realpath(__file__)), 'common-passwords.txt.gz'
+-    )
++    DEFAULT_PASSWORD_LIST_PATH = Path(__file__).resolve().parent / 'common-passwords.txt.gz'
+@@COMMIT 4e729feaa647547f25debb1cb63dec989dc41a20  2017-01-20  Refs #23919 -- Removed django.utils._os.upath()/npath()/abspathu() usage.
+
+diff --git a/django/contrib/auth/password_validation.py b/django/contrib/auth/password_validation.py
+--- a/django/contrib/auth/password_validation.py
++++ b/django/contrib/auth/password_validation.py
+@@ -170,3 +169,3 @@
+     DEFAULT_PASSWORD_LIST_PATH = os.path.join(
+-        os.path.dirname(os.path.realpath(upath(__file__))), 'common-passwords.txt.gz'
++        os.path.dirname(os.path.realpath(__file__)), 'common-passwords.txt.gz'
+     )
+@@COMMIT 55b3bd84681a87266f6bef72480aaef48a7c295f  2015-06-08  Refs #16860 -- Minor edits and fixes to password validation.
+
+diff --git a/django/contrib/auth/password_validation.py b/django/contrib/auth/password_validation.py
+--- a/django/contrib/auth/password_validation.py
++++ b/django/contrib/auth/password_validation.py
+@@ -148,1 +156,3 @@
+-    DEFAULT_PASSWORD_LIST_PATH = os.path.dirname(os.path.realpath(__file__)) + '/common-passwords.txt.gz'
++    DEFAULT_PASSWORD_LIST_PATH = os.path.join(
++        os.path.dirname(os.path.realpath(upath(__file__))), 'common-passwords.txt.gz'
++    )
+@@COMMIT 1daae25bdcd735151de394a5578c22257e3e5dc7  2015-03-08  Fixed #16860 -- Added password validation to django.contrib.auth.
+
+diff --git a/django/contrib/auth/password_validation.py b/django/contrib/auth/password_validation.py
+--- /dev/null
++++ b/django/contrib/auth/password_validation.py
+@@ -0,0 +148,1 @@
++    DEFAULT_PASSWORD_LIST_PATH = os.path.dirname(os.path.realpath(__file__)) + '/common-passwords.txt.gz'
+
+=== 1daae25bdc added the line; the same code is not in its parent

@@ -1,0 +1,50 @@
+django/test/utils.py:934
+"APP_DIRS": True,
+
+=== history of django/test/utils.py:934 at d9d05f104e
+@@COMMIT 9c19aff7c7561e3a82978a272ecdaad40dda5c00  2022-02-03  Refs #33476 -- Reformatted code with Black.
+
+diff --git a/django/test/utils.py b/django/test/utils.py
+--- a/django/test/utils.py
++++ b/django/test/utils.py
+@@ -831,8 +874,1 @@
+-    return override_settings(TEMPLATES=[{
+-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+-        'APP_DIRS': True,
+-    }, {
+-        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+-        'APP_DIRS': True,
+-        'OPTIONS': {'keep_trailing_newline': True},
+-    }])(test_func)
++                "APP_DIRS": True,
+@@COMMIT 8b3f1c35dd848678225e8634d6880efeeab5e796  2019-04-24  Removed unnecessary assignments in various code.
+
+diff --git a/django/test/utils.py b/django/test/utils.py
+--- a/django/test/utils.py
++++ b/django/test/utils.py
+@@ -760,8 +759,8 @@
+-    test_func = override_settings(TEMPLATES=[{
++    return override_settings(TEMPLATES=[{
+         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+         'APP_DIRS': True,
+     }, {
+         'BACKEND': 'django.template.backends.jinja2.Jinja2',
+         'APP_DIRS': True,
+         'OPTIONS': {'keep_trailing_newline': True},
+     }])(test_func)
+@@COMMIT 2133f3157eff853329bafb7fda74c3c8fb4eae42  2015-01-26  Fixed #24168 -- Allowed selecting a template engine in a few APIs.
+
+diff --git a/django/test/utils.py b/django/test/utils.py
+--- a/django/test/utils.py
++++ b/django/test/utils.py
+@@ -576,0 +589,8 @@
++    test_func = override_settings(TEMPLATES=[{
++        'BACKEND': 'django.template.backends.django.DjangoTemplates',
++        'APP_DIRS': True,
++    }, {
++        'BACKEND': 'django.template.backends.jinja2.Jinja2',
++        'APP_DIRS': True,
++        'OPTIONS': {'keep_trailing_newline': True},
++    }])(test_func)
+
+=== 2133f3157e added the line; the same code is not in its parent

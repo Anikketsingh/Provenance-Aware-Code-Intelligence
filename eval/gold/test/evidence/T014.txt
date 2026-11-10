@@ -1,0 +1,290 @@
+django/contrib/admin/options.py:2618
+"pagination_required": paginator.count > 100,
+
+=== history of django/contrib/admin/options.py:2618 at d9d05f104e
+@@COMMIT 9c19aff7c7561e3a82978a272ecdaad40dda5c00  2022-02-03  Refs #33476 -- Reformatted code with Black.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -1956,10 +2208,1 @@
+-            'title': _('Change history: %s') % obj,
+-            'subtitle': None,
+-            'action_list': page_obj,
+-            'page_range': page_range,
+-            'page_var': PAGE_VAR,
+-            'pagination_required': paginator.count > 100,
+-            'module_name': str(capfirst(opts.verbose_name_plural)),
+-            'object': obj,
+-            'opts': opts,
+-            'preserved_filters': self.get_preserved_filters(request),
++            "pagination_required": paginator.count > 100,
+@@COMMIT ac5cc6cf01463d90aa333d5f6f046c311019827b  2021-12-14  Fixed #33316 -- Added pagination to admin history view.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -1950,7 +1956,10 @@
+             'title': _('Change history: %s') % obj,
+             'subtitle': None,
+-            'action_list': action_list,
++            'action_list': page_obj,
++            'page_range': page_range,
++            'page_var': PAGE_VAR,
++            'pagination_required': paginator.count > 100,
+             'module_name': str(capfirst(opts.verbose_name_plural)),
+             'object': obj,
+             'opts': opts,
+             'preserved_filters': self.get_preserved_filters(request),
+@@COMMIT 4e5bbb6ef2287126badd32842b239f4a8a7394ca  2021-04-24  Fixed #32681 -- Fixed VariableDoesNotExist when rendering some admin template.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -1932,6 +1933,7 @@
+             'title': _('Change history: %s') % obj,
++            'subtitle': None,
+             'action_list': action_list,
+             'module_name': str(capfirst(opts.verbose_name_plural)),
+             'object': obj,
+             'opts': opts,
+             'preserved_filters': self.get_preserved_filters(request),
+@@COMMIT d13a9e44ded4e93570c6ba42ec84e45ddca2505b  2017-12-11  Fixed #28909 -- Simplified code using tuple/list/set/dict unpacking.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -1818,10 +1818,6 @@
+-        context = dict(
+-            self.admin_site.each_context(request),
+-            title=_('Change history: %s') % obj,
+-            action_list=action_list,
+-            module_name=str(capfirst(opts.verbose_name_plural)),
+-            object=obj,
+-            opts=opts,
+-            preserved_filters=self.get_preserved_filters(request),
+-        )
+-        context.update(extra_context or {})
++            'title': _('Change history: %s') % obj,
++            'action_list': action_list,
++            'module_name': str(capfirst(opts.verbose_name_plural)),
++            'object': obj,
++            'opts': opts,
++            'preserved_filters': self.get_preserved_filters(request),
+@@COMMIT 301de774c21d055e9e5a7073e5bffdb52bc71079  2017-04-21  Refs #27795 -- Replaced many force_text() with str()
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -1768,10 +1767,10 @@
+         context = dict(
+             self.admin_site.each_context(request),
+             title=_('Change history: %s') % obj,
+             action_list=action_list,
+-            module_name=capfirst(force_text(opts.verbose_name_plural)),
++            module_name=str(capfirst(opts.verbose_name_plural)),
+             object=obj,
+             opts=opts,
+             preserved_filters=self.get_preserved_filters(request),
+         )
+         context.update(extra_context or {})
+@@COMMIT 8346680e1ca4a8ddc8190baf3f5f944f6418d5cf  2017-03-04  Refs #27795 -- Removed unneeded force_text calls
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -1769,10 +1768,10 @@
+         context = dict(
+             self.admin_site.each_context(request),
+-            title=_('Change history: %s') % force_text(obj),
++            title=_('Change history: %s') % obj,
+             action_list=action_list,
+             module_name=capfirst(force_text(opts.verbose_name_plural)),
+             object=obj,
+             opts=opts,
+             preserved_filters=self.get_preserved_filters(request),
+         )
+         context.update(extra_context or {})
+@@COMMIT df8d8d4292684d6ffa7474f1e201aed486f02b53  2016-03-28  Fixed E128 flake8 warnings in django/.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -1747,9 +1764,10 @@
+-        context = dict(self.admin_site.each_context(request),
++        context = dict(
++            self.admin_site.each_context(request),
+             title=_('Change history: %s') % force_text(obj),
+             action_list=action_list,
+             module_name=capfirst(force_text(opts.verbose_name_plural)),
+             object=obj,
+             opts=opts,
+             preserved_filters=self.get_preserved_filters(request),
+         )
+         context.update(extra_context or {})
+@@COMMIT 46068d850d8debd3611ed6499d48b9907bf07ef6  2014-12-31  Fixed #22295 -- Replaced permission check for displaying admin user-tools
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -1723,9 +1723,9 @@
+-        context = dict(self.admin_site.each_context(),
++        context = dict(self.admin_site.each_context(request),
+             title=_('Change history: %s') % force_text(obj),
+             action_list=action_list,
+             module_name=capfirst(force_text(opts.verbose_name_plural)),
+             object=obj,
+             opts=opts,
+             preserved_filters=self.get_preserved_filters(request),
+         )
+         context.update(extra_context or {})
+@@COMMIT ba60fcbcf7645afd82f3135ecb56562f8a9c9824  2013-12-20  Used application verbose names in the admin.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -1625,10 +1623,9 @@
+         context = dict(self.admin_site.each_context(),
+             title=_('Change history: %s') % force_text(obj),
+             action_list=action_list,
+             module_name=capfirst(force_text(opts.verbose_name_plural)),
+             object=obj,
+-            app_label=app_label,
+             opts=opts,
+             preserved_filters=self.get_preserved_filters(request),
+         )
+         context.update(extra_context or {})
+@@COMMIT a962286b74f1e8c8cb19fb45a057800da8c2fb56  2013-09-06  Added AdminSite attributes for easily changing admin title. AdminSite now has overridable site_header, site_title and index_title attributes. Changed each admin view to pass these to the context (in a new AdminSite.each_context() method). The intent here is to make it easier to override these things in the common case, instead of having to override a template, which is a bigger burden.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -1523,10 +1523,10 @@
+-        context = {
+-            'title': _('Change history: %s') % force_text(obj),
+-            'action_list': action_list,
+-            'module_name': capfirst(force_text(opts.verbose_name_plural)),
+-            'object': obj,
+-            'app_label': app_label,
+-            'opts': opts,
+-            'preserved_filters': self.get_preserved_filters(request),
+-        }
++        context = dict(self.admin_site.each_context(),
++            title=_('Change history: %s') % force_text(obj),
++            action_list=action_list,
++            module_name=capfirst(force_text(opts.verbose_name_plural)),
++            object=obj,
++            app_label=app_label,
++            opts=opts,
++            preserved_filters=self.get_preserved_filters(request),
++        )
+         context.update(extra_context or {})
+@@COMMIT c86a9b63984f6692d478f6f70e3c78de4ec41814  2013-06-19  Fixed #6903 - Preserve admin changelist filters after saving or deleting an object
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -1459,9 +1509,10 @@
+         context = {
+             'title': _('Change history: %s') % force_text(obj),
+             'action_list': action_list,
+             'module_name': capfirst(force_text(opts.verbose_name_plural)),
+             'object': obj,
+             'app_label': app_label,
+             'opts': opts,
++            'preserved_filters': self.get_preserved_filters(request),
+         }
+         context.update(extra_context or {})
+@@COMMIT c5ef65bcf324f4c90b53be90f4aec069a68e8c59  2012-07-21  [py3] Ported django.utils.encoding.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -1328,9 +1328,9 @@
+         context = {
+-            'title': _('Change history: %s') % force_unicode(obj),
++            'title': _('Change history: %s') % force_text(obj),
+             'action_list': action_list,
+-            'module_name': capfirst(force_unicode(opts.verbose_name_plural)),
++            'module_name': capfirst(force_text(opts.verbose_name_plural)),
+             'object': obj,
+             'app_label': app_label,
+             'opts': opts,
+         }
+         context.update(extra_context or {})
+@@COMMIT aaf77c1676e44019abe544911ff7a06eb2690295  2011-09-20  Converted internal link generation in the admin and admin document generator to use named URLs.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -1289,8 +1310,9 @@
+         context = {
+             'title': _('Change history: %s') % force_unicode(obj),
+             'action_list': action_list,
+             'module_name': capfirst(force_unicode(opts.verbose_name_plural)),
+             'object': obj,
+             'app_label': app_label,
++            'opts': opts,
+         }
+         context.update(extra_context or {})
+@@COMMIT ff9a66675301cf716a6af1a246636a6cfc4395fd  2011-07-30  Removed deprecated admin contrib app AdminSite root_path attribute. Refs #15294, r11250, r16136.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -1286,9 +1281,8 @@
+         context = {
+             'title': _('Change history: %s') % force_unicode(obj),
+             'action_list': action_list,
+             'module_name': capfirst(force_unicode(opts.verbose_name_plural)),
+             'object': obj,
+-            'root_path': self.admin_site.root_path,
+             'app_label': app_label,
+         }
+         context.update(extra_context or {})
+@@COMMIT 853f4d29b8021e9d919fe69e757ab1baeb6fc3ae  2008-08-25  Fixed #8547 -- Corrected the breadcrumb display in the object_history.html template. Thanks sorl for catching this.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -711,8 +712,9 @@
+         context = {
+             'title': _('Change history: %s') % force_unicode(obj),
+             'action_list': action_list,
+             'module_name': capfirst(force_unicode(opts.verbose_name_plural)),
+             'object': obj,
+             'root_path': self.admin_site.root_path,
++            'app_label': app_label,
+         }
+         context.update(extra_context or {})
+@@COMMIT 726a24c609110f5d99f4104692b6e1e2181687f9  2008-07-30  Fixed #7992 -- Interpolate UTF-8 verbose_names correctly into unicode strings in the admin interface. Patch from aabele. Refs #8016.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -682,8 +682,8 @@
+         context = {
+             'title': _('Change history: %s') % force_unicode(obj),
+             'action_list': action_list,
+-            'module_name': capfirst(opts.verbose_name_plural),
++            'module_name': capfirst(force_unicode(opts.verbose_name_plural)),
+             'object': obj,
+             'root_path': self.admin_site.root_path,
+         }
+         context.update(extra_context or {})
+@@COMMIT a19ed8aea395e8e07164ff7d85bd7dff2f24edca  2008-07-18  Merged the newforms-admin branch into trunk.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- /dev/null
++++ b/django/contrib/admin/options.py
+@@ -0,0 +681,8 @@
++        context = {
++            'title': _('Change history: %s') % force_unicode(obj),
++            'action_list': action_list,
++            'module_name': capfirst(opts.verbose_name_plural),
++            'object': obj,
++            'root_path': self.admin_site.root_path,
++        }
++        context.update(extra_context or {})
+
+=== a19ed8aea3 added the line; the same code is not in its parent

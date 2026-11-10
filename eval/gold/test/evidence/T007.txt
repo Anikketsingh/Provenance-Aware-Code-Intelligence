@@ -1,0 +1,21 @@
+django/contrib/sessions/backends/file.py:52
+session_key = self._get_or_create_session_key()
+
+=== history of django/contrib/sessions/backends/file.py:52 at d9d05f104e
+@@COMMIT bda21e2b9d19f435d841a5ff9f8f636ae843842d  2011-11-27  Fixed #11555 -- Made SessionBase.session_key read-only. Cleaned up code slightly. Refs #13478.
+
+diff --git a/django/contrib/sessions/backends/file.py b/django/contrib/sessions/backends/file.py
+--- a/django/contrib/sessions/backends/file.py
++++ b/django/contrib/sessions/backends/file.py
+@@ -36,1 +36,1 @@
+-            session_key = self.session_key
++            session_key = self._get_or_create_session_key()
+@@COMMIT bcf7e9a9fe037eff4d5dea0cdd8c35104590e1a8  2007-09-15  Fixed #2066: session data can now be stored in the cache or on the filesystem. This should be fully backwards-compatible (the database cache store is still the default). A big thanks to John D'Agostino for the bulk of this code.
+
+diff --git a/django/contrib/sessions/backends/file.py b/django/contrib/sessions/backends/file.py
+--- /dev/null
++++ b/django/contrib/sessions/backends/file.py
+@@ -0,0 +20,1 @@
++            session_key = self.session_key
+
+=== bcf7e9a9fe added the line; the same code is not in its parent

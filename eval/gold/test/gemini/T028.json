@@ -1,0 +1,5 @@
+{
+  "id": "T028",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"5d674eac87\", \"first_appearance\": \"5d674eac87\", \"ambiguous\": \"no\", \"notes\": \"Line added in 5d674eac87; subsequent commit 9c19aff7c7 only changed quote style.\"}\n```"
+}

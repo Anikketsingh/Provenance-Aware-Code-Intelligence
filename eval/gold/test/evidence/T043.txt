@@ -1,0 +1,29 @@
+src/pubsub.c:502
+dictSetVal(type.clientPubSubChannels(c), client_de, NULL);
+
+=== history of src/pubsub.c:502 at 5b69ba2ce9
+@@COMMIT 43c88eb4519581c7e65d298222d7210c98779b96  2026-08-05  Track Pub/Sub subscription provenance across AUTH changes (#15468)
+
+diff --git a/src/pubsub.c b/src/pubsub.c
+--- a/src/pubsub.c
++++ b/src/pubsub.c
+@@ -273,1 +501,1 @@
+-        dictSetKeyAtLink(type.clientPubSubChannels(c), channel, &bucket, 1);
++        dictSetVal(type.clientPubSubChannels(c), client_de, NULL);
+@@COMMIT e1789e43687108a41cfa8e77d09138e2a296fb89  2025-05-12  keyspace - Unify key and value & use dict no_value=1 (#13806)
+
+diff --git a/src/pubsub.c b/src/pubsub.c
+--- a/src/pubsub.c
++++ b/src/pubsub.c
+@@ -266,1 +267,1 @@
+-        serverAssert(dictInsertAtPosition(type.clientPubSubChannels(c), channel, position));
++        dictSetKeyAtLink(type.clientPubSubChannels(c), channel, &bucket, 1);
+@@COMMIT ad127303338f21a29ba7f11b51f076edc29655d3  2024-03-04  Implement defragmentation for pubsub kvstore (#13058)
+
+diff --git a/src/pubsub.c b/src/pubsub.c
+--- a/src/pubsub.c
++++ b/src/pubsub.c
+@@ -285,0 +286,1 @@
++        serverAssert(dictInsertAtPosition(type.clientPubSubChannels(c), channel, position));
+
+=== ad12730333 added the line; the same code is not in its parent

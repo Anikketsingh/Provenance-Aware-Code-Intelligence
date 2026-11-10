@@ -1,0 +1,88 @@
+django/utils/dateparse.py:101
+return datetime.time(**kw)
+
+=== history of django/utils/dateparse.py:101 at d9d05f104e
+@@COMMIT f35ab74752adb37138112657c1bc8b91f50e799b  2021-07-01  Fixed #32892 -- Optimized django.utils.dateparse functions by using fromisoformat().
+
+diff --git a/django/utils/dateparse.py b/django/utils/dateparse.py
+--- a/django/utils/dateparse.py
++++ b/django/utils/dateparse.py
+@@ -90,6 +103,1 @@
+-    match = time_re.match(value)
+-    if match:
+-        kw = match.groupdict()
+-        kw['microsecond'] = kw['microsecond'] and kw['microsecond'].ljust(6, '0')
+-        kw = {k: int(v) for k, v in kw.items() if v is not None}
+-        return datetime.time(**kw)
++            return datetime.time(**kw)
+@@COMMIT d7b2aa24f75434c2ce50100cfef3586071e0747a  2018-01-03  Fixed #28982 -- Simplified code with and/or.
+
+diff --git a/django/utils/dateparse.py b/django/utils/dateparse.py
+--- a/django/utils/dateparse.py
++++ b/django/utils/dateparse.py
+@@ -89,7 +89,6 @@
+     match = time_re.match(value)
+     if match:
+         kw = match.groupdict()
+-        if kw['microsecond']:
+-            kw['microsecond'] = kw['microsecond'].ljust(6, '0')
++        kw['microsecond'] = kw['microsecond'] and kw['microsecond'].ljust(6, '0')
+         kw = {k: int(v) for k, v in kw.items() if v is not None}
+         return datetime.time(**kw)
+@@COMMIT 2b281cc35ed9d997614ca3c416928d7fabfef1ad  2017-01-07  Refs #23919 -- Removed most of remaining six usage
+
+diff --git a/django/utils/dateparse.py b/django/utils/dateparse.py
+--- a/django/utils/dateparse.py
++++ b/django/utils/dateparse.py
+@@ -76,7 +75,7 @@
+     match = time_re.match(value)
+     if match:
+         kw = match.groupdict()
+         if kw['microsecond']:
+             kw['microsecond'] = kw['microsecond'].ljust(6, '0')
+-        kw = {k: int(v) for k, v in six.iteritems(kw) if v is not None}
++        kw = {k: int(v) for k, v in kw.items() if v is not None}
+         return datetime.time(**kw)
+@@COMMIT 4468c08d70b5b722f3ebd4872909e56580ec7d68  2014-12-06  Fixed #23968 -- Replaced list comprehension with generators and dict comprehension
+
+diff --git a/django/utils/dateparse.py b/django/utils/dateparse.py
+--- a/django/utils/dateparse.py
++++ b/django/utils/dateparse.py
+@@ -52,7 +52,7 @@
+     match = time_re.match(value)
+     if match:
+         kw = match.groupdict()
+         if kw['microsecond']:
+             kw['microsecond'] = kw['microsecond'].ljust(6, '0')
+-        kw = dict((k, int(v)) for k, v in six.iteritems(kw) if v is not None)
++        kw = {k: int(v) for k, v in six.iteritems(kw) if v is not None}
+         return datetime.time(**kw)
+@@COMMIT ee191715eae73362768184aa95206cf61bac5d38  2012-07-20  [py3] Fixed access to dict keys/values/items.
+
+diff --git a/django/utils/dateparse.py b/django/utils/dateparse.py
+--- a/django/utils/dateparse.py
++++ b/django/utils/dateparse.py
+@@ -51,7 +52,7 @@
+     match = time_re.match(value)
+     if match:
+         kw = match.groupdict()
+         if kw['microsecond']:
+             kw['microsecond'] = kw['microsecond'].ljust(6, '0')
+-        kw = dict((k, int(v)) for k, v in kw.iteritems() if v is not None)
++        kw = dict((k, int(v)) for k, v in six.iteritems(kw) if v is not None)
+         return datetime.time(**kw)
+@@COMMIT 9b1cb755a28f020e27d4268c214b25315d4de42e  2011-11-18  Added support for time zones. Thanks Luke Plant for the review. Fixed #2626.
+
+diff --git a/django/utils/dateparse.py b/django/utils/dateparse.py
+--- /dev/null
++++ b/django/utils/dateparse.py
+@@ -0,0 +58,7 @@
++    match = time_re.match(value)
++    if match:
++        kw = match.groupdict()
++        if kw['microsecond']:
++            kw['microsecond'] = kw['microsecond'].ljust(6, '0')
++        kw = dict((k, int(v)) for k, v in kw.iteritems() if v is not None)
++        return datetime.time(**kw)
+
+=== 9b1cb755a2 added the line; the same code is not in its parent

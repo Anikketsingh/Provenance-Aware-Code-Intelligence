@@ -1,0 +1,209 @@
+django/contrib/admin/options.py:1191
+return action.plural_description % model_format_dict(self.opts)
+
+=== history of django/contrib/admin/options.py:1191 at d9d05f104e
+@@COMMIT f30acb184f75fd9260cfd6ddc48a3bbbd49f9c1d  2026-04-22  Fixed #12090 -- Added admin actions to the admin change form.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -1076,4 +1184,1 @@
+-        actions = self._filter_actions_by_permissions(request, self._get_base_actions())
+-        return {name: (func, name, desc) for func, name, desc in actions}
+-
+-    def get_action_choices(self, request, default_choices=None):
++            return action.plural_description % model_format_dict(self.opts)
+@@COMMIT 63c56cda133a85a158502891c40465bc0331d3d9  2026-01-18  Fixed #35870 -- Made blank choice label in forms more accessible.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -1049,4 +1050,4 @@
+         actions = self._filter_actions_by_permissions(request, self._get_base_actions())
+         return {name: (func, name, desc) for func, name, desc in actions}
+ 
+-    def get_action_choices(self, request, default_choices=models.BLANK_CHOICE_DASH):
++    def get_action_choices(self, request, default_choices=None):
+@@COMMIT 335c9c94acf263901fb023404408880245b0c4b4  2019-08-20  Simplified imports from django.db and django.contrib.gis.db.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -889,4 +888,4 @@
+         actions = self._filter_actions_by_permissions(request, self._get_base_actions())
+         return {name: (func, name, desc) for func, name, desc in actions}
+ 
+-    def get_action_choices(self, request, default_choices=BLANK_CHOICE_DASH):
++    def get_action_choices(self, request, default_choices=models.BLANK_CHOICE_DASH):
+@@COMMIT 24b82cd201e21060fbc02117dc16d1702877a1f3  2019-02-05  Fixed #30159 -- Removed unneeded use of OrderedDict.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -890,8 +886,4 @@
+         actions = self._filter_actions_by_permissions(request, self._get_base_actions())
+-        # Convert the actions into an OrderedDict keyed by name.
+-        return OrderedDict(
+-            (name, (func, name, desc))
+-            for func, name, desc in actions
+-        )
++        return {name: (func, name, desc) for func, name, desc in actions}
+ 
+     def get_action_choices(self, request, default_choices=BLANK_CHOICE_DASH):
+@@COMMIT 958c7b301ead79974db8edd5b9c6588a10a28ae7  2018-06-18  Fixed #29419 -- Allowed permissioning of admin actions.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -881,7 +898,8 @@
++        actions = self._filter_actions_by_permissions(request, self._get_base_actions())
+         # Convert the actions into an OrderedDict keyed by name.
+         return OrderedDict(
+             (name, (func, name, desc))
+             for func, name, desc in actions
+         )
+ 
+     def get_action_choices(self, request, default_choices=BLANK_CHOICE_DASH):
+@@COMMIT acc8dd4142ec81def9a73507120c0262ba6b1264  2018-01-03  Fixed #28984 -- Made assorted code simplifications.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -843,9 +843,7 @@
+         # Convert the actions into an OrderedDict keyed by name.
+-        actions = OrderedDict(
++        return OrderedDict(
+             (name, (func, name, desc))
+             for func, name, desc in actions
+         )
+ 
+-        return actions
+-
+     def get_action_choices(self, request, default_choices=BLANK_CHOICE_DASH):
+@@COMMIT 11cd7388f77aa9d12ab6b57285c3801b237e241b  2013-08-29  Fixed #20989 -- Removed useless explicit list comprehensions.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -706,9 +706,9 @@
+         # Convert the actions into an OrderedDict keyed by name.
+-        actions = OrderedDict([
++        actions = OrderedDict(
+             (name, (func, name, desc))
+             for func, name, desc in actions
+-        ])
++        )
+ 
+         return actions
+ 
+     def get_action_choices(self, request, default_choices=BLANK_CHOICE_DASH):
+@@COMMIT 07876cf02b6db453ca0397c29c225668872fa96d  2013-08-03  Deprecated SortedDict (replaced with collections.OrderedDict)
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -696,9 +696,9 @@
+-        # Convert the actions into a SortedDict keyed by name.
+-        actions = SortedDict([
++        # Convert the actions into an OrderedDict keyed by name.
++        actions = OrderedDict([
+             (name, (func, name, desc))
+             for func, name, desc in actions
+         ])
+ 
+         return actions
+ 
+     def get_action_choices(self, request, default_choices=BLANK_CHOICE_DASH):
+@@COMMIT 8eccb728ccd97a07b9281d3a7c2c6bac105f285f  2011-05-05  Fixed #15964 - Do not order admin actions by description
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -579,11 +579,9 @@
+-        # Convert the actions into a SortedDict keyed by name
+-        # and sorted by description.
+-        actions.sort(key=lambda k: k[2].lower())
++        # Convert the actions into a SortedDict keyed by name.
+         actions = SortedDict([
+             (name, (func, name, desc))
+             for func, name, desc in actions
+         ])
+ 
+         return actions
+ 
+     def get_action_choices(self, request, default_choices=BLANK_CHOICE_DASH):
+@@COMMIT c4b6edf3b8b647e7ef43f1ba49a310fb93468919  2010-08-06  Fixed #12746 -- Updated sorting calls to use 'key' instead of 'cmp'. This will be slightly faster in certain circumstances, but more importantly, is a required step for migration to Python 3. Thanks to Martin van Loewis for the patch.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -502,11 +502,11 @@
+         # Convert the actions into a SortedDict keyed by name
+         # and sorted by description.
+-        actions.sort(lambda a,b: cmp(a[2].lower(), b[2].lower()))
++        actions.sort(key=lambda k: k[2].lower())
+         actions = SortedDict([
+             (name, (func, name, desc))
+             for func, name, desc in actions
+         ])
+ 
+         return actions
+ 
+     def get_action_choices(self, request, default_choices=BLANK_CHOICE_DASH):
+@@COMMIT 31c833f113caa85bcaa14673b738b4555e6be463  2009-05-05  Fixed #10897 -- Modified use of ngettext to ungettext in admin change messages. Thanks to zuber for the report and patch.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -462,11 +462,11 @@
+         # Convert the actions into a SortedDict keyed by name
+         # and sorted by description.
+         actions.sort(lambda a,b: cmp(a[2].lower(), b[2].lower()))
+         actions = SortedDict([
+             (name, (func, name, desc))
+             for func, name, desc in actions
+         ])
+-        
++
+         return actions
+ 
+     def get_action_choices(self, request, default_choices=BLANK_CHOICE_DASH):
+@@COMMIT bb15cee58a43eeb0d060f8a31f9078b3406f195a  2009-04-06  Made a bunch of improvements to admin actions. Be warned: this includes one minor but BACKWARDS-INCOMPATIBLE change.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -422,8 +447,11 @@
+-        actions = {}
+-        for klass in [self.admin_site] + self.__class__.mro()[::-1]:
+-            for action in getattr(klass, 'actions', []):
+-                func, name, description = self.get_action(action)
+-                actions[name] = (func, name, description)
++        # Convert the actions into a SortedDict keyed by name
++        # and sorted by description.
++        actions.sort(lambda a,b: cmp(a[2].lower(), b[2].lower()))
++        actions = SortedDict([
++            (name, (func, name, desc))
++            for func, name, desc in actions
++        ])
++        
+         return actions
+ 
+-    def get_action_choices(self, request=None, default_choices=BLANK_CHOICE_DASH):
++    def get_action_choices(self, request, default_choices=BLANK_CHOICE_DASH):
+@@COMMIT 44f3080226888eb709cc6e027321647964ebe64e  2009-03-23  Fixed #10505: added support for bulk admin actions, including a globally-available "delete selected" action. See the documentation for details.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -393,0 +422,8 @@
++        actions = {}
++        for klass in [self.admin_site] + self.__class__.mro()[::-1]:
++            for action in getattr(klass, 'actions', []):
++                func, name, description = self.get_action(action)
++                actions[name] = (func, name, description)
++        return actions
++
++    def get_action_choices(self, request=None, default_choices=BLANK_CHOICE_DASH):
+
+=== 44f3080226 added the line; the same code is not in its parent

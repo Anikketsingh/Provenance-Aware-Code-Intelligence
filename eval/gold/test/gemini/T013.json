@@ -1,0 +1,5 @@
+{
+  "id": "T013",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"33ef6a3003\", \"first_appearance\": \"0270abda82\", \"ambiguous\": \"no\", \"notes\": \"Renaming a function prototype counts as an API change, while first appearance traces back to the original declaration.\"}\n```"
+}

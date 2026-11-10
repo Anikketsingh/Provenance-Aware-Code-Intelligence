@@ -44,3 +44,17 @@ Two changes came out of this list. Both were chosen on this development set, so 
 | **`-w -M60 -C60 -C60` (chosen)** | **88.8%** | **7** |
 
 These rows already include the C and D fixes. Still wrong: L014, L024 and L051 (category B), L030 and L058 (copies of longer blocks), L031 (category E), and L050. L050 is now marked ambiguous, because a recheck showed it's a copy, not a move.
+
+## Held-out test set (10 Nov, scored once with commit c84fa8e)
+
+59 lines were scored, and one is ambiguous. The full tracer scored **83.5%** weighted (86.4% raw, 95% CI 67.6–96.7%). git's strongest settings scored 69.2%. The tracer beat them on 20 lines and lost on 2 (p < 0.001). Layer C added 7 right answers over layers A and B, with no losses (p = 0.016).
+
+Wrong answers from the full tracer:
+
+| Category | Lines |
+|---|---|
+| Code moved across files at large scale, and the move wasn't detected (file split, framework rewrite, double move) | T029, T037, T052 |
+| The rules count an API rename as logic, but the tracer treats it as a rename | T013 |
+| Not yet diagnosed | T022, T035, T036, T049 |
+
+The development set (89.5%) scored higher than the test set (83.5%). That gap is expected, because the method was tuned on the development lines.

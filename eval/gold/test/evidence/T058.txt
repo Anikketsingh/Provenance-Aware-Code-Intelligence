@@ -1,0 +1,73 @@
+django/core/management/commands/sqlmigrate.py:69
+target = (app_label, migration.name)
+
+=== history of django/core/management/commands/sqlmigrate.py:69 at d9d05f104e
+@@COMMIT e12fea24f06f8911ddc2af1d6cbfb1adb529c1f2  2020-03-06  Optimized a bit handle() of sqlmigrate management command.
+
+diff --git a/django/core/management/commands/sqlmigrate.py b/django/core/management/commands/sqlmigrate.py
+--- a/django/core/management/commands/sqlmigrate.py
++++ b/django/core/management/commands/sqlmigrate.py
+@@ -56,1 +56,1 @@
+-        targets = [(app_label, migration.name)]
++        target = (app_label, migration.name)
+@@COMMIT f17b24e407385eb18651bf023a187347aa9c1f75  2014-06-06  Converted remaining management commands to argparse
+
+diff --git a/django/core/management/commands/sqlmigrate.py b/django/core/management/commands/sqlmigrate.py
+--- a/django/core/management/commands/sqlmigrate.py
++++ b/django/core/management/commands/sqlmigrate.py
+@@ -33,13 +41,1 @@
+-        if len(args) != 2:
+-            raise CommandError("Wrong number of arguments (expecting 'sqlmigrate app_label migrationname')")
+-        else:
+-            app_label, migration_name = args
+-            if app_label not in executor.loader.migrated_apps:
+-                raise CommandError("App '%s' does not have migrations" % app_label)
+-            try:
+-                migration = executor.loader.get_migration_by_prefix(app_label, migration_name)
+-            except AmbiguityError:
+-                raise CommandError("More than one migration matches '%s' in app '%s'. Please be more specific." % (app_label, migration_name))
+-            except KeyError:
+-                raise CommandError("Cannot find a migration matching '%s' from app '%s'. Is it in INSTALLED_APPS?" % (app_label, migration_name))
+-            targets = [(app_label, migration.name)]
++        targets = [(app_label, migration.name)]
+@@COMMIT c81fae6b9588ab9ef1edd7309c00e72a87154bc1  2013-12-28  Used app_label instead of appname.
+
+diff --git a/django/core/management/commands/sqlmigrate.py b/django/core/management/commands/sqlmigrate.py
+--- a/django/core/management/commands/sqlmigrate.py
++++ b/django/core/management/commands/sqlmigrate.py
+@@ -33,13 +33,13 @@
+         if len(args) != 2:
+-            raise CommandError("Wrong number of arguments (expecting 'sqlmigrate appname migrationname')")
++            raise CommandError("Wrong number of arguments (expecting 'sqlmigrate app_label migrationname')")
+         else:
+             app_label, migration_name = args
+             if app_label not in executor.loader.migrated_apps:
+                 raise CommandError("App '%s' does not have migrations" % app_label)
+             try:
+                 migration = executor.loader.get_migration_by_prefix(app_label, migration_name)
+             except AmbiguityError:
+                 raise CommandError("More than one migration matches '%s' in app '%s'. Please be more specific." % (app_label, migration_name))
+             except KeyError:
+                 raise CommandError("Cannot find a migration matching '%s' from app '%s'. Is it in INSTALLED_APPS?" % (app_label, migration_name))
+             targets = [(app_label, migration.name)]
+@@COMMIT efd1e6096ee87fe332cf989ba5479e9461d0fb3a  2013-09-06  Adding 'sqlmigrate' command and quote_parameter to support it.
+
+diff --git a/django/core/management/commands/sqlmigrate.py b/django/core/management/commands/sqlmigrate.py
+--- /dev/null
++++ b/django/core/management/commands/sqlmigrate.py
+@@ -0,0 +33,13 @@
++        if len(args) != 2:
++            raise CommandError("Wrong number of arguments (expecting 'sqlmigrate appname migrationname')")
++        else:
++            app_label, migration_name = args
++            if app_label not in executor.loader.migrated_apps:
++                raise CommandError("App '%s' does not have migrations" % app_label)
++            try:
++                migration = executor.loader.get_migration_by_prefix(app_label, migration_name)
++            except AmbiguityError:
++                raise CommandError("More than one migration matches '%s' in app '%s'. Please be more specific." % (app_label, migration_name))
++            except KeyError:
++                raise CommandError("Cannot find a migration matching '%s' from app '%s'. Is it in INSTALLED_APPS?" % (app_label, migration_name))
++            targets = [(app_label, migration.name)]
+
+=== efd1e6096e added the line; the same code is not in its parent

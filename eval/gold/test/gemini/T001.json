@@ -1,0 +1,5 @@
+{
+  "id": "T001",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"9a56b4b13e\", \"first_appearance\": \"9a56b4b13e\", \"ambiguous\": \"no\", \"notes\": \"Quote style change by Black formatting is not a logic change.\"}\n```"
+}

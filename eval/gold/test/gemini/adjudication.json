@@ -1,0 +1,42 @@
+[
+  {
+    "id": "T020",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\n  \"answer\": \"A\",\n  \"reason\": \"Commit B only moved or re-indented the line within the file without changing its logic, making commit A the commit where the logic originated.\"\n}\n```"
+  },
+  {
+    "id": "T029",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"A\", \"reason\": \"Commit B only moved the line from feeds.py to views.py without changing its logic, making commit A the most recent logic change.\"}\n```"
+  },
+  {
+    "id": "T034",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"B\", \"reason\": \"Commit A only moved or re-indented the existing line within the file, while commit B originally introduced the logic.\"}\n```"
+  },
+  {
+    "id": "T037",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"A\", \"reason\": \"Commit B merely moves the line from redis.c to t_list.c as part of a file split, which does not count as a logic change.\"}\n```"
+  },
+  {
+    "id": "T038",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"B\", \"reason\": \"Commit A only moved the line between files without altering its logic, making commit B the commit that established this logic.\"}\n```"
+  },
+  {
+    "id": "T042",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"B\", \"reason\": \"Commit A merely moved the code from endian.c to endianconv.c without changing its behavior, making commit B the commit where the logic was introduced.\"}\n```"
+  },
+  {
+    "id": "T052",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"B\", \"reason\": \"Commit A merely moved the unchanged line from src/kvstore.c to src/fwtree.c, so commit B is the commit where the logic was introduced.\"}\n```"
+  },
+  {
+    "id": "T053",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"B\", \"reason\": \"Commit A only moved the identical line from postgres fields to core model fields, so commit B is the most recent logic change.\"}\n```"
+  }
+]

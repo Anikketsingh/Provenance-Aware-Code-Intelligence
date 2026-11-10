@@ -1,0 +1,37 @@
+django/contrib/gis/utils/ogrinspect.py:199
+ogr_fields, layer.field_widths, layer.field_precisions, layer.field_types
+
+=== history of django/contrib/gis/utils/ogrinspect.py:199 at d9d05f104e
+@@COMMIT 9c19aff7c7561e3a82978a272ecdaad40dda5c00  2022-02-03  Refs #33476 -- Reformatted code with Black.
+
+diff --git a/django/contrib/gis/utils/ogrinspect.py b/django/contrib/gis/utils/ogrinspect.py
+--- a/django/contrib/gis/utils/ogrinspect.py
++++ b/django/contrib/gis/utils/ogrinspect.py
+@@ -177,1 +197,1 @@
+-            ogr_fields, layer.field_widths, layer.field_precisions, layer.field_types):
++        ogr_fields, layer.field_widths, layer.field_precisions, layer.field_types
+@@COMMIT 1101467ce0756272a54f4c7bc65c4c335a94111b  2014-09-04  Limited lines to 119 characters in django/
+
+diff --git a/django/contrib/gis/utils/ogrinspect.py b/django/contrib/gis/utils/ogrinspect.py
+--- a/django/contrib/gis/utils/ogrinspect.py
++++ b/django/contrib/gis/utils/ogrinspect.py
+@@ -177,1 +178,1 @@
+-    for field_name, width, precision, field_type in zip(ogr_fields, layer.field_widths, layer.field_precisions, layer.field_types):
++            ogr_fields, layer.field_widths, layer.field_precisions, layer.field_types):
+@@COMMIT 1aae1cba99b0f8232527742d64b120e4d902c68d  2012-05-07  Imported zip from future_builtins instead of itertools.izip.
+
+diff --git a/django/contrib/gis/utils/ogrinspect.py b/django/contrib/gis/utils/ogrinspect.py
+--- a/django/contrib/gis/utils/ogrinspect.py
++++ b/django/contrib/gis/utils/ogrinspect.py
+@@ -168,1 +168,1 @@
+-    for field_name, width, precision, field_type in izip(ogr_fields, layer.field_widths, layer.field_precisions, layer.field_types):
++    for field_name, width, precision, field_type in zip(ogr_fields, layer.field_widths, layer.field_precisions, layer.field_types):
+@@COMMIT 79e68c225b926302ebb29c808dda8afa49856f5c  2008-08-05  Merged the gis branch into trunk.
+
+diff --git a/django/contrib/gis/utils/ogrinspect.py b/django/contrib/gis/utils/ogrinspect.py
+--- /dev/null
++++ b/django/contrib/gis/utils/ogrinspect.py
+@@ -0,0 +168,1 @@
++    for field_name, width, precision, field_type in izip(ogr_fields, layer.field_widths, layer.field_precisions, layer.field_types):
+
+=== 79e68c225b added the line; the same code is not in its parent

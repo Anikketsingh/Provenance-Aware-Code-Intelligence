@@ -1,0 +1,21 @@
+django/contrib/postgres/fields/ranges.py:196
+return "numrange"
+
+=== history of django/contrib/postgres/fields/ranges.py:196 at d9d05f104e
+@@COMMIT 9c19aff7c7561e3a82978a272ecdaad40dda5c00  2022-02-03  Refs #33476 -- Reformatted code with Black.
+
+diff --git a/django/contrib/postgres/fields/ranges.py b/django/contrib/postgres/fields/ranges.py
+--- a/django/contrib/postgres/fields/ranges.py
++++ b/django/contrib/postgres/fields/ranges.py
+@@ -174,1 +182,1 @@
+-        return 'numrange'
++        return "numrange"
+@@COMMIT 6de7f9ec60fbdc59797bc21803f16260bd203f04  2018-10-03  Fixed #29598 -- Deprecated FloatRangeField in favor of DecimalRangeField.
+
+diff --git a/django/contrib/postgres/fields/ranges.py b/django/contrib/postgres/fields/ranges.py
+--- a/django/contrib/postgres/fields/ranges.py
++++ b/django/contrib/postgres/fields/ranges.py
+@@ -103,0 +110,1 @@
++        return 'numrange'
+
+=== 6de7f9ec60 added the line; the same code is not in its parent

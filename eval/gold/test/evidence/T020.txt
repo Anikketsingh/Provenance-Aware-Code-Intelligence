@@ -1,0 +1,32 @@
+src/defrag.c:794
+struct zskiplistNode *newheader;
+
+=== history of src/defrag.c:794 at 5b69ba2ce9
+@@COMMIT be1b4aa9aa76d15bb57b7159cb559a8b9dde5513  2018-02-18  active defrag v2
+
+diff --git a/src/defrag.c b/src/defrag.c
+--- a/src/defrag.c
++++ b/src/defrag.c
+@@ -272,0 +534,1 @@
++    struct zskiplistNode *newheader;
+
+=== the same code already existed in be1b4aa9aa^ at:
+  src/defrag.c:362  struct zskiplistNode *newheader;
+=== history of src/defrag.c:362 at be1b4aa9aa
+@@COMMIT 5ab6a54cc619e750daac59baef7b9f9dc1f87db9  2017-01-02  active defrag improvements
+
+diff --git a/src/defrag.c b/src/defrag.c
+--- a/src/defrag.c
++++ b/src/defrag.c
+@@ -333,1 +350,1 @@
+-            if (newzs)
++            struct zskiplistNode *newheader;
+@@COMMIT 7aa9e6d2ae1d500d8ba900b239207143993ecc3e  2016-12-30  active memory defragmentation
+
+diff --git a/src/defrag.c b/src/defrag.c
+--- /dev/null
++++ b/src/defrag.c
+@@ -0,0 +333,1 @@
++            if (newzs)
+
+=== 7aa9e6d2ae added the line; the same code is not in its parent

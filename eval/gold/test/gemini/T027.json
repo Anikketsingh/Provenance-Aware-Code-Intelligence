@@ -1,0 +1,5 @@
+{
+  "id": "T027",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"4e472a1a7f\", \"first_appearance\": \"4e472a1a7f\", \"ambiguous\": \"no\", \"notes\": \"Added in 4e472a1a7f; earlier lines in git log -L history are unrelated code.\"}\n```"
+}

@@ -1,0 +1,23 @@
+django/db/models/functions/window.py:5
+"CumeDist",
+
+=== history of django/db/models/functions/window.py:5 at d9d05f104e
+@@COMMIT 9c19aff7c7561e3a82978a272ecdaad40dda5c00  2022-02-03  Refs #33476 -- Reformatted code with Black.
+
+diff --git a/django/db/models/functions/window.py b/django/db/models/functions/window.py
+--- a/django/db/models/functions/window.py
++++ b/django/db/models/functions/window.py
+@@ -5,2 +5,1 @@
+-    'CumeDist', 'DenseRank', 'FirstValue', 'Lag', 'LastValue', 'Lead',
+-    'NthValue', 'Ntile', 'PercentRank', 'Rank', 'RowNumber',
++    "CumeDist",
+@@COMMIT d549b8805053d4b064bf492ba90e90db5d7e2a6b  2017-09-18  Fixed #26608 -- Added support for window expressions (OVER clause).
+
+diff --git a/django/db/models/functions/window.py b/django/db/models/functions/window.py
+--- /dev/null
++++ b/django/db/models/functions/window.py
+@@ -0,0 +4,2 @@
++    'CumeDist', 'DenseRank', 'FirstValue', 'Lag', 'LastValue', 'Lead',
++    'NthValue', 'Ntile', 'PercentRank', 'Rank', 'RowNumber',
+
+=== d549b88050 added the line; the same code is not in its parent

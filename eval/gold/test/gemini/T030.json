@@ -1,0 +1,5 @@
+{
+  "id": "T030",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"9e35c8b2e3\", \"first_appearance\": \"febe136d4c\", \"ambiguous\": \"no\", \"notes\": \"Changed from getattr call on cls._meta to direct attribute access on self.\"}\n```"
+}

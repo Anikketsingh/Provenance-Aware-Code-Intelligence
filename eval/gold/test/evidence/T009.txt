@@ -1,0 +1,21 @@
+django/contrib/admin/options.py:2194
+media = self.media + admin_form.media
+
+=== history of django/contrib/admin/options.py:2194 at d9d05f104e
+@@COMMIT cd11664066087051ef11311708ebc55def48d1da  2022-06-03  Changed camel case variable to snake case in contrib.admin/auth.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- a/django/contrib/admin/options.py
++++ b/django/contrib/admin/options.py
+@@ -1837,1 +1837,1 @@
+-        media = self.media + adminForm.media
++        media = self.media + admin_form.media
+@@COMMIT a19ed8aea395e8e07164ff7d85bd7dff2f24edca  2008-07-18  Merged the newforms-admin branch into trunk.
+
+diff --git a/django/contrib/admin/options.py b/django/contrib/admin/options.py
+--- /dev/null
++++ b/django/contrib/admin/options.py
+@@ -0,0 +559,1 @@
++        media = self.media + adminForm.media
+
+=== a19ed8aea3 added the line; the same code is not in its parent

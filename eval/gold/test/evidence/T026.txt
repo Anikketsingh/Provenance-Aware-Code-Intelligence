@@ -1,0 +1,81 @@
+django/test/utils.py:223
+keepdb=keepdb,
+
+=== history of django/test/utils.py:223 at d9d05f104e
+@@COMMIT 61a0ba43cfd4ff66f51a9d73dcd8ed6f6a6d9915  2020-07-22  Refs #31811 -- Added optional timing outputs to the test runner.
+
+diff --git a/django/test/utils.py b/django/test/utils.py
+--- a/django/test/utils.py
++++ b/django/test/utils.py
+@@ -170,6 +177,1 @@
+-                connection.creation.create_test_db(
+-                    verbosity=verbosity,
+-                    autoclobber=not interactive,
+-                    keepdb=keepdb,
+-                    serialize=connection.settings_dict['TEST'].get('SERIALIZE', True),
+-                )
++                        keepdb=keepdb,
+@@COMMIT 2540c5f08c8ca616e8549d8c4ce4bf0e938818cf  2019-12-04  Removed unnecessary dict.get() call in favor of direct indexing.
+
+diff --git a/django/test/utils.py b/django/test/utils.py
+--- a/django/test/utils.py
++++ b/django/test/utils.py
+@@ -169,6 +169,6 @@
+                 connection.creation.create_test_db(
+                     verbosity=verbosity,
+                     autoclobber=not interactive,
+                     keepdb=keepdb,
+-                    serialize=connection.settings_dict.get('TEST', {}).get('SERIALIZE', True),
++                    serialize=connection.settings_dict['TEST'].get('SERIALIZE', True),
+                 )
+@@COMMIT e76981b43325da60b8a7475661df6cbfa7fda37e  2016-07-03  Fixed #26840 -- Added test.utils.setup/teardown_databases().
+
+diff --git a/django/test/utils.py b/django/test/utils.py
+--- a/django/test/utils.py
++++ b/django/test/utils.py
+@@ -158,0 +177,6 @@
++                connection.creation.create_test_db(
++                    verbosity=verbosity,
++                    autoclobber=not interactive,
++                    keepdb=keepdb,
++                    serialize=connection.settings_dict.get('TEST', {}).get('SERIALIZE', True),
++                )
+
+=== the same code already existed in e76981b433^ at:
+  django/test/runner.py:750  keepdb=keepdb,
+  django/test/runner.py:758  keepdb=keepdb,
+  tests/runtests.py:268  keepdb=keepdb,
+=== history of django/test/runner.py:750 at e76981b433
+@@COMMIT 8c12d51ea27479555e226894c50c83043211d71d  2014-06-08  Fixed #22487: Optional rollback emulation for migrated apps
+
+diff --git a/django/test/runner.py b/django/test/runner.py
+--- a/django/test/runner.py
++++ b/django/test/runner.py
+@@ -301,1 +303,1 @@
+-                    verbosity, autoclobber=not interactive, keepdb=keepdb)
++                    keepdb=keepdb,
+@@COMMIT b7aa7c4ab4372d2b7994d252c8bc87f77dd217ae  2014-05-27  Fixed #20550 -- Added ability to preserve test db between runs
+
+diff --git a/django/test/runner.py b/django/test/runner.py
+--- a/django/test/runner.py
++++ b/django/test/runner.py
+@@ -297,1 +301,1 @@
+-                    verbosity, autoclobber=not interactive)
++                    verbosity, autoclobber=not interactive, keepdb=keepdb)
+@@COMMIT b289fcf1bfeaa717ed465b2529a275b61dc02d92  2013-10-20  Fixed #21288 -- Fixed E126 pep8 warnings
+
+diff --git a/django/test/runner.py b/django/test/runner.py
+--- a/django/test/runner.py
++++ b/django/test/runner.py
+@@ -282,1 +282,1 @@
+-                        verbosity, autoclobber=not interactive)
++                    verbosity, autoclobber=not interactive)
+@@COMMIT 9012833af857e081b515ce760685b157638efcef  2013-05-10  Fixed #17365, #17366, #18727 -- Switched to discovery test runner.
+
+diff --git a/django/test/runner.py b/django/test/runner.py
+--- /dev/null
++++ b/django/test/runner.py
+@@ -0,0 +280,1 @@
++                        verbosity, autoclobber=not interactive)
+
+=== 9012833af8 added the line; the same code is not in its parent

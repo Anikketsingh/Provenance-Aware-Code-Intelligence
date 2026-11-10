@@ -1,0 +1,5 @@
+{
+  "id": "T004",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"81d653f5dc\", \"first_appearance\": \"81d653f5dc\", \"ambiguous\": \"no\", \"notes\": \"Unwrapped from if-else block without changing the loop condition itself.\"}\n```"
+}

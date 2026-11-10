@@ -596,9 +596,16 @@ uv run provenance classify django</span></li>
     }
     resultsLoaded = true;
     const parts = [el("h2", { text: "How often each method finds the right commit" })];
-    const gold = data.gold_scores;
-    if (gold) {
-      parts.push(el("p", { text: `Scored on ${gold.labelled} labelled lines from Django and Redis. A method is right when it names the most recent commit that changed what the line does. Accuracy is weighted back to the real mix of lines, and the thin line on each bar is the 95% confidence range.` }));
+    const sets = [
+      ["Held-out test set", data.gold_scores_test, "These lines were drawn after the method was frozen and scored once, so this is the headline result."],
+      ["Development set", data.gold_scores, "The method was tuned on these lines, so expect them to flatter it."],
+    ].filter(([, gold]) => gold);
+    if (!sets.length) {
+      parts.push(el("p", { text: "No scored labels yet. Fill in eval/gold/annotations.csv and run eval/score_gold.py." }));
+    }
+    for (const [title, gold, why] of sets) {
+      parts.push(el("h3", { text: title }));
+      parts.push(el("p", { text: `${why} Scored on ${gold.labelled} labelled lines from Django and Redis, with ${gold.ambiguous} ambiguous lines left out. A method is right when it names the most recent commit that changed what the line does. Accuracy is weighted back to the real mix of lines, and the thin line on each bar is the 95% confidence range.` }));
       const bars = el("div", { class: "bars" });
       for (const [key, name, note] of METHODS) {
         const m = gold.methods[key];
@@ -617,9 +624,9 @@ uv run provenance classify django</span></li>
       if (b2) parts.push(el("p", { text: `Against git's strongest settings, the full tracer was right on ${b2.only_second} lines where git was wrong, and wrong on ${b2.only_first} where git was right (McNemar exact test, ${b2.p < 0.001 ? "p < 0.001" : "p = " + b2.p.toFixed(3)}).` }));
       const firstOurs = gold.methods["first:Ours-C"]?.weighted, firstB2 = gold.methods["first:B2"]?.weighted;
       if (firstOurs != null) parts.push(el("p", { text: `For the commit where the line first appeared, the full tracer scored ${pct(firstOurs)}, against ${pct(firstB2)} for git's strongest settings.` }));
-      parts.push(el("p", { class: "note", text: "These labels were made by Claude, an AI that also built the method, by reading git's own line history for each line. They are not yet checked by a person, so treat these numbers as provisional until someone labels an overlapping sample." }));
-    } else {
-      parts.push(el("p", { text: "No scored labels yet. Fill in eval/gold/annotations.csv and run eval/score_gold.py." }));
+    }
+    if (sets.length) {
+      parts.push(el("p", { class: "note", text: "The labels are AI labels. Claude, which built the method, labelled every line from git's own history. Gemini, a model from another company, labelled the same lines blind, and then answered a second round on the lines where they disagreed. See eval/gold/RULES.md. No person has checked them yet." }));
     }
 
     const gap = data.method_gap;

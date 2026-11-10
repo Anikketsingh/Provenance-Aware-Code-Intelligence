@@ -1,0 +1,24 @@
+django/db/models/fields/json.py:530
+previous = previous.lhs
+
+=== history of django/db/models/fields/json.py:530 at d9d05f104e
+@@COMMIT 6789ded0a6ab797f0dcdfa6ad5d1cfa46e23abcd  2019-06-09  Fixed #12990, Refs #27694 -- Added JSONField model field.
+
+diff --git a/django/db/models/fields/json.py b/django/db/models/fields/json.py
+--- /dev/null
++++ b/django/db/models/fields/json.py
+@@ -0,0 +302,1 @@
++            previous = previous.lhs
+
+=== the same code already existed in 6789ded0a6^ at:
+  django/contrib/postgres/fields/jsonb.py:106  previous = previous.lhs
+=== history of django/contrib/postgres/fields/jsonb.py:106 at 6789ded0a6
+@@COMMIT 33ea472f6924480eb8708bc6d0ac90b9f742ba68  2015-05-30  Fixed #24604 -- Added JSONField to contrib.postgres.
+
+diff --git a/django/contrib/postgres/fields/jsonb.py b/django/contrib/postgres/fields/jsonb.py
+--- /dev/null
++++ b/django/contrib/postgres/fields/jsonb.py
+@@ -0,0 +80,1 @@
++            previous = previous.lhs
+
+=== 33ea472f69 added the line; the same code is not in its parent

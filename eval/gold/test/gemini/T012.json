@@ -1,0 +1,5 @@
+{
+  "id": "T012",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"6789ded0a6\", \"first_appearance\": \"6789ded0a6\", \"ambiguous\": \"no\", \"notes\": \"Added in a new file; code may have been moved from another file.\"}\n```"
+}

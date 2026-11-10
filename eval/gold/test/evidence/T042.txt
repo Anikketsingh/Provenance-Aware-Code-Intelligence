@@ -1,0 +1,26 @@
+src/endianconv.c:81
+return v;
+
+=== history of src/endianconv.c:81 at 5b69ba2ce9
+@@COMMIT 7a3e372025b2a54486ce52d706b1da95be4b7e7e  2012-02-14  endian.c/h -> endianconv.c/h to avoid issues with broken libraries search paths.
+
+diff --git a/src/endianconv.c b/src/endianconv.c
+--- /dev/null
++++ b/src/endianconv.c
+@@ -0,0 +101,1 @@
++    return v;
+
+=== the same code already existed in 7a3e372025^ at:
+  src/endian.c:47  return v;
+  src/endian.c:52  return v;
+  src/endian.c:57  return v;
+=== history of src/endian.c:47 at 7a3e372025
+@@COMMIT 56538477143b144f2267ce98805a7b6edc763528  2012-02-08  ziplist.c fixes for bigendian
+
+diff --git a/src/endian.c b/src/endian.c
+--- a/src/endian.c
++++ b/src/endian.c
+@@ -43,0 +47,1 @@
++    return v;
+
+=== 5653847714 added the line; the same code is not in its parent

@@ -1,0 +1,300 @@
+django/contrib/auth/migrations/0001_initial.py:132
+models.CharField(
+
+=== history of django/contrib/auth/migrations/0001_initial.py:132 at d9d05f104e
+@@COMMIT 9c19aff7c7561e3a82978a272ecdaad40dda5c00  2022-02-03  Refs #33476 -- Reformatted code with Black.
+
+diff --git a/django/contrib/auth/migrations/0001_initial.py b/django/contrib/auth/migrations/0001_initial.py
+--- a/django/contrib/auth/migrations/0001_initial.py
++++ b/django/contrib/auth/migrations/0001_initial.py
+@@ -54,39 +127,1 @@
+-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+-                ('password', models.CharField(max_length=128, verbose_name='password')),
+-                ('last_login', models.DateTimeField(default=timezone.now, verbose_name='last login')),
+-                ('is_superuser', models.BooleanField(
+-                    default=False,
+-                    help_text='Designates that this user has all permissions without explicitly assigning them.',
+-                    verbose_name='superuser status'
+-                )),
+-                ('username', models.CharField(
+-                    help_text='Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.', unique=True,
+-                    max_length=30, verbose_name='username',
+-                    validators=[validators.UnicodeUsernameValidator()],
+-                )),
+-                ('first_name', models.CharField(max_length=30, verbose_name='first name', blank=True)),
+-                ('last_name', models.CharField(max_length=30, verbose_name='last name', blank=True)),
+-                ('email', models.EmailField(max_length=75, verbose_name='email address', blank=True)),
+-                ('is_staff', models.BooleanField(
+-                    default=False, help_text='Designates whether the user can log into this admin site.',
+-                    verbose_name='staff status'
+-                )),
+-                ('is_active', models.BooleanField(
+-                    default=True, verbose_name='active', help_text=(
+-                        'Designates whether this user should be treated as active. Unselect this instead of deleting '
+-                        'accounts.'
+-                    )
+-                )),
+-                ('date_joined', models.DateTimeField(default=timezone.now, verbose_name='date joined')),
+-                ('groups', models.ManyToManyField(
+-                    to='auth.Group', verbose_name='groups', blank=True, related_name='user_set',
+-                    related_query_name='user', help_text=(
+-                        'The groups this user belongs to. A user will get all permissions granted to each of their '
+-                        'groups.'
+-                    )
+-                )),
+-                ('user_permissions', models.ManyToManyField(
+-                    to='auth.Permission', verbose_name='user permissions', blank=True,
+-                    help_text='Specific permissions for this user.', related_name='user_set',
+-                    related_query_name='user')
+-                 ),
++                    models.CharField(
+@@COMMIT c716fe87821df00f9f03ecc761c914d1682591a2  2016-12-01  Refs #23919 -- Removed six.PY2/PY3 usage
+
+diff --git a/django/contrib/auth/migrations/0001_initial.py b/django/contrib/auth/migrations/0001_initial.py
+--- a/django/contrib/auth/migrations/0001_initial.py
++++ b/django/contrib/auth/migrations/0001_initial.py
+@@ -55,41 +55,39 @@
+                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                 ('password', models.CharField(max_length=128, verbose_name='password')),
+                 ('last_login', models.DateTimeField(default=timezone.now, verbose_name='last login')),
+                 ('is_superuser', models.BooleanField(
+                     default=False,
+                     help_text='Designates that this user has all permissions without explicitly assigning them.',
+                     verbose_name='superuser status'
+                 )),
+                 ('username', models.CharField(
+                     help_text='Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.', unique=True,
+                     max_length=30, verbose_name='username',
+-                    validators=[
+-                        validators.UnicodeUsernameValidator() if six.PY3 else validators.ASCIIUsernameValidator()
+-                    ],
++                    validators=[validators.UnicodeUsernameValidator()],
+                 )),
+                 ('first_name', models.CharField(max_length=30, verbose_name='first name', blank=True)),
+                 ('last_name', models.CharField(max_length=30, verbose_name='last name', blank=True)),
+                 ('email', models.EmailField(max_length=75, verbose_name='email address', blank=True)),
+                 ('is_staff', models.BooleanField(
+                     default=False, help_text='Designates whether the user can log into this admin site.',
+                     verbose_name='staff status'
+                 )),
+                 ('is_active', models.BooleanField(
+                     default=True, verbose_name='active', help_text=(
+                         'Designates whether this user should be treated as active. Unselect this instead of deleting '
+                         'accounts.'
+                     )
+                 )),
+                 ('date_joined', models.DateTimeField(default=timezone.now, verbose_name='date joined')),
+                 ('groups', models.ManyToManyField(
+                     to='auth.Group', verbose_name='groups', blank=True, related_name='user_set',
+                     related_query_name='user', help_text=(
+                         'The groups this user belongs to. A user will get all permissions granted to each of their '
+                         'groups.'
+                     )
+                 )),
+                 ('user_permissions', models.ManyToManyField(
+                     to='auth.Permission', verbose_name='user permissions', blank=True,
+                     help_text='Specific permissions for this user.', related_name='user_set',
+                     related_query_name='user')
+                  ),
+@@COMMIT 526575c64150e10dd8666d1ed3f86eedd00df2ed  2016-04-22  Fixed #21379 -- Created auth-specific username validators
+
+diff --git a/django/contrib/auth/migrations/0001_initial.py b/django/contrib/auth/migrations/0001_initial.py
+--- a/django/contrib/auth/migrations/0001_initial.py
++++ b/django/contrib/auth/migrations/0001_initial.py
+@@ -58,39 +58,41 @@
+                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                 ('password', models.CharField(max_length=128, verbose_name='password')),
+                 ('last_login', models.DateTimeField(default=timezone.now, verbose_name='last login')),
+                 ('is_superuser', models.BooleanField(
+                     default=False,
+                     help_text='Designates that this user has all permissions without explicitly assigning them.',
+                     verbose_name='superuser status'
+                 )),
+                 ('username', models.CharField(
+                     help_text='Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.', unique=True,
+                     max_length=30, verbose_name='username',
+-                    validators=[validators.RegexValidator('^[\\w.@+-]+$', 'Enter a valid username.', 'invalid')]
++                    validators=[
++                        validators.UnicodeUsernameValidator() if six.PY3 else validators.ASCIIUsernameValidator()
++                    ],
+                 )),
+                 ('first_name', models.CharField(max_length=30, verbose_name='first name', blank=True)),
+                 ('last_name', models.CharField(max_length=30, verbose_name='last name', blank=True)),
+                 ('email', models.EmailField(max_length=75, verbose_name='email address', blank=True)),
+                 ('is_staff', models.BooleanField(
+                     default=False, help_text='Designates whether the user can log into this admin site.',
+                     verbose_name='staff status'
+                 )),
+                 ('is_active', models.BooleanField(
+                     default=True, verbose_name='active', help_text=(
+                         'Designates whether this user should be treated as active. Unselect this instead of deleting '
+                         'accounts.'
+                     )
+                 )),
+                 ('date_joined', models.DateTimeField(default=timezone.now, verbose_name='date joined')),
+                 ('groups', models.ManyToManyField(
+                     to='auth.Group', verbose_name='groups', blank=True, related_name='user_set',
+                     related_query_name='user', help_text=(
+                         'The groups this user belongs to. A user will get all permissions granted to each of their '
+                         'groups.'
+                     )
+                 )),
+                 ('user_permissions', models.ManyToManyField(
+                     to='auth.Permission', verbose_name='user permissions', blank=True,
+                     help_text='Specific permissions for this user.', related_name='user_set',
+                     related_query_name='user')
+                  ),
+@@COMMIT b1e33ceceda1e75ff68c7deed8f6659683a195d3  2015-09-11  Fixed #23395 -- Limited line lengths to 119 characters.
+
+diff --git a/django/contrib/auth/migrations/0001_initial.py b/django/contrib/auth/migrations/0001_initial.py
+--- a/django/contrib/auth/migrations/0001_initial.py
++++ b/django/contrib/auth/migrations/0001_initial.py
+@@ -58,13 +58,39 @@
+                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                 ('password', models.CharField(max_length=128, verbose_name='password')),
+                 ('last_login', models.DateTimeField(default=timezone.now, verbose_name='last login')),
+-                ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
+-                ('username', models.CharField(help_text='Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.', unique=True, max_length=30, verbose_name='username', validators=[validators.RegexValidator('^[\\w.@+-]+$', 'Enter a valid username.', 'invalid')])),
++                ('is_superuser', models.BooleanField(
++                    default=False,
++                    help_text='Designates that this user has all permissions without explicitly assigning them.',
++                    verbose_name='superuser status'
++                )),
++                ('username', models.CharField(
++                    help_text='Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.', unique=True,
++                    max_length=30, verbose_name='username',
++                    validators=[validators.RegexValidator('^[\\w.@+-]+$', 'Enter a valid username.', 'invalid')]
++                )),
+                 ('first_name', models.CharField(max_length=30, verbose_name='first name', blank=True)),
+                 ('last_name', models.CharField(max_length=30, verbose_name='last name', blank=True)),
+                 ('email', models.EmailField(max_length=75, verbose_name='email address', blank=True)),
+-                ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
+-                ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
++                ('is_staff', models.BooleanField(
++                    default=False, help_text='Designates whether the user can log into this admin site.',
++                    verbose_name='staff status'
++                )),
++                ('is_active', models.BooleanField(
++                    default=True, verbose_name='active', help_text=(
++                        'Designates whether this user should be treated as active. Unselect this instead of deleting '
++                        'accounts.'
++                    )
++                )),
+                 ('date_joined', models.DateTimeField(default=timezone.now, verbose_name='date joined')),
+-                ('groups', models.ManyToManyField(to='auth.Group', verbose_name='groups', blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user')),
+-                ('user_permissions', models.ManyToManyField(to='auth.Permission', verbose_name='user permissions', blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user')),
++                ('groups', models.ManyToManyField(
++                    to='auth.Group', verbose_name='groups', blank=True, related_name='user_set',
++                    related_query_name='user', help_text=(
++                        'The groups this user belongs to. A user will get all permissions granted to each of their '
++                        'groups.'
++                    )
++                )),
++                ('user_permissions', models.ManyToManyField(
++                    to='auth.Permission', verbose_name='user permissions', blank=True,
++                    help_text='Specific permissions for this user.', related_name='user_set',
++                    related_query_name='user')
++                 ),
+@@COMMIT 1d79d08d9aef1565cf56d50f0742285efae53631  2014-08-15  Fixed #23294 -- Add related_name to existing migrations.
+
+diff --git a/django/contrib/auth/migrations/0001_initial.py b/django/contrib/auth/migrations/0001_initial.py
+--- a/django/contrib/auth/migrations/0001_initial.py
++++ b/django/contrib/auth/migrations/0001_initial.py
+@@ -46,13 +46,13 @@
+                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                 ('password', models.CharField(max_length=128, verbose_name='password')),
+                 ('last_login', models.DateTimeField(default=timezone.now, verbose_name='last login')),
+                 ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
+                 ('username', models.CharField(help_text='Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.', unique=True, max_length=30, verbose_name='username', validators=[validators.RegexValidator('^[\\w.@+-]+$', 'Enter a valid username.', 'invalid')])),
+                 ('first_name', models.CharField(max_length=30, verbose_name='first name', blank=True)),
+                 ('last_name', models.CharField(max_length=30, verbose_name='last name', blank=True)),
+                 ('email', models.EmailField(max_length=75, verbose_name='email address', blank=True)),
+                 ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
+                 ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
+                 ('date_joined', models.DateTimeField(default=timezone.now, verbose_name='date joined')),
+-                ('groups', models.ManyToManyField(to='auth.Group', verbose_name='groups', blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.')),
+-                ('user_permissions', models.ManyToManyField(to='auth.Permission', verbose_name='user permissions', blank=True, help_text='Specific permissions for this user.')),
++                ('groups', models.ManyToManyField(to='auth.Group', verbose_name='groups', blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user')),
++                ('user_permissions', models.ManyToManyField(to='auth.Permission', verbose_name='user permissions', blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user')),
+@@COMMIT 059f5d17c5fe92d6b4c5d189020ea59e9bed4472  2014-08-04  Fixed #23163: Align user help text with migrations
+
+diff --git a/django/contrib/auth/migrations/0001_initial.py b/django/contrib/auth/migrations/0001_initial.py
+--- a/django/contrib/auth/migrations/0001_initial.py
++++ b/django/contrib/auth/migrations/0001_initial.py
+@@ -46,13 +46,13 @@
+                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                 ('password', models.CharField(max_length=128, verbose_name='password')),
+                 ('last_login', models.DateTimeField(default=timezone.now, verbose_name='last login')),
+                 ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
+                 ('username', models.CharField(help_text='Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.', unique=True, max_length=30, verbose_name='username', validators=[validators.RegexValidator('^[\\w.@+-]+$', 'Enter a valid username.', 'invalid')])),
+                 ('first_name', models.CharField(max_length=30, verbose_name='first name', blank=True)),
+                 ('last_name', models.CharField(max_length=30, verbose_name='last name', blank=True)),
+                 ('email', models.EmailField(max_length=75, verbose_name='email address', blank=True)),
+                 ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
+                 ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
+                 ('date_joined', models.DateTimeField(default=timezone.now, verbose_name='date joined')),
+-                ('groups', models.ManyToManyField(to='auth.Group', verbose_name='groups', blank=True)),
+-                ('user_permissions', models.ManyToManyField(to='auth.Permission', verbose_name='user permissions', blank=True)),
++                ('groups', models.ManyToManyField(to='auth.Group', verbose_name='groups', blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.')),
++                ('user_permissions', models.ManyToManyField(to='auth.Permission', verbose_name='user permissions', blank=True, help_text='Specific permissions for this user.')),
+@@COMMIT b341f33697cdd26cc967c2ca4a0ac679f4167319  2014-06-16  Added database migration for contrib.auth.
+
+diff --git a/django/contrib/auth/migrations/0001_initial.py b/django/contrib/auth/migrations/0001_initial.py
+--- /dev/null
++++ b/django/contrib/auth/migrations/0001_initial.py
+@@ -0,0 +46,13 @@
++                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
++                ('password', models.CharField(max_length=128, verbose_name='password')),
++                ('last_login', models.DateTimeField(default=timezone.now, verbose_name='last login')),
++                ('is_superuser', models.BooleanField(default=False, help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status')),
++                ('username', models.CharField(help_text='Required. 30 characters or fewer. Letters, digits and @/./+/-/_ only.', unique=True, max_length=30, verbose_name='username', validators=[validators.RegexValidator('^[\\w.@+-]+$', 'Enter a valid username.', 'invalid')])),
++                ('first_name', models.CharField(max_length=30, verbose_name='first name', blank=True)),
++                ('last_name', models.CharField(max_length=30, verbose_name='last name', blank=True)),
++                ('email', models.EmailField(max_length=75, verbose_name='email address', blank=True)),
++                ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
++                ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
++                ('date_joined', models.DateTimeField(default=timezone.now, verbose_name='date joined')),
++                ('groups', models.ManyToManyField(to='auth.Group', verbose_name='groups', blank=True)),
++                ('user_permissions', models.ManyToManyField(to='auth.Permission', verbose_name='user permissions', blank=True)),
+
+=== the same code already existed in b341f33697^ at:
+  django/contrib/admin/migrations/0001_initial.py:22  ('object_repr', models.CharField(max_length=200, verbose_name='object repr')),
+  django/contrib/admin/models.py:29  object_repr = models.CharField(_('object repr'), max_length=200)
+  django/contrib/auth/models.py:64  name = models.CharField(_('name'), max_length=50)
+  django/contrib/auth/models.py:66  codename = models.CharField(_('codename'), max_length=100)
+  django/contrib/auth/models.py:113  name = models.CharField(_('name'), max_length=80, unique=True)
+  django/contrib/auth/models.py:193  password = models.CharField(_('password'), max_length=128)
+=== history of django/contrib/admin/migrations/0001_initial.py:22 at b341f33697
+@@COMMIT edd9f8a7b2beb0fe2f83a9e50157c45364753121  2014-06-15  Fixed #22563: Added migration to admin, fixed a few more loader issues.
+
+diff --git a/django/contrib/admin/migrations/0001_initial.py b/django/contrib/admin/migrations/0001_initial.py
+--- /dev/null
++++ b/django/contrib/admin/migrations/0001_initial.py
+@@ -0,0 +22,1 @@
++                ('object_repr', models.CharField(max_length=200, verbose_name='object repr')),
+
+=== the same code already existed in edd9f8a7b2^ at:
+  django/contrib/admin/models.py:29  object_repr = models.CharField(_('object repr'), max_length=200)
+  django/contrib/auth/models.py:64  name = models.CharField(_('name'), max_length=50)
+  django/contrib/auth/models.py:66  codename = models.CharField(_('codename'), max_length=100)
+  django/contrib/auth/models.py:113  name = models.CharField(_('name'), max_length=80, unique=True)
+  django/contrib/auth/models.py:193  password = models.CharField(_('password'), max_length=128)
+  django/contrib/auth/models.py:382  username = models.CharField(_('username'), max_length=30, unique=True,
+=== history of django/contrib/admin/models.py:29 at edd9f8a7b2
+@@COMMIT 212ee65be782240554749f25bbd3772240d56fff  2007-08-05  Fixed #2101 -- Renamed `maxlength` argument to `max_length` for oldforms `FormField`s and db model `Field`s.  This is fully backwards compatible at the moment since the legacy `maxlength` argument is still supported.  Using `maxlength` will, however, issue a `PendingDeprecationWarning` when used.
+
+diff --git a/django/contrib/admin/models.py b/django/contrib/admin/models.py
+--- a/django/contrib/admin/models.py
++++ b/django/contrib/admin/models.py
+@@ -21,1 +21,1 @@
+-    object_repr = models.CharField(_('object repr'), maxlength=200)
++    object_repr = models.CharField(_('object repr'), max_length=200)
+@@COMMIT f69cf70ed813a8cd7e1f963a14ae39103e8d5265  2006-05-02  MERGED MAGIC-REMOVAL BRANCH TO TRUNK. This change is highly backwards-incompatible. Please read http://code.djangoproject.com/wiki/RemovingTheMagic for upgrade instructions.
+
+diff --git a/django/contrib/admin/models.py b/django/contrib/admin/models.py
+--- /dev/null
++++ b/django/contrib/admin/models.py
+@@ -0,0 +20,1 @@
++    object_repr = models.CharField(_('object repr'), maxlength=200)
+
+=== f69cf70ed8 added the line; the same code is not in its parent
