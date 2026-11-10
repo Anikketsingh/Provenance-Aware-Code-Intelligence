@@ -1,0 +1,5 @@
+{
+  "id": "L005",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"5776a1660e\", \"first_appearance\": \"00aa562884\", \"ambiguous\": \"no\", \"notes\": \"Following rule 1, first appearance traces back through edits to when rhs was first assigned from self.rhs.\"}\n```"
+}

@@ -18,8 +18,8 @@ The research plan's milestone is "working provenance engine with git blame compa
 2. Automatic discovery of cosmetic commits, tested against Django's own ignore list.
 3. A comparison table of baselines B0 to B3 and our method, on about 60 hand-annotated lines.
 4. A first failure taxonomy.
-5. **Stretch:** Layer C of the engine.
-6. **Stretch:** a live demo of an agent calling `why_line` through MCP.
+5. **Done:** Layer C of the engine.
+6. **Done:** a web UI for the demo, plus an agent calling `why_line` through MCP.
 
 **Cut from Project-I:** PR and issue search, the LLM, the CI check, and evaluating React and PostgreSQL. The Redis crawl can start if there's spare time.
 
@@ -33,24 +33,29 @@ The research plan's milestone is "working provenance engine with git blame compa
 
 ## 4. Two-week plan
 
-### Week 1: 8–14 Nov (annotate)
+### Status on 9 Nov
+
+Labelling is done, ahead of plan. Claude labelled all 60 lines at Aniket's request, and the web UI exists (`uv run provenance ui`). The first accuracy table, on AI labels, is in `eval/results/gold_scores.json`:
+
+| Method | Weighted accuracy | 95% CI |
+|---|---:|---|
+| git blame | 65.5% | 50.0–76.1% |
+| git blame -w -M -C -C (B2) | 69.2% | 54.0–80.4% |
+| Ours, layers A + B | 80.7% | 65.8–92.1% |
+| Ours, full tracer | 85.5% | 71.5–94.7% |
+
+The full tracer beat B2 on 18 lines and lost on none (McNemar p < 0.001). **The labels come from Claude, which also built the method, so they must be checked by a person before they are reported as gold.**
+
+### Remaining plan: 10–21 Nov
 
 | Dates | Work | Done when |
 |---|---|---|
-| Done | Engine, MCP server, evaluation pipeline, annotation packet | Saved and committed |
-| 8–9 Nov | Label the first 10 lines, then review `RULES.md` | Rules are settled |
-| 9–13 Nov | Label the other 50 lines, and get the 15 overlap lines labelled | `annotations.csv` is complete |
-| 13–14 Nov | Run `eval/score_gold.py`, and review wrong answers | First accuracy table exists |
-
-**Checkpoint, 14 Nov:** real accuracy numbers. **Decide here whether Layer C goes in the headline result.**
-
-### Week 2: 15–21 Nov (evaluate and report)
-
-| Dates | Work | Done when |
-|---|---|---|
-| 15–17 Nov | Fix what labels reveal, then freeze the code | No rule changes after this |
-| 17–18 Nov | Failure taxonomy and final frozen run | Final tables come from one frozen run |
-| 18–20 Nov | Report, slides, demo script | Dry run works, and a backup recording exists |
+| 10–11 Nov | Aniket labels 15 lines blind into `annotations_human.csv`, then runs the scorer with `--second` | Agreement and kappa exist, and disputed labels are settled |
+| 11–12 Nov | Failure taxonomy from the per-line results, and the 14 Nov Layer C decision brought forward | Each wrong answer has a category |
+| 12–14 Nov | Fix what the failures show, if anything, then freeze the code | No rule changes after this |
+| 14–15 Nov | Final frozen run of every evaluation script | Every number in the report comes from one run |
+| 15–19 Nov | Report, slides, UI demo script, and a backup screen recording | Dry run works |
+| 20 Nov | Buffer | |
 
 ## 5. Later phases
 

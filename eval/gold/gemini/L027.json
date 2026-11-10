@@ -1,0 +1,5 @@
+{
+  "id": "L027",
+  "model": "gemini-3.8-flash",
+  "reply": "{\"last_logic_change\": \"dcb3ad3319\", \"first_appearance\": \"1893467784\", \"ambiguous\": \"no\", \"notes\": \"50e95ad536 simplified dict access without changing behavior; dcb3ad3319 added the service check; 1893467784 added the original NAME check.\"}"
+}

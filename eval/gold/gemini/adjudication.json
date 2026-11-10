@@ -1,0 +1,77 @@
+[
+  {
+    "id": "L002",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"A\", \"reason\": \"Commit B merely moved the line from cluster.h to cluster_legacy.h without changing it, so commit A is the commit that introduced the line's logic.\"}\n```"
+  },
+  {
+    "id": "L014",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"A\", \"reason\": \"Adding an explicit zero initializer to a static variable does not change its behavior, so commit B is not a logic change and commit A is the last logic change.\"}\n```"
+  },
+  {
+    "id": "L019",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"B\", \"reason\": \"Commit A only moved the line from __init__.py to response.py without changing its logic, so commit B is the most recent change to what the line does.\"}\n```"
+  },
+  {
+    "id": "L020",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"neither\", \"reason\": \"Commit B only moved the line from src/module.c to src/server.h without changing it, and Commit A is not in this line's history.\"}\n```"
+  },
+  {
+    "id": "L025",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"B\", \"reason\": \"Commit A only moved or re-indented the identical line within the file, while commit B is the commit that actually introduced this line.\"}\n```"
+  },
+  {
+    "id": "L027",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"B\", \"reason\": \"Commit B changed the lookup from a safe dict.get() fallback to direct dictionary indexing, which changes the method/operator called and how missing keys are handled.\"}\n```"
+  },
+  {
+    "id": "L029",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"B\", \"reason\": \"Commit A merely moved the function containing this line from generic.py to forms.py without altering its logic, whereas commit B originally introduced the logic.\"}\n```"
+  },
+  {
+    "id": "L031",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"B\", \"reason\": \"Commit A only moved the line from django/utils/images.py to django/core/files/images.py without changing its logic, making the initial import commit B the last logic change.\"}\n```"
+  },
+  {
+    "id": "L032",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"A\", \"reason\": \"Commit B only moved the line from src/scripting.c to src/script_lua.c without altering its logic, making commit A the most recent commit that established the line's logic.\"}\n```"
+  },
+  {
+    "id": "L036",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"A\", \"reason\": \"Commit B only moved the code between files without changing its logic, making commit A the most recent commit that changed what the line does.\"}\n```"
+  },
+  {
+    "id": "L041",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"A\", \"reason\": \"Commit A added this method definition to admin inlines in this line's history, whereas commit B is an older commit that is not in the line's history.\"}\n```"
+  },
+  {
+    "id": "L047",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"A\", \"reason\": \"Commit A is in the line's history and introduced this logic, whereas Commit B is an older commit not in this line's history.\"}\n```"
+  },
+  {
+    "id": "L050",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"A\", \"reason\": \"Commit aaad3e27ac is in this line's direct history and introduced the line, whereas commit d818e0c9b2 is an older commit that added similar text elsewhere.\"}\n```"
+  },
+  {
+    "id": "L052",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"B\", \"reason\": \"Commit A only moved the line from src/lolwut.c to src/lolwut5.c without changing its logic, so the most recent logic change is its initial introduction in commit B.\"}\n```"
+  },
+  {
+    "id": "L058",
+    "model": "gemini-3.8-flash",
+    "reply": "```json\n{\"answer\": \"B\", \"reason\": \"Commit A only moves or re-indents the line without changing its logic, so the most recent logic change is commit B where the line was introduced.\"}\n```"
+  }
+]

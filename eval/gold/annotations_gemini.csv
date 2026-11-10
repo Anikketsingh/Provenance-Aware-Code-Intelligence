@@ -1,0 +1,61 @@
+id,repo,path,line,last_logic_change,first_appearance,ambiguous,notes
+L001,django,django/contrib/gis/gdal/prototypes/raster.py,134,8f5904560a,8f5904560a,no,Line added as part of compute_band_statistics prototype; subsequent commits only changed formatting.
+L002,redis,src/cluster_legacy.h,329,d9a0478599,d9a0478599,no,History starts with commit adding line to a new file; code may have been moved from another file.
+L003,redis,src/db.c,3381,55c81f2cd3,55c81f2cd3,no,Line introduced in this commit.
+L004,redis,src/object.c,612,8ec28002be,8ec28002be,no,Function definition added in this commit with no subsequent changes.
+L005,django,django/db/models/lookups.py,536,5776a1660e,00aa562884,no,"Following rule 1, first appearance traces back through edits to when rhs was first assigned from self.rhs."
+L006,redis,src/cluster_asm.c,1924,2bc4e0299d,2bc4e0299d,no,Added when the file was created; may have originated elsewhere.
+L007,django,django/db/models/query.py,835,0f6946495a,0f6946495a,no,Commit 9c19aff7c7 only changed quote formatting with Black.
+L008,django,django/db/models/fields/related.py,1180,f39b0421b4,f39b0421b4,no,9c19aff7c7 only changed formatting and quote style.
+L009,django,django/db/backends/oracle/base.py,41,cbf9d6e0bb,cbf9d6e0bb,no,Reformatting quotes from single to double in 9c19aff7c7 is cosmetic.
+L010,django,django/contrib/gis/gdal/prototypes/raster.py,109,f1db8c36e9,f1db8c36e9,no,Line introduced in f1db8c36e9; subsequent commits only dedented and reformatted it.
+L011,django,django/db/backends/postgresql/base.py,335,1d90c9b113,1d90c9b113,no,Line raising ImproperlyConfigured for invalid isolation level was introduced in 1d90c9b113.
+L012,django,django/contrib/admin/options.py,247,8f30556329,30610719d5,no,Attribute renamed from rel.to to remote_field.model; later indentation under try is cosmetic.
+L013,django,django/utils/regex_helper.py,153,e52c52ea13,e52c52ea13,no,Commit 9c19aff7c7 only changed quote style from single to double quotes.
+L014,redis,src/server.c,4162,aa856b39f2,aa856b39f2,no,Line was introduced in this commit.
+L015,django,django/utils/lorem_ipsum.py,117,d22e39c10d,d22e39c10d,no,Added to new file in d22e39c10d (possibly moved from elsewhere); subsequent commits only reformatted and rewrapped.
+L016,redis,src/sparsearray.c,258,0d9576435f,0d9576435f,no,Line introduced when creating the new sparsearray.c file.
+L017,django,django/contrib/gis/utils/layermapping.py,489,79e68c225b,79e68c225b,no,Added in initial GIS merge commit and never changed.
+L018,django,django/core/management/sql.py,32,68e0a169c4,3de1288042,no,Signal renamed from pre_syncdb to pre_migrate; later line split was cosmetic.
+L019,django,django/http/response.py,297,b4066d7d21,b4066d7d21,no,"Added to new file in b4066d7d21, likely moved from another file."
+L020,redis,src/server.h,1079,babe3c7b29,babe3c7b29,no,Line introduced in babe3c7b29 with no subsequent logic changes.
+L021,django,django/db/backends/base/client.py,30,6e742dabc9,bbe6fbb876,no,"Logic changed to set env to None instead of leaving it unchanged when falsy, affecting subprocess inheritance."
+L022,django,django/contrib/gis/gdal/raster/base.py,53,e0b456bee7,e0b456bee7,no,Line introduced when raster base metadata functionality was added.
+L023,redis,src/chk.c,615,c93e4a62c6,c93e4a62c6,no,Line introduced when src/chk.c was added as a new file.
+L024,django,django/db/models/fields/related.py,1058,d818e0c9b2,d818e0c9b2,no,super() modernization and unpacking syntax refactoring are cosmetic with no change in API or behavior.
+L025,redis,src/module.c,13966,23325c135f,23325c135f,no,Line was added in 23325c135f and has not been modified since.
+L026,redis,src/redis-cli.c,8316,6d1a7cec23,6d1a7cec23,no,The line was introduced in 6d1a7cec23 as part of the rebalance command implementation; earlier diff lines are git tracking misalignments.
+L027,django,django/db/backends/postgresql/base.py,252,dcb3ad3319,1893467784,no,50e95ad536 simplified dict access without changing behavior; dcb3ad3319 added the service check; 1893467784 added the original NAME check.
+L028,django,django/contrib/sites/shortcuts.py,13,9ffab9cee1,9ffab9cee1,no,Added in 9ffab9cee1 (possibly moved from elsewhere); 9c19aff7c7 was just a quote style change.
+L029,django,django/contrib/contenttypes/forms.py,86,10e3faf191,10e3faf191,no,Line added in a new file (moved from another file); subsequent commit 9c19aff7c7 was formatting.
+L030,django,django/db/models/query.py,308,d97f026a7a,d97f026a7a,no,Added as an argument in d97f026a7a and reformatted onto its own line by Black in 9c19aff7c7.
+L031,django,django/core/files/images.py,61,7899568e01,7899568e01,no,Line was only re-indented when wrapped in a7faf6424a.
+L032,redis,src/script_lua.c,1233,22aab1ce94,22aab1ce94,no,Code added in a new file moved from another file not in history.
+L033,django,django/db/models/fields/related.py,1674,c627da0ccc,c627da0ccc,no,Hint text was introduced in c627da0ccc; subsequent commits only rewrapped the line.
+L034,django,django/conf/global_settings.py,55,8c399ba5b6,8c399ba5b6,no,Reformatting with Black changed only quote style.
+L035,redis,src/redis-cli.c,7205,5bf13eaaf8,5bf13eaaf8,no,The line was introduced in 5bf13eaaf8 and has not been modified since.
+L036,redis,src/script_lua.c,210,22aab1ce94,22aab1ce94,no,File created in this commit; code may have been moved from another file.
+L037,django,django/db/backends/mysql/schema.py,41,e2c6a0858d,e2c6a0858d,no,Added support for MySQL 8.0.16+ check constraints; subsequent commit only reformatted quotes with Black.
+L038,django,django/http/response.py,488,4a685bc0dc,4a685bc0dc,no,Line introduced in 4a685bc0dc and has not been modified.
+L039,django,django/contrib/gis/utils/layermapping.py,173,1adb7b3c38,79e68c225b,no,Statement assigning transaction_decorator was rewritten to handle autocommit explicitly; initial import in 79e68c225b.
+L040,django,django/conf/global_settings.py,17,ed114e1510,ed114e1510,no,Initial import.
+L041,django,django/contrib/admin/options.py,622,b1b1da1eac,b1b1da1eac,no,Line was added in this commit and has not changed since.
+L042,django,django/db/models/fields/related.py,831,1ed77e7782,1ed77e7782,no,Line added to initialize return list in get_instance_value_for_fields.
+L043,redis,src/connection.h,58,0ae02ce95b,0ae02ce95b,no,Line introduced in this commit with no subsequent changes.
+L044,django,django/http/response.py,190,bcc2befd0e,b4066d7d21,no,Code was moved from another file in b4066d7d21 where history ends.
+L045,redis,src/hyperloglog.c,726,c756936b1d,c756936b1d,no,Commit 93238575f7 only fixed a typo in a comment.
+L046,redis,src/quicklist.c,2170,abdd1414a8,abdd1414a8,no,Line added in abdd1414a8 replacing unrelated test code.
+L047,redis,src/db.c,3264,0270abda82,0270abda82,no,Copied line first appeared in 0270abda82 and has not changed logic since.
+L048,django,django/db/models/fields/tuple_lookups.py,188,1eac690d25,1eac690d25,no,Line introduced in new file adding tuple lookups.
+L049,django,django/contrib/admin/options.py,350,d9330d5be2,d9330d5be2,no,Indentation under a new condition in 1718b5256c and quote style reformatting in 9c19aff7c7 are not logic changes.
+L050,django,django/db/models/fields/related.py,1778,aaad3e27ac,aaad3e27ac,no,Line added as part of an assert statement.
+L051,django,django/db/models/fields/related.py,2111,8f30556329,38362a1276,no,Attribute rename in 8f30556329 is a logic change; replacing literal with constant in 1e0dcd6c8b and black formatting in 9c19aff7c7 are not.
+L052,redis,src/lolwut5.c,72,c560ade831,c560ade831,no,"Added to a new file, likely moved from another file not visible in history."
+L053,redis,src/redis-cli.c,6523,3f8a4adb49,3f8a4adb49,no,Line introduced in this commit.
+L054,django,django/contrib/gis/utils/layermapping.py,324,79e68c225b,79e68c225b,no,Quote style change in 9c19aff7c7 is cosmetic.
+L055,django,django/contrib/admin/templatetags/admin_urls.py,18,a222d6e800,a222d6e800,no,Line added in commit a222d6e800 with no subsequent changes.
+L056,django,django/contrib/admin/options.py,2310,7bc0878922,7bc0878922,no,Factored out into a helper method without changing logic.
+L057,django,django/contrib/gis/utils/layermapping.py,385,79e68c225b,79e68c225b,no,b35ff0d920 only fixed whitespace around a colon; history begins with the GIS branch merge.
+L058,redis,src/acl.c,2920,23325c135f,23325c135f,no,Line introduced in this commit.
+L059,django,django/db/models/query.py,1575,66933a6619,4c3bfe9053,no,Changed method called from _clone() to _chain().
+L060,django,django/contrib/auth/views.py,336,255fb99284,255fb99284,no,Commit 9c19aff7c7 only reformatted quotes and whitespace with Black.

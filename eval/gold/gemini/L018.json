@@ -1,0 +1,5 @@
+{
+  "id": "L018",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"68e0a169c4\", \"first_appearance\": \"3de1288042\", \"ambiguous\": \"no\", \"notes\": \"Signal renamed from pre_syncdb to pre_migrate; later line split was cosmetic.\"}\n```"
+}

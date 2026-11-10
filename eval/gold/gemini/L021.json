@@ -1,0 +1,5 @@
+{
+  "id": "L021",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"6e742dabc9\", \"first_appearance\": \"bbe6fbb876\", \"ambiguous\": \"no\", \"notes\": \"Logic changed to set env to None instead of leaving it unchanged when falsy, affecting subprocess inheritance.\"}\n```"
+}

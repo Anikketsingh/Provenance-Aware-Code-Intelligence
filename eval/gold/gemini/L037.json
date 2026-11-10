@@ -1,0 +1,5 @@
+{
+  "id": "L037",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"e2c6a0858d\", \"first_appearance\": \"e2c6a0858d\", \"ambiguous\": \"no\", \"notes\": \"Added support for MySQL 8.0.16+ check constraints; subsequent commit only reformatted quotes with Black.\"}\n```"
+}

@@ -52,3 +52,18 @@ def test_commit_matching_needs_enough_characters():
     assert score.same_commit(full, "9c19aff")
     assert not score.same_commit(full, "9c1")
     assert not score.same_commit(full, "")
+
+
+@pytest.mark.parametrize(
+    ("answer", "label", "expected"),
+    [
+        ("f5552571dc7aaaa", "f5552571dc", True),
+        ("1ed77e7782bbbb", "f5552571dc|1ed77e7782", True),
+        ("f5552571dc", "f5552571dc|1ed77e7782", True),
+        ("abcdef1234", "f5552571dc|1ed77e7782", False),
+        ("", "f5552571dc", False),
+        ("abc", "abc", False),
+    ],
+)
+def test_labels_can_list_equivalent_commits(answer, label, expected):
+    assert score.same_commit(answer, label) is expected

@@ -1,0 +1,5 @@
+{
+  "id": "L017",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"79e68c225b\", \"first_appearance\": \"79e68c225b\", \"ambiguous\": \"no\", \"notes\": \"Added in initial GIS merge commit and never changed.\"}\n```"
+}

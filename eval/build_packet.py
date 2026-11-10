@@ -6,6 +6,7 @@ method suggested which commit. The answer can also be any other commit in the hi
 Usage: uv run python eval/build_packet.py
 """
 
+import argparse
 import json
 import subprocess
 from datetime import UTC, datetime
@@ -93,7 +94,10 @@ def section(item: dict, baselines: Baselines, tracer: Tracer, store: Store, repo
 
 
 def main() -> None:
-    items = json.loads((GOLD / "sample_key.json").read_text())["items"]
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--set", choices=("dev", "test"), default="dev")
+    folder = GOLD if parser.parse_args().set == "dev" else GOLD / "test"
+    items = json.loads((folder / "sample_key.json").read_text())["items"]
     parts = {}
     for name in sorted({item["repo"] for item in items}):
         repo = Repo.named(name)
@@ -107,7 +111,7 @@ def main() -> None:
     header = (
         "# Annotation Packet\n\nFollow `RULES.md`, and record answers in `annotations.csv`.\n\n"
     )
-    (GOLD / "packet.md").write_text(header + "\n".join(parts[i["id"]] for i in items))
+    (folder / "packet.md").write_text(header + "\n".join(parts[i["id"]] for i in items))
 
 
 if __name__ == "__main__":

@@ -1,5 +1,7 @@
 """Layer C: commits that mix cosmetic and real changes inside a single file."""
 
+import pytest
+
 from provenance.ingest.git_history import ingest_history
 from provenance.model import ChangeKind
 from provenance.store.db import Store
@@ -103,3 +105,59 @@ def test_too_short_lines_do_not_match():
 
 def test_tokens_ignore_quote_style_and_layout():
     assert line_tokens("f('a', b)") == line_tokens('f("a" b')
+
+
+@pytest.mark.parametrize(
+    ("language", "old", "new"),
+    [
+        # Comment edits don't change behaviour (Redis 4339706e07 -> b7b23bdfb8)
+        ("c", "int options;  /* Moduile options. */", "int options;  /* Module options. */"),
+        ("c", "x = 1; // old note", "x = 1;"),
+        ("python", "x = 1  # old note", "x = 1  # new note"),
+        ("javascript", "let a = b; /* a */ // b", "let a = b;"),
+        # Python 2 unicode prefixes mean nothing in Python 3
+        ("python", "x = u'abc'", "x = 'abc'"),
+    ],
+)
+def test_tokens_ignore_comments(language, old, new):
+    assert line_tokens(old, language) == line_tokens(new, language)
+
+
+@pytest.mark.parametrize(
+    ("language", "old", "new"),
+    [
+        ("python", "f(x)", 'f("x")'),
+        ("python", 'x = "a # b"', 'x = "a"'),
+        ("c", 'url = "http://a";', 'url = "http:";'),
+        ("c", "#define LIMIT 10", "#define LIMIT 20"),
+        ("python", "x = bu'a'", "x = b'a'"),
+        ("python", 'x = f"{a}"', 'x = "{a}"'),
+    ],
+)
+def test_tokens_keep_real_differences(language, old, new):
+    assert line_tokens(old, language) != line_tokens(new, language)
+
+
+def test_resplit_string_is_found_in_the_old_line():
+    # Django 004ba0f99e joined a hint, and 7119f40c98 split it again differently
+    old = '                hint="Use through_fields to pick the foreign keys Django should use.",'
+    hunk = Hunk(
+        "a.py",
+        10,
+        (old,),
+        "a.py",
+        10,
+        ('    "Use through_fields to pick the "', '    "foreign keys Django should use."'),
+    )
+    step = step_back([hunk], "a.py", 11)
+    assert step.kind == ChangeKind.COSMETIC
+    assert step.line == 10
+
+
+def test_comment_only_edit_steps_back_as_cosmetic():
+    hunk = Hunk(
+        "m.c", 5, ("    int options;    /* Moduile options. */",),
+        "m.c", 5, ("    int options;    /* Module options. */",),
+    )  # fmt: skip
+    step = step_back([hunk], "m.c", 5)
+    assert step.kind == ChangeKind.COSMETIC

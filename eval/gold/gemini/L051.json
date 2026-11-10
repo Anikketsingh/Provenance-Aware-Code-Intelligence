@@ -1,0 +1,5 @@
+{
+  "id": "L051",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"8f30556329\", \"first_appearance\": \"38362a1276\", \"ambiguous\": \"no\", \"notes\": \"Attribute rename in 8f30556329 is a logic change; replacing literal with constant in 1e0dcd6c8b and black formatting in 9c19aff7c7 are not.\"}\n```"
+}

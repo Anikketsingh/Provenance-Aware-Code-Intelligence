@@ -11,6 +11,10 @@ from provenance.gitio import git, validate_rev
 
 #: The strongest flags git offers: ignore whitespace, follow moves within and across files.
 STRONGEST_FLAGS = ("-w", "-M", "-C", "-C")
+#: What the tracer uses. With git's default thresholds (20 and 40 characters), short common
+#: lines such as `struct node *n = ln->value;` were credited to identical older lines
+#: elsewhere. Chosen on the development set on 10 Nov 2026 (eval/results/tune_flags.json).
+TRACE_FLAGS = ("-w", "-M60", "-C60", "-C60")
 
 _HEADER_RE = re.compile(r"^([0-9a-f]{40}) (\d+) (\d+)")
 

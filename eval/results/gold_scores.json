@@ -1,0 +1,1359 @@
+{
+  "labelled": 60,
+  "ambiguous": 0,
+  "methods": {
+    "B0": {
+      "weighted": 0.6550289019554572,
+      "ci": [
+        0.4999190741717083,
+        0.7612177675659324
+      ],
+      "raw": 0.4,
+      "vs_ours_c": {
+        "only_first": 5,
+        "only_second": 28,
+        "p": 6.618769839406013e-05
+      }
+    },
+    "B1": {
+      "weighted": 0.6715049841587037,
+      "ci": [
+        0.5219184800974375,
+        0.7808147491039374
+      ],
+      "raw": 0.4166666666666667,
+      "vs_ours_c": {
+        "only_first": 0,
+        "only_second": 22,
+        "p": 4.76837158203125e-07
+      }
+    },
+    "B2": {
+      "weighted": 0.6915936024872091,
+      "ci": [
+        0.5398884215943262,
+        0.8037266994363484
+      ],
+      "raw": 0.48333333333333334,
+      "vs_ours_c": {
+        "only_first": 0,
+        "only_second": 18,
+        "p": 7.62939453125e-06
+      }
+    },
+    "Ours-A": {
+      "weighted": 0.807014667893025,
+      "ci": [
+        0.6578632048176244,
+        0.9208561875742566
+      ],
+      "raw": 0.7333333333333333,
+      "vs_ours_c": {
+        "only_first": 0,
+        "only_second": 3,
+        "p": 0.25
+      }
+    },
+    "Ours-C": {
+      "weighted": 0.8552815160890768,
+      "ci": [
+        0.7154750980873122,
+        0.9465425976920048
+      ],
+      "raw": 0.7833333333333333,
+      "vs_ours_c": {
+        "only_first": 0,
+        "only_second": 0,
+        "p": 1.0
+      }
+    },
+    "first:B2": {
+      "weighted": 0.577732782146063
+    },
+    "first:Ours-C": {
+      "weighted": 0.8221831191652215
+    }
+  },
+  "lines": [
+    {
+      "id": "L001",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "9c19aff7c7",
+        "B1": "9c19aff7c7",
+        "B2": "9c19aff7c7",
+        "Ours-A": "8f5904560a",
+        "B3": "8f5904560a",
+        "Ours-C": "8f5904560a",
+        "Ours-C first": "8f5904560a"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L005",
+      "repo": "django",
+      "stratum": "agree",
+      "B0": true,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "5776a1660e",
+        "B1": "5776a1660e",
+        "B2": "5776a1660e",
+        "Ours-A": "5776a1660e",
+        "B3": "5776a1660e",
+        "Ours-C": "5776a1660e",
+        "Ours-C first": "5776a1660e"
+      },
+      "Ours-C": true,
+      "first:Ours-C": false,
+      "first:B2": false
+    },
+    {
+      "id": "L007",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "9c19aff7c7",
+        "B1": "9c19aff7c7",
+        "B2": "9c19aff7c7",
+        "Ours-A": "0f6946495a",
+        "B3": "0f6946495a",
+        "Ours-C": "0f6946495a",
+        "Ours-C first": "0f6946495a"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L008",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "9c19aff7c7",
+        "B1": "9c19aff7c7",
+        "B2": "9c19aff7c7",
+        "Ours-A": "f39b0421b4",
+        "B3": "f39b0421b4",
+        "Ours-C": "f39b0421b4",
+        "Ours-C first": "f39b0421b4"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L009",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "9c19aff7c7",
+        "B1": "9c19aff7c7",
+        "B2": "9c19aff7c7",
+        "Ours-A": "cbf9d6e0bb",
+        "B3": "cbf9d6e0bb",
+        "Ours-C": "cbf9d6e0bb",
+        "Ours-C first": "cbf9d6e0bb"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L010",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "9c19aff7c7",
+        "B1": "9c19aff7c7",
+        "B2": "9c19aff7c7",
+        "Ours-A": "f1db8c36e9",
+        "B3": "f1db8c36e9",
+        "Ours-C": "f1db8c36e9",
+        "Ours-C first": "f1db8c36e9"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L011",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": true,
+      "B1": false,
+      "B2": false,
+      "Ours-A": false,
+      "B3": false,
+      "answers": {
+        "B0": "1d90c9b113",
+        "B1": "828f7b62e8",
+        "B2": "828f7b62e8",
+        "Ours-A": "828f7b62e8",
+        "B3": "828f7b62e8",
+        "Ours-C": "ff60c5f9de",
+        "Ours-C first": "1e0fb3b7a3"
+      },
+      "Ours-C": false,
+      "first:Ours-C": false,
+      "first:B2": false
+    },
+    {
+      "id": "L012",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "f64fd47a76",
+        "B1": "9c19aff7c7",
+        "B2": "9c19aff7c7",
+        "Ours-A": "8f30556329",
+        "B3": "8f30556329",
+        "Ours-C": "8f30556329",
+        "Ours-C first": "30610719d5"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L013",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "9c19aff7c7",
+        "B1": "9c19aff7c7",
+        "B2": "9c19aff7c7",
+        "Ours-A": "e52c52ea13",
+        "B3": "e52c52ea13",
+        "Ours-C": "e52c52ea13",
+        "Ours-C first": "e52c52ea13"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L015",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": true,
+      "B3": false,
+      "answers": {
+        "B0": "9c19aff7c7",
+        "B1": "9c19aff7c7",
+        "B2": "9c19aff7c7",
+        "Ours-A": "d22e39c10d",
+        "B3": "953badbea5",
+        "Ours-C": "d22e39c10d",
+        "Ours-C first": "d22e39c10d"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L017",
+      "repo": "django",
+      "stratum": "agree",
+      "B0": true,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "79e68c225b",
+        "B1": "79e68c225b",
+        "B2": "79e68c225b",
+        "Ours-A": "79e68c225b",
+        "B3": "79e68c225b",
+        "Ours-C": "79e68c225b",
+        "Ours-C first": "79e68c225b"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": true
+    },
+    {
+      "id": "L018",
+      "repo": "django",
+      "stratum": "agree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": false,
+      "B3": false,
+      "answers": {
+        "B0": "2732edc5f2",
+        "B1": "2732edc5f2",
+        "B2": "2732edc5f2",
+        "Ours-A": "2732edc5f2",
+        "B3": "2732edc5f2",
+        "Ours-C": "68e0a169c4",
+        "Ours-C first": "3de1288042"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L019",
+      "repo": "django",
+      "stratum": "agree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": false,
+      "B3": false,
+      "answers": {
+        "B0": "b4066d7d21",
+        "B1": "b4066d7d21",
+        "B2": "b4066d7d21",
+        "Ours-A": "b4066d7d21",
+        "B3": "b4066d7d21",
+        "Ours-C": "f60d428463",
+        "Ours-C first": "f60d428463"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L021",
+      "repo": "django",
+      "stratum": "agree",
+      "B0": true,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "6e742dabc9",
+        "B1": "6e742dabc9",
+        "B2": "6e742dabc9",
+        "Ours-A": "6e742dabc9",
+        "B3": "6e742dabc9",
+        "Ours-C": "6e742dabc9",
+        "Ours-C first": "bbe6fbb876"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L022",
+      "repo": "django",
+      "stratum": "agree",
+      "B0": true,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "e0b456bee7",
+        "B1": "e0b456bee7",
+        "B2": "e0b456bee7",
+        "Ours-A": "e0b456bee7",
+        "B3": "e0b456bee7",
+        "Ours-C": "e0b456bee7",
+        "Ours-C first": "e0b456bee7"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": true
+    },
+    {
+      "id": "L024",
+      "repo": "django",
+      "stratum": "agree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": false,
+      "B3": false,
+      "answers": {
+        "B0": "d13a9e44de",
+        "B1": "d13a9e44de",
+        "B2": "d13a9e44de",
+        "Ours-A": "d13a9e44de",
+        "B3": "d13a9e44de",
+        "Ours-C": "d13a9e44de",
+        "Ours-C first": "d818e0c9b2"
+      },
+      "Ours-C": false,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L027",
+      "repo": "django",
+      "stratum": "agree",
+      "B0": true,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "50e95ad536",
+        "B1": "50e95ad536",
+        "B2": "50e95ad536",
+        "Ours-A": "50e95ad536",
+        "B3": "50e95ad536",
+        "Ours-C": "50e95ad536",
+        "Ours-C first": "dcb3ad3319"
+      },
+      "Ours-C": true,
+      "first:Ours-C": false,
+      "first:B2": false
+    },
+    {
+      "id": "L028",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "9c19aff7c7",
+        "B1": "9c19aff7c7",
+        "B2": "9c19aff7c7",
+        "Ours-A": "9ffab9cee1",
+        "B3": "9ffab9cee1",
+        "Ours-C": "9ffab9cee1",
+        "Ours-C first": "9ffab9cee1"
+      },
+      "Ours-C": true,
+      "first:Ours-C": false,
+      "first:B2": false
+    },
+    {
+      "id": "L029",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": false,
+      "B3": false,
+      "answers": {
+        "B0": "9c19aff7c7",
+        "B1": "9c19aff7c7",
+        "B2": "9c19aff7c7",
+        "Ours-A": "10e3faf191",
+        "B3": "10e3faf191",
+        "Ours-C": "02cc59187b",
+        "Ours-C first": "02cc59187b"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L030",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": false,
+      "B3": false,
+      "answers": {
+        "B0": "9c19aff7c7",
+        "B1": "9c19aff7c7",
+        "B2": "9c19aff7c7",
+        "Ours-A": "3187c89d6f",
+        "B3": "3187c89d6f",
+        "Ours-C": "3187c89d6f",
+        "Ours-C first": "d97f026a7a"
+      },
+      "Ours-C": false,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L031",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": false,
+      "B3": false,
+      "answers": {
+        "B0": "a7faf6424a",
+        "B1": "7899568e01",
+        "B2": "7899568e01",
+        "Ours-A": "7899568e01",
+        "B3": "7899568e01",
+        "Ours-C": "7899568e01",
+        "Ours-C first": "7899568e01"
+      },
+      "Ours-C": false,
+      "first:Ours-C": false,
+      "first:B2": false
+    },
+    {
+      "id": "L033",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": false,
+      "B3": false,
+      "answers": {
+        "B0": "7119f40c98",
+        "B1": "7119f40c98",
+        "B2": "7119f40c98",
+        "Ours-A": "004ba0f99e",
+        "B3": "004ba0f99e",
+        "Ours-C": "004ba0f99e",
+        "Ours-C first": "c627da0ccc"
+      },
+      "Ours-C": false,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L034",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "9c19aff7c7",
+        "B1": "9c19aff7c7",
+        "B2": "9c19aff7c7",
+        "Ours-A": "8c399ba5b6",
+        "B3": "8c399ba5b6",
+        "Ours-C": "8c399ba5b6",
+        "Ours-C first": "8c399ba5b6"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L037",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "9c19aff7c7",
+        "B1": "9c19aff7c7",
+        "B2": "9c19aff7c7",
+        "Ours-A": "e2c6a0858d",
+        "B3": "e2c6a0858d",
+        "Ours-C": "e2c6a0858d",
+        "Ours-C first": "1fc2c70f76"
+      },
+      "Ours-C": true,
+      "first:Ours-C": false,
+      "first:B2": false
+    },
+    {
+      "id": "L038",
+      "repo": "django",
+      "stratum": "agree",
+      "B0": true,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "4a685bc0dc",
+        "B1": "4a685bc0dc",
+        "B2": "4a685bc0dc",
+        "Ours-A": "4a685bc0dc",
+        "B3": "4a685bc0dc",
+        "Ours-C": "4a685bc0dc",
+        "Ours-C first": "4a685bc0dc"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": true
+    },
+    {
+      "id": "L039",
+      "repo": "django",
+      "stratum": "agree",
+      "B0": true,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "1adb7b3c38",
+        "B1": "1adb7b3c38",
+        "B2": "1adb7b3c38",
+        "Ours-A": "1adb7b3c38",
+        "B3": "1adb7b3c38",
+        "Ours-C": "1adb7b3c38",
+        "Ours-C first": "79e68c225b"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L040",
+      "repo": "django",
+      "stratum": "agree",
+      "B0": true,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "ed114e1510",
+        "B1": "ed114e1510",
+        "B2": "ed114e1510",
+        "Ours-A": "ed114e1510",
+        "B3": "ed114e1510",
+        "Ours-C": "ed114e1510",
+        "Ours-C first": "ed114e1510"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": true
+    },
+    {
+      "id": "L041",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "b1b1da1eac",
+        "B1": "a19ed8aea3",
+        "B2": "a19ed8aea3",
+        "Ours-A": "a19ed8aea3",
+        "B3": "a19ed8aea3",
+        "Ours-C": "a19ed8aea3",
+        "Ours-C first": "a19ed8aea3"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": true
+    },
+    {
+      "id": "L042",
+      "repo": "django",
+      "stratum": "agree",
+      "B0": true,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "f5552571dc",
+        "B1": "f5552571dc",
+        "B2": "f5552571dc",
+        "Ours-A": "f5552571dc",
+        "B3": "f5552571dc",
+        "Ours-C": "f5552571dc",
+        "Ours-C first": "f5552571dc"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": true
+    },
+    {
+      "id": "L044",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "9c19aff7c7",
+        "B1": "bcc2befd0e",
+        "B2": "bcc2befd0e",
+        "Ours-A": "bcc2befd0e",
+        "B3": "bcc2befd0e",
+        "Ours-C": "bcc2befd0e",
+        "Ours-C first": "ed114e1510"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L048",
+      "repo": "django",
+      "stratum": "agree",
+      "B0": true,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "1eac690d25",
+        "B1": "1eac690d25",
+        "B2": "1eac690d25",
+        "Ours-A": "1eac690d25",
+        "B3": "1eac690d25",
+        "Ours-C": "1eac690d25",
+        "Ours-C first": "1eac690d25"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": true
+    },
+    {
+      "id": "L049",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "9c19aff7c7",
+        "B1": "9c19aff7c7",
+        "B2": "9c19aff7c7",
+        "Ours-A": "d9330d5be2",
+        "B3": "d9330d5be2",
+        "Ours-C": "d9330d5be2",
+        "Ours-C first": "d9330d5be2"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L050",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "aaad3e27ac",
+        "B1": "d818e0c9b2",
+        "B2": "d818e0c9b2",
+        "Ours-A": "d818e0c9b2",
+        "B3": "d818e0c9b2",
+        "Ours-C": "d818e0c9b2",
+        "Ours-C first": "d818e0c9b2"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": true
+    },
+    {
+      "id": "L051",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": false,
+      "B3": false,
+      "answers": {
+        "B0": "9c19aff7c7",
+        "B1": "9c19aff7c7",
+        "B2": "9c19aff7c7",
+        "Ours-A": "1e0dcd6c8b",
+        "B3": "1e0dcd6c8b",
+        "Ours-C": "1e0dcd6c8b",
+        "Ours-C first": "1e0dcd6c8b"
+      },
+      "Ours-C": false,
+      "first:Ours-C": false,
+      "first:B2": false
+    },
+    {
+      "id": "L054",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "9c19aff7c7",
+        "B1": "9c19aff7c7",
+        "B2": "9c19aff7c7",
+        "Ours-A": "79e68c225b",
+        "B3": "79e68c225b",
+        "Ours-C": "79e68c225b",
+        "Ours-C first": "79e68c225b"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L055",
+      "repo": "django",
+      "stratum": "agree",
+      "B0": true,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "a222d6e800",
+        "B1": "a222d6e800",
+        "B2": "a222d6e800",
+        "Ours-A": "a222d6e800",
+        "B3": "a222d6e800",
+        "Ours-C": "a222d6e800",
+        "Ours-C first": "a222d6e800"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": true
+    },
+    {
+      "id": "L056",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "512e348bb2",
+        "B1": "7bc0878922",
+        "B2": "7bc0878922",
+        "Ours-A": "7bc0878922",
+        "B3": "7bc0878922",
+        "Ours-C": "7bc0878922",
+        "Ours-C first": "7bc0878922"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": true
+    },
+    {
+      "id": "L057",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "b35ff0d920",
+        "B1": "79e68c225b",
+        "B2": "79e68c225b",
+        "Ours-A": "79e68c225b",
+        "B3": "79e68c225b",
+        "Ours-C": "79e68c225b",
+        "Ours-C first": "79e68c225b"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": true
+    },
+    {
+      "id": "L059",
+      "repo": "django",
+      "stratum": "agree",
+      "B0": true,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "66933a6619",
+        "B1": "66933a6619",
+        "B2": "66933a6619",
+        "Ours-A": "66933a6619",
+        "B3": "66933a6619",
+        "Ours-C": "66933a6619",
+        "Ours-C first": "4c3bfe9053"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L060",
+      "repo": "django",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": true,
+      "B3": true,
+      "answers": {
+        "B0": "9c19aff7c7",
+        "B1": "9c19aff7c7",
+        "B2": "9c19aff7c7",
+        "Ours-A": "255fb99284",
+        "B3": "255fb99284",
+        "Ours-C": "255fb99284",
+        "Ours-C first": "255fb99284"
+      },
+      "Ours-C": true,
+      "first:Ours-C": false,
+      "first:B2": false
+    },
+    {
+      "id": "L002",
+      "repo": "redis",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": true,
+      "Ours-A": true,
+      "answers": {
+        "B0": "d9a0478599",
+        "B1": "d9a0478599",
+        "B2": "11436b1449",
+        "Ours-A": "11436b1449",
+        "Ours-C": "11436b1449",
+        "Ours-C first": "ecc9109434"
+      },
+      "Ours-C": true,
+      "first:Ours-C": false,
+      "first:B2": true
+    },
+    {
+      "id": "L003",
+      "repo": "redis",
+      "stratum": "agree",
+      "B0": true,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "answers": {
+        "B0": "55c81f2cd3",
+        "B1": "55c81f2cd3",
+        "B2": "55c81f2cd3",
+        "Ours-A": "55c81f2cd3",
+        "Ours-C": "55c81f2cd3",
+        "Ours-C first": "55c81f2cd3"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": true
+    },
+    {
+      "id": "L004",
+      "repo": "redis",
+      "stratum": "agree",
+      "B0": true,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "answers": {
+        "B0": "8ec28002be",
+        "B1": "8ec28002be",
+        "B2": "8ec28002be",
+        "Ours-A": "8ec28002be",
+        "Ours-C": "8ec28002be",
+        "Ours-C first": "8ec28002be"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": true
+    },
+    {
+      "id": "L006",
+      "repo": "redis",
+      "stratum": "agree",
+      "B0": true,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "answers": {
+        "B0": "2bc4e0299d",
+        "B1": "2bc4e0299d",
+        "B2": "2bc4e0299d",
+        "Ours-A": "2bc4e0299d",
+        "Ours-C": "2bc4e0299d",
+        "Ours-C first": "2bc4e0299d"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": true
+    },
+    {
+      "id": "L014",
+      "repo": "redis",
+      "stratum": "agree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": false,
+      "answers": {
+        "B0": "aa856b39f2",
+        "B1": "aa856b39f2",
+        "B2": "aa856b39f2",
+        "Ours-A": "aa856b39f2",
+        "Ours-C": "aa856b39f2",
+        "Ours-C first": "aa856b39f2"
+      },
+      "Ours-C": false,
+      "first:Ours-C": false,
+      "first:B2": false
+    },
+    {
+      "id": "L016",
+      "repo": "redis",
+      "stratum": "agree",
+      "B0": true,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "answers": {
+        "B0": "0d9576435f",
+        "B1": "0d9576435f",
+        "B2": "0d9576435f",
+        "Ours-A": "0d9576435f",
+        "Ours-C": "0d9576435f",
+        "Ours-C first": "0d9576435f"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": true
+    },
+    {
+      "id": "L020",
+      "repo": "redis",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": false,
+      "answers": {
+        "B0": "babe3c7b29",
+        "B1": "babe3c7b29",
+        "B2": "b7b23bdfb8",
+        "Ours-A": "b7b23bdfb8",
+        "Ours-C": "b7b23bdfb8",
+        "Ours-C first": "4339706e07"
+      },
+      "Ours-C": false,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L023",
+      "repo": "redis",
+      "stratum": "agree",
+      "B0": true,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "answers": {
+        "B0": "c93e4a62c6",
+        "B1": "c93e4a62c6",
+        "B2": "c93e4a62c6",
+        "Ours-A": "c93e4a62c6",
+        "Ours-C": "c93e4a62c6",
+        "Ours-C first": "c93e4a62c6"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": true
+    },
+    {
+      "id": "L025",
+      "repo": "redis",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "answers": {
+        "B0": "23325c135f",
+        "B1": "867816003e",
+        "B2": "867816003e",
+        "Ours-A": "867816003e",
+        "Ours-C": "867816003e",
+        "Ours-C first": "867816003e"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": true
+    },
+    {
+      "id": "L026",
+      "repo": "redis",
+      "stratum": "disagree",
+      "B0": true,
+      "B1": false,
+      "B2": false,
+      "Ours-A": false,
+      "answers": {
+        "B0": "6d1a7cec23",
+        "B1": "486c7af7b8",
+        "B2": "486c7af7b8",
+        "Ours-A": "486c7af7b8",
+        "Ours-C": "486c7af7b8",
+        "Ours-C first": "486c7af7b8"
+      },
+      "Ours-C": false,
+      "first:Ours-C": false,
+      "first:B2": false
+    },
+    {
+      "id": "L032",
+      "repo": "redis",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": true,
+      "Ours-A": true,
+      "answers": {
+        "B0": "22aab1ce94",
+        "B1": "22aab1ce94",
+        "B2": "63505e0b59",
+        "Ours-A": "63505e0b59",
+        "Ours-C": "63505e0b59",
+        "Ours-C first": "63505e0b59"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": true
+    },
+    {
+      "id": "L035",
+      "repo": "redis",
+      "stratum": "disagree",
+      "B0": true,
+      "B1": false,
+      "B2": false,
+      "Ours-A": false,
+      "answers": {
+        "B0": "5bf13eaaf8",
+        "B1": "3f8a4adb49",
+        "B2": "3f8a4adb49",
+        "Ours-A": "3f8a4adb49",
+        "Ours-C": "3f8a4adb49",
+        "Ours-C first": "3f8a4adb49"
+      },
+      "Ours-C": false,
+      "first:Ours-C": false,
+      "first:B2": false
+    },
+    {
+      "id": "L036",
+      "repo": "redis",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": true,
+      "Ours-A": true,
+      "answers": {
+        "B0": "22aab1ce94",
+        "B1": "22aab1ce94",
+        "B2": "2237131e15",
+        "Ours-A": "2237131e15",
+        "Ours-C": "2237131e15",
+        "Ours-C first": "2237131e15"
+      },
+      "Ours-C": true,
+      "first:Ours-C": false,
+      "first:B2": false
+    },
+    {
+      "id": "L043",
+      "repo": "redis",
+      "stratum": "agree",
+      "B0": true,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "answers": {
+        "B0": "0ae02ce95b",
+        "B1": "0ae02ce95b",
+        "B2": "0ae02ce95b",
+        "Ours-A": "0ae02ce95b",
+        "Ours-C": "0ae02ce95b",
+        "Ours-C first": "0ae02ce95b"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": true
+    },
+    {
+      "id": "L045",
+      "repo": "redis",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": true,
+      "answers": {
+        "B0": "93238575f7",
+        "B1": "93238575f7",
+        "B2": "93238575f7",
+        "Ours-A": "c756936b1d",
+        "Ours-C": "c756936b1d",
+        "Ours-C first": "c756936b1d"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": false
+    },
+    {
+      "id": "L046",
+      "repo": "redis",
+      "stratum": "agree",
+      "B0": true,
+      "B1": true,
+      "B2": true,
+      "Ours-A": true,
+      "answers": {
+        "B0": "abdd1414a8",
+        "B1": "abdd1414a8",
+        "B2": "abdd1414a8",
+        "Ours-A": "abdd1414a8",
+        "Ours-C": "abdd1414a8",
+        "Ours-C first": "abdd1414a8"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": true
+    },
+    {
+      "id": "L047",
+      "repo": "redis",
+      "stratum": "disagree",
+      "B0": true,
+      "B1": false,
+      "B2": false,
+      "Ours-A": false,
+      "answers": {
+        "B0": "e1789e4368",
+        "B1": "0270abda82",
+        "B2": "0270abda82",
+        "Ours-A": "0270abda82",
+        "Ours-C": "0270abda82",
+        "Ours-C first": "0270abda82"
+      },
+      "Ours-C": false,
+      "first:Ours-C": false,
+      "first:B2": false
+    },
+    {
+      "id": "L052",
+      "repo": "redis",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": true,
+      "Ours-A": true,
+      "answers": {
+        "B0": "c560ade831",
+        "B1": "c560ade831",
+        "B2": "eac2a79cf5",
+        "Ours-A": "eac2a79cf5",
+        "Ours-C": "eac2a79cf5",
+        "Ours-C first": "eac2a79cf5"
+      },
+      "Ours-C": true,
+      "first:Ours-C": true,
+      "first:B2": true
+    },
+    {
+      "id": "L053",
+      "repo": "redis",
+      "stratum": "disagree",
+      "B0": true,
+      "B1": false,
+      "B2": false,
+      "Ours-A": false,
+      "answers": {
+        "B0": "3f8a4adb49",
+        "B1": "486c7af7b8",
+        "B2": "486c7af7b8",
+        "Ours-A": "486c7af7b8",
+        "Ours-C": "486c7af7b8",
+        "Ours-C first": "486c7af7b8"
+      },
+      "Ours-C": false,
+      "first:Ours-C": false,
+      "first:B2": false
+    },
+    {
+      "id": "L058",
+      "repo": "redis",
+      "stratum": "disagree",
+      "B0": false,
+      "B1": false,
+      "B2": false,
+      "Ours-A": false,
+      "answers": {
+        "B0": "23325c135f",
+        "B1": "e8bf9b03ed",
+        "B2": "e8bf9b03ed",
+        "Ours-A": "e8bf9b03ed",
+        "Ours-C": "e8bf9b03ed",
+        "Ours-C first": "e8bf9b03ed"
+      },
+      "Ours-C": false,
+      "first:Ours-C": false,
+      "first:B2": false
+    }
+  ]
+}

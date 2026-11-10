@@ -1,0 +1,5 @@
+{
+  "id": "L056",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"7bc0878922\", \"first_appearance\": \"7bc0878922\", \"ambiguous\": \"no\", \"notes\": \"Factored out into a helper method without changing logic.\"}\n```"
+}

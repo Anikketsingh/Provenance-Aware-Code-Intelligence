@@ -1,0 +1,5 @@
+{
+  "id": "L011",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"1d90c9b113\", \"first_appearance\": \"1d90c9b113\", \"ambiguous\": \"no\", \"notes\": \"Line raising ImproperlyConfigured for invalid isolation level was introduced in 1d90c9b113.\"}\n```"
+}

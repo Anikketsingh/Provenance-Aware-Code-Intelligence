@@ -7,7 +7,7 @@ from pathlib import Path
 from provenance.config import Repo
 from provenance.gitio import git
 from provenance.store.db import Store
-from provenance.trace.blame import STRONGEST_FLAGS, BlameLine, blame_file
+from provenance.trace.blame import STRONGEST_FLAGS, TRACE_FLAGS, BlameLine, blame_file
 
 LOCK_FILE = Path(__file__).parent / "corpus.lock.json"
 
@@ -47,8 +47,14 @@ class Baselines:
             "B0": blame_file(git_dir, path, rev, flags=()),
             "B1": blame_file(git_dir, path, rev, flags=("-w", "-M")),
             "B2": blame_file(git_dir, path, rev, flags=STRONGEST_FLAGS),
+            # Same thresholds as our tracer, without skip lists, so a gain is not just the flags
+            "B2t": blame_file(git_dir, path, rev, flags=TRACE_FLAGS),
             "Ours-A": blame_file(
-                git_dir, path, rev, ignore_revs=self.store.non_logic_commits(path)
+                git_dir,
+                path,
+                rev,
+                flags=TRACE_FLAGS,
+                ignore_revs=self.store.non_logic_commits(path),
             ),
         }
         if self.listed:

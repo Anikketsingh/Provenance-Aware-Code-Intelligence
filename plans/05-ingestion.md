@@ -89,7 +89,7 @@ Each parser gets unit tests built from real messages.
 | 1 | SQLite schema and connection helper | Yes |
 | 2 | Bare clone helper and corpus lock file | Yes |
 | 3 | History walker, resumable | Yes |
-| 4 | Reference parsers with tests | Yes |
-| 5 | GraphQL crawler with cache and resume | Start, run on Redis |
-| 6 | Trac crawler | No, but start it if there is time |
+| 4 | Reference parsers with tests | **Done, 10 Nov.** `provenance link` stores 22,273 Django and 7,242 Redis links |
+| 5 | GraphQL crawler with cache and resume | Next. Needs a `GITHUB_TOKEN` from Aniket |
+| 6 | Trac crawler | **Started, 10 Nov.** `provenance fetch-tickets` fetches summaries and descriptions, not yet comments |
 | 7 | Crawl React and Django | No |

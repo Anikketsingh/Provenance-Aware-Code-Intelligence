@@ -1,0 +1,61 @@
+id,repo,path,line,code,last_logic_change,first_appearance,ambiguous,notes
+L001,django,django/contrib/gis/gdal/prototypes/raster.py,134,"POINTER(c_double),",8f5904560a,8f5904560a,no,df8d8d4292 re-indent and Black split are layout only
+L002,redis,src/cluster_legacy.h,329,int cport;                  /* Latest known cluster port of this node. */,11436b1449,11436b1449,no,cport field added; d9a0478599 moved the struct to cluster_legacy.h
+L003,redis,src/db.c,3381,} else if (spec->begin_search_type == KSPEC_BS_KEYWORD) {,55c81f2cd3,55c81f2cd3,no,new key-spec lookup code; no earlier keyword branch in db.c
+L004,redis,src/object.c,612,void freeModuleObject(robj *o) {,8ec28002be,8ec28002be,no,
+L005,django,django/db/models/lookups.py,536,rhs = [r for r in self.rhs if r is not None],5776a1660e,00aa562884,no,86eccdc8b6 turned list(self.rhs) into the TypeError fallback; first = original rhs assignment
+L006,redis,src/cluster_asm.c,1924,"""server paused"";",2bc4e0299d,2bc4e0299d,no,new file
+L007,django,django/db/models/query.py,835,"""the upsert.""",0f6946495a,0f6946495a,no,Black changed quotes only
+L008,django,django/db/models/fields/related.py,1180,"id=""fields.W342"",",f39b0421b4,f39b0421b4,no,Black split only
+L009,django,django/db/backends/oracle/base.py,41,"kernel32 = ctypes.CDLL(""kernel32"")",cbf9d6e0bb,cbf9d6e0bb,no,Black changed quotes only
+L010,django,django/contrib/gis/gdal/prototypes/raster.py,109,delete_band_nodata_value = void_output(,f1db8c36e9,f1db8c36e9,no,3ae4344bbd removed the surrounding GDAL version guard; unwrapping treated as non-logic per rules
+L011,django,django/db/backends/postgresql/base.py,335,raise ImproperlyConfigured(,1d90c9b113,1d90c9b113,no,new validation code
+L012,django,django/contrib/admin/options.py,247,db_field.remote_field.model,8f30556329,30610719d5,no,hard: enclosing call changed in f64fd47a76 (_registry.get -> get_model_admin); argument itself last changed by rel.to -> remote_field.model
+L013,django,django/utils/regex_helper.py,153,"if terminal_char != "")"":",e52c52ea13,e52c52ea13,no,Black changed quotes only
+L014,redis,src/server.c,4162,static long long prev_err_count = 0;,90b9f08e5d,90b9f08e5d,no,"aa856b39f2 moved it into incrCommandStatsOnError and added = 0 to a static, no behaviour change"
+L015,django,django/utils/lorem_ipsum.py,117,"""quis"",",d22e39c10d,d22e39c10d,no,"953badbea5, df8d8d4292 and Black only re-wrapped the list"
+L016,redis,src/sparsearray.c,258,"arSlice *s = arAllocAndTrack(ar, arSparseAllocSize(cap));",0d9576435f,0d9576435f,no,new file
+L017,django,django/contrib/gis/utils/layermapping.py,489,"def verify_geom(self, geom, model_field):",79e68c225b,79e68c225b,no,import: gis branch merge
+L018,django,django/core/management/sql.py,32,models.signals.pre_migrate.send(,68e0a169c4,3de1288042,no,pre_syncdb -> pre_migrate is a different signal; 2732edc5f2 changed arguments on other lines only
+L019,django,django/http/response.py,297,"return self.set_cookie(key, value, **kwargs)",f60d428463,f60d428463,no,b4066d7d21 moved it from http/__init__.py
+L020,redis,src/server.h,1079,int options;    /* Module options and capabilities. */,4339706e07,4339706e07,no,b7b23bdfb8 comment typo; babe3c7b29 moved the struct to server.h
+L021,django,django/db/backends/base/client.py,30,"env = {**os.environ, **env} if env else None",6e742dabc9,bbe6fbb876,no,now yields None for empty env
+L022,django,django/contrib/gis/gdal/raster/base.py,53,domain_meta[key] = val,e0b456bee7,e0b456bee7,no,new file
+L023,redis,src/chk.c,615,return i;,c93e4a62c6,c93e4a62c6,no,new file
+L024,django,django/db/models/fields/related.py,1058,"*super().check(**kwargs),",d818e0c9b2,d818e0c9b2,no,d6eaf7c018 super() syntax and d13a9e44de list unpacking treated as syntax-only
+L025,redis,src/module.c,13966,for (int j = 0; cmd->history && cmd->history[j].since; j++) {,867816003e,867816003e,no,23325c135f moved the loop into a new function
+L026,redis,src/redis-cli.c,8316,clusterManagerNode *n = ln->value;,6d1a7cec23,6d1a7cec23,no,common idiom; 486c7af7b8 has the same text elsewhere
+L027,django,django/db/backends/postgresql/base.py,252,"if settings_dict[""NAME""] == """" and not settings_dict[""OPTIONS""].get(""service""):",50e95ad536,1e0fb3b7a3,no,"hard: .get('OPTIONS', {}) -> ['OPTIONS'] counted as a different call; empty-NAME check copied from the old postgresql backend via 88ca662e75"
+L028,django,django/contrib/sites/shortcuts.py,13,"if apps.is_installed(""django.contrib.sites""):",9ffab9cee1,667d832e90,no,Site._meta.installed -> apps.is_installed when moved to shortcuts.py
+L029,django,django/contrib/contenttypes/forms.py,86,"can_order=False,",02cc59187b,02cc59187b,no,10e3faf191 moved it from generic.py; Black split
+L030,django,django/db/models/query.py,308,"chunked_fetch=self.chunked_fetch,",d97f026a7a,d97f026a7a,no,Black split only
+L031,django,django/core/files/images.py,61,if not data:,ed114e1510,ed114e1510,no,import; 7899568e01 moved it from utils/images.py; a7faf6424a wrapped it in try
+L032,redis,src/script_lua.c,1233,"luaLoadLib(lua, ""cmsgpack"", luaopen_cmsgpack);",63505e0b59,63505e0b59,no,22aab1ce94 moved it from scripting.c
+L033,django,django/db/models/fields/related.py,1674,"""Django should use.""",c627da0ccc,c627da0ccc,no,004ba0f99e and 7119f40c98 only re-split the string
+L034,django,django/conf/global_settings.py,55,"(""ar"", gettext_noop(""Arabic"")),",8c399ba5b6,8c399ba5b6,no,Black changed quotes only
+L035,redis,src/redis-cli.c,7205,list *owners = listCreate();,5bf13eaaf8,5bf13eaaf8,no,new loop; similar line in clusterManagerFixOpenSlot
+L036,redis,src/script_lua.c,210,".null_callback = redisProtocolToLuaType_Null,",2237131e15,f01f0c02d1,no,hard: switch case for RESP3 null replaced by callback table; first = the original null dispatch
+L037,django,django/db/backends/mysql/schema.py,41,"return ""ALTER TABLE %(table)s DROP CHECK %(name)s""",e2c6a0858d,e2c6a0858d,no,Black changed quotes only
+L038,django,django/http/response.py,488,"""This %s instance has no `text` attribute."" % self.__class__.__name__",4a685bc0dc,4a685bc0dc,no,
+L039,django,django/contrib/gis/utils/layermapping.py,173,self.transaction_decorator = None,1adb7b3c38,79e68c225b,no,import; decorator assignment rewritten for autocommit
+L040,django,django/conf/global_settings.py,17,DEBUG = False,ed114e1510,ed114e1510,no,import
+L041,django,django/contrib/admin/options.py,622,"def has_change_permission(self, request, obj=None):",a19ed8aea3,a19ed8aea3,no,import: newforms-admin merge; b1b1da1eac moved the method to BaseModelAdmin
+L042,django,django/db/models/fields/related.py,831,ret = [],f5552571dc|1ed77e7782,f5552571dc|1ed77e7782,no,"the same patch was committed twice (f5552571dc and 1ed77e7782), so either counts"
+L043,redis,src/connection.h,58,aeFileProc *accept_handler;,0ae02ce95b,0ae02ce95b,no,
+L044,django,django/http/response.py,190,"for key, value in self.headers.items()",bcc2befd0e,ed114e1510,no,import; _headers.values() -> headers.items() is a different attribute
+L045,redis,src/hyperloglog.c,726,prev = NULL; /* Points to previous opcode at the end of the loop. */,c756936b1d,c756936b1d,no,93238575f7 fixed a typo in the comment
+L046,redis,src/quicklist.c,2170,for (int _i = 0; _i < (int)option_count; _i++) {,abdd1414a8,abdd1414a8,no,
+L047,redis,src/db.c,3264,int slot = getKeySlot(key);,e1789e4368,e1789e4368,no,new function; same idiom elsewhere
+L048,django,django/db/models/fields/tuple_lookups.py,188,"return root.as_sql(compiler, connection)",1eac690d25,1eac690d25,no,new file
+L049,django,django/contrib/admin/options.py,350,"kwargs[""queryset""] = queryset",d9330d5be2,d9330d5be2,no,1718b5256c wrapped it in an if; noted per rules
+L050,django,django/db/models/fields/related.py,1778,"""where the field is attached to.""",d818e0c9b2,d818e0c9b2,yes,"aaad3e27ac copied an existing assert into a new branch (the original stayed), so it is a copy, not a move; rule 3 suggests d818e0c9b2, the new location suggests aaad3e27ac"
+L051,django,django/db/models/fields/related.py,2111,self.remote_field.model == RECURSIVE_RELATIONSHIP_CONSTANT,8f30556329,38362a1276,no,"1e0dcd6c8b replaced the 'self' literal with an equal constant, treated as non-logic"
+L052,redis,src/lolwut5.c,72,if (rand() % 2) r3 = -r3;,eac2a79cf5,eac2a79cf5,no,c560ade831 moved it from lolwut.c
+L053,redis,src/redis-cli.c,6523,"listRewind(cluster_manager.nodes, &li);",3f8a4adb49,3f8a4adb49,no,common idiom
+L054,django,django/contrib/gis/utils/layermapping.py,324,"raise LayerMapError(""No source reference system defined."")",79e68c225b,79e68c225b,no,import: gis branch merge
+L055,django,django/contrib/admin/templatetags/admin_urls.py,18,return quote(value),a222d6e800,a222d6e800,no,
+L056,django,django/contrib/admin/options.py,2310,if changecount:,7bc0878922,7bc0878922,no,512e348bb2 moved it into _save_formset()
+L057,django,django/contrib/gis/utils/layermapping.py,385,return {self.unique: kwargs[self.unique]},79e68c225b,79e68c225b,no,import; b35ff0d920 whitespace
+L058,redis,src/acl.c,2920,struct redisCommand *cmd = dictGetVal(de);,b9c97c0b2e,b9c97c0b2e,no,23325c135f moved it into aclCatWithFlags()
+L059,django,django/db/models/query.py,1575,clone = self._chain(),66933a6619,4c3bfe9053,no,_clone() -> _chain() is a different method
+L060,django,django/contrib/auth/views.py,336,"""title"": _(""Password reset unsuccessful""),",255fb99284,e07e4030b9,no,hard: class-based view re-implemented the function view's title assignment

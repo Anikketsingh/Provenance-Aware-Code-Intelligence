@@ -4,9 +4,14 @@ Lines where methods disagree are the informative ones, so half the sample comes 
 That oversampling would bias accuracy, so we also record each stratum's real share of the
 population, and score_gold.py uses those shares as weights.
 
-Usage: uv run python eval/sample_lines.py
+The development set (eval/gold) was studied while improving the method. The test set
+(eval/gold/test) is drawn later with another seed, excludes every development line, and is
+only scored after the code is frozen.
+
+Usage: uv run python eval/sample_lines.py [--set dev|test]
 """
 
+import argparse
 import csv
 import json
 import random
@@ -21,7 +26,7 @@ from provenance.trace.lines import logic_lines
 from provenance.trace.tokens import language_for
 
 GOLD = Path(__file__).parent / "gold"
-SEED = 20261108
+SETS = {"dev": (GOLD, 20261108, "L"), "test": (GOLD / "test", 20261110, "T")}
 FILES_PER_REPO = 120
 PLAN = {"django": {"agree": 15, "disagree": 25}, "redis": {"agree": 8, "disagree": 12}}
 ROOTS = {"django": ("django/",), "redis": ("src/",)}
@@ -70,27 +75,40 @@ def population(name: str, rng: random.Random) -> tuple[list[dict], dict]:
 
 
 def main() -> None:
-    rng = random.Random(SEED)
-    GOLD.mkdir(exist_ok=True)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--set", choices=SETS, default="dev")
+    folder, seed, prefix = SETS[parser.parse_args().set]
+    if folder != GOLD:
+        dev = json.loads((GOLD / "sample_key.json").read_text())["items"]
+        taken = {(item["repo"], item["path"], item["line"]) for item in dev}
+    else:
+        taken = set()
+    rng = random.Random(seed)
+    folder.mkdir(exist_ok=True)
     items: list[dict] = []
-    meta: dict = {"seed": SEED, "repos": {}}
+    meta: dict = {"seed": seed, "repos": {}}
     for name, plan in PLAN.items():
         rows, info = population(name, rng)
         info["lines"] = len(rows)
         info["strata"] = {}
         for stratum, count in plan.items():
-            members = [row for row in rows if row["stratum"] == stratum]
+            members = [
+                row
+                for row in rows
+                if row["stratum"] == stratum
+                and (row["repo"], row["path"], row["line"]) not in taken
+            ]
             info["strata"][stratum] = {"population": len(members), "sampled": count}
             items.extend(rng.sample(members, count))
         meta["repos"][name] = info
     rng.shuffle(items)  # mixes repos and strata, so position reveals nothing to the annotator
     for number, item in enumerate(items, 1):
-        item["id"] = f"L{number:03d}"
+        item["id"] = f"{prefix}{number:03d}"
 
-    (GOLD / "sample_key.json").write_text(
+    (folder / "sample_key.json").write_text(
         json.dumps({"meta": meta, "items": items}, indent=2) + "\n"
     )
-    with (GOLD / "annotations.csv").open("w", newline="") as handle:
+    with (folder / "annotations.csv").open("w", newline="") as handle:
         writer = csv.writer(handle)
         writer.writerow(
             [

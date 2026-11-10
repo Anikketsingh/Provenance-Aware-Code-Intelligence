@@ -167,3 +167,80 @@ class Store:
     def class_counts(self) -> dict[str, int]:
         rows = self._db.execute("SELECT kind, count(*) FROM commit_class GROUP BY kind")
         return dict(rows.fetchall())
+
+    def messages(self) -> Iterator[tuple[str, str, str]]:
+        yield from self._db.execute("SELECT sha, subject, body FROM commits")
+
+    def replace_edges(self, origin: str, version: int, edges: Iterable[tuple]) -> int:
+        """Swap every edge from one origin for a fresh set of (src, dst, type, conf, evidence)."""
+        self._db.execute("DELETE FROM edges WHERE origin = ?", (origin,))
+        rows = [(*edge, origin, version) for edge in edges]
+        self._db.executemany("INSERT OR IGNORE INTO edges VALUES (?, ?, ?, ?, ?, ?, ?)", rows)
+        self._db.commit()
+        return self._db.execute(
+            "SELECT count(*) FROM edges WHERE origin = ?", (origin,)
+        ).fetchone()[0]
+
+    def edges_of(self, node: str) -> list[tuple[str, str, str, float, str]]:
+        """Edges leaving or entering a node, as (src, dst, type, confidence, evidence)."""
+        rows = self._db.execute(
+            """SELECT src, dst, type, confidence, evidence FROM edges WHERE src = ?
+               UNION SELECT src, dst, type, confidence, evidence FROM edges WHERE dst = ?""",
+            (node, node),
+        )
+        return rows.fetchall()
+
+    def edge_counts(self) -> dict[str, int]:
+        return dict(self._db.execute("SELECT type, count(*) FROM edges GROUP BY type").fetchall())
+
+    def has_artefact(self, node: str) -> bool:
+        return (
+            self._db.execute("SELECT 1 FROM artefacts WHERE id = ?", (node,)).fetchone() is not None
+        )
+
+    def add_artefact(
+        self, node: str, kind: str, title: str, body: str, state: str, url: str, raw: str
+    ) -> None:
+        self._db.execute(
+            "INSERT OR REPLACE INTO artefacts VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%s','now'))",
+            (node, kind, title, body, state, url, raw),
+        )
+        self._db.commit()
+
+    def artefact(self, node: str) -> dict | None:
+        row = self._db.execute(
+            "SELECT kind, title, body, state, url FROM artefacts WHERE id = ?", (node,)
+        ).fetchone()
+        if row is None or row[3] == "missing":
+            return None
+        return dict(zip(("kind", "title", "body", "state", "url"), row, strict=True))
+
+    def linked_numbers(self, prefix: str) -> list[int]:
+        """Numbers of nodes like `ticket:django/` that commits link to, newest commits first."""
+        rows = self._db.execute(
+            """SELECT e.dst, max(c.commit_time) AS latest FROM edges e
+               JOIN commits c ON e.src = 'commit:' || c.sha
+               WHERE e.dst LIKE ? GROUP BY e.dst ORDER BY latest DESC""",
+            (prefix + "%",),
+        )
+        return [int(dst.rpartition("/")[2]) for dst, _latest in rows]
+
+    def add_edges(self, origin: str, version: int, edges: Iterable[tuple]) -> None:
+        """Add edges of (src, dst, type, conf, evidence) without removing existing ones."""
+        rows = [(*edge, origin, version) for edge in edges]
+        self._db.executemany("INSERT OR IGNORE INTO edges VALUES (?, ?, ?, ?, ?, ?, ?)", rows)
+        self._db.commit()
+
+    def crawl_state(self, key: str) -> tuple[str | None, int, bool]:
+        """The saved cursor, pages fetched so far, and whether the crawl finished."""
+        row = self._db.execute(
+            "SELECT cursor, pages, done FROM crawl_state WHERE key = ?", (key,)
+        ).fetchone()
+        return (row[0], row[1], bool(row[2])) if row else (None, 0, False)
+
+    def save_crawl_state(self, key: str, cursor: str | None, pages: int, done: bool) -> None:
+        self._db.execute(
+            "INSERT OR REPLACE INTO crawl_state VALUES (?, ?, ?, ?)",
+            (key, cursor, pages, int(done)),
+        )
+        self._db.commit()

@@ -19,10 +19,26 @@ uv run pytest
 uv run provenance clone django       # bare clone into data/django/
 uv run provenance ingest django      # load commits into SQLite
 uv run provenance classify django    # find cosmetic commits
+uv run provenance link django        # link commits to tickets, PRs and reverts
+uv run provenance fetch-tickets django --limit 300   # Trac tickets, 1 request a second
 uv run provenance why django django/db/models/query.py 214
 ```
 
 Supported repos are listed in `src/provenance/config.py`.
+
+## Web UI
+
+```bash
+uv run provenance ui
+```
+
+This opens http://127.0.0.1:8765 in your browser. It only listens on your own machine.
+
+- **Explore:** pick a file and click a line. Lines marked in amber are where plain `git blame` points at a change that didn't alter behaviour. The panel shows the line's history, newest first. Hatched layers only changed the layout, and the solid layer is where the behaviour came from. It also shows the exact reply an AI agent gets from the MCP server.
+- **Results:** accuracy of each method on the labelled lines, plus the checks that need no labels.
+- **Connect an agent:** how to register the MCP server.
+
+Links like `http://127.0.0.1:8765/#django:django/contrib/auth/hashers.py:114` open a file at a line, which helps in a demo.
 
 ## Connect an AI agent
 

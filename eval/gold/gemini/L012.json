@@ -1,0 +1,5 @@
+{
+  "id": "L012",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"8f30556329\", \"first_appearance\": \"30610719d5\", \"ambiguous\": \"no\", \"notes\": \"Attribute renamed from rel.to to remote_field.model; later indentation under try is cosmetic.\"}\n```"
+}

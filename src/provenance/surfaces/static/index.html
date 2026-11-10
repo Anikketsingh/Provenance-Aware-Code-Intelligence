@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Provenance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ground: #eef1f4;
+    --panel: #ffffff;
+    --ink: #1c2430;
+    --ink-2: #4d5868;
+    --muted: #7a8494;
+    --line: #d9dee5;
+    --bedrock: #1f5f8b;
+    --bedrock-soft: #dbe8f2;
+    --bedrock-fill: #1f5f8b;
+    --sediment: #c98a1b;
+    --sediment-soft: #f7ecd6;
+    --select: #e6eef6;
+    --danger: #b3412e;
+    --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #12171e; --panel: #1a212b; --ink: #dce3ea; --ink-2: #aab4c0; --muted: #808b98;
+      --line: #2c3540; --bedrock: #5a9fd0; --bedrock-soft: #1d3446; --bedrock-fill: #24557a; --sediment: #e0a43a;
+      --sediment-soft: #3a2f1a; --select: #22303e; --danger: #e07a66; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #12171e; --panel: #1a212b; --ink: #dce3ea; --ink-2: #aab4c0; --muted: #808b98;
+    --line: #2c3540; --bedrock: #5a9fd0; --bedrock-soft: #1d3446; --bedrock-fill: #24557a; --sediment: #e0a43a;
+    --sediment-soft: #3a2f1a; --select: #22303e; --danger: #e07a66; color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { background: var(--ground); color: var(--ink); font: 15px/1.5 var(--sans); }
+  button, input, select { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--bedrock); outline-offset: 2px; }
+  a { color: var(--bedrock); }
+  code, .mono { font-family: var(--mono); font-size: 0.86em; }
+
+  header.top {
+    display: flex; align-items: center; gap: 24px; padding: 12px 20px;
+    border-bottom: 1px solid var(--line); background: var(--panel); flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: baseline; gap: 10px; }
+  .brand h1 { font-size: 19px; margin: 0; font-weight: 700; letter-spacing: -0.01em; }
+  .brand p { margin: 0; color: var(--muted); font-size: 13px; }
+  .repo-pick { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink-2); }
+  .repo-pick select { padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); }
+  nav.tabs { margin-left: auto; display: flex; gap: 4px; }
+  nav.tabs button {
+    border: 0; background: none; padding: 7px 12px; border-radius: 6px; cursor: pointer; color: var(--ink-2);
+  }
+  nav.tabs button[aria-selected="true"] { background: var(--select); color: var(--ink); font-weight: 600; }
+
+  main { height: calc(100vh - 58px); }
+  .view[hidden] { display: none !important; }
+
+  /* Explore */
+  #explore { display: grid; grid-template-columns: 260px minmax(0, 1fr) 440px; height: 100%; }
+  .files { border-right: 1px solid var(--line); display: flex; flex-direction: column; min-height: 0; background: var(--panel); }
+  .files label { font-size: 13px; color: var(--ink-2); padding: 14px 14px 4px; }
+  .files input { margin: 0 14px 10px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--ground); }
+  .files ul { list-style: none; margin: 0; padding: 0 6px 12px; overflow: auto; flex: 1; }
+  .files li button {
+    width: 100%; text-align: left; border: 0; background: none; padding: 4px 8px; border-radius: 5px;
+    cursor: pointer; font-family: var(--mono); font-size: 12px; color: var(--ink-2); overflow-wrap: anywhere;
+  }
+  .files li button:hover { background: var(--ground); }
+  .files li button[aria-current="true"] { background: var(--select); color: var(--ink); }
+  .files .count { font-size: 12px; color: var(--muted); padding: 0 14px 6px; }
+
+  .code { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+  .code-head {
+    display: flex; align-items: center; gap: 14px; padding: 10px 16px; border-bottom: 1px solid var(--line);
+    flex-wrap: wrap; background: var(--panel);
+  }
+  .code-head .path { font-family: var(--mono); font-size: 13px; font-weight: 500; overflow-wrap: anywhere; }
+  .code-head .summary { font-size: 13px; color: var(--ink-2); }
+  .code-head .summary b { color: var(--sediment); font-weight: 600; }
+  .code-head .jump { margin-left: auto; display: flex; gap: 6px; }
+  .btn {
+    border: 1px solid var(--line); background: var(--panel); padding: 4px 10px; border-radius: 6px;
+    cursor: pointer; font-size: 13px;
+  }
+  .btn:hover { border-color: var(--muted); }
+  .btn:disabled { opacity: 0.45; cursor: default; }
+  .listing { overflow: auto; flex: 1; background: var(--panel); font-family: var(--mono); font-size: 12.5px; line-height: 1.6; }
+  .row {
+    display: grid; grid-template-columns: 58px 4px minmax(0, 1fr); cursor: pointer; min-width: max-content;
+  }
+  .row:hover { background: var(--ground); }
+  .row .n { text-align: right; padding-right: 12px; color: var(--muted); user-select: none; }
+  .row .mark { background: transparent; }
+  .row .t { white-space: pre; padding: 0 16px 0 10px; }
+  .row.misleads .mark { background: var(--sediment); }
+  .row.misleads .n { color: var(--sediment); }
+  .row[aria-selected="true"] { background: var(--select); }
+  .row[aria-selected="true"] .n { color: var(--ink); font-weight: 500; }
+  .placeholder { padding: 40px 28px; color: var(--ink-2); max-width: 560px; font-family: var(--sans); font-size: 15px; }
+  .placeholder h2 { font-size: 20px; margin: 0 0 8px; color: var(--ink); }
+  .placeholder p { margin: 0 0 10px; }
+  .legend-inline { display: inline-block; width: 4px; height: 14px; background: var(--sediment); vertical-align: -2px; margin: 0 4px; }
+
+  /* Story */
+  .story { border-left: 1px solid var(--line); overflow: auto; padding: 18px 20px 28px; background: var(--ground); }
+  .story h2 { font-size: 16px; margin: 0 0 4px; }
+  .story .where { font-size: 13px; color: var(--muted); margin: 0 0 12px; }
+  .story .theline {
+    font-family: var(--mono); font-size: 12px; background: var(--panel); border: 1px solid var(--line);
+    padding: 8px 10px; border-radius: 6px; white-space: pre-wrap; overflow-wrap: anywhere; margin: 0 0 14px;
+  }
+  .verdict { font-size: 15px; margin: 0 0 18px; }
+  .verdict strong { color: var(--bedrock); }
+
+  .core { position: relative; margin: 0 0 18px; padding-left: 0; }
+  .core h3, .agent h3 { font-size: 13px; color: var(--ink-2); font-weight: 600; margin: 0 0 8px; }
+  .stratum {
+    position: relative; border-radius: 4px; padding: 9px 12px 10px; margin-bottom: 3px;
+    border: 1px solid var(--line); background: var(--panel);
+  }
+  .stratum.layout {
+    background-color: var(--panel);
+    background-image: repeating-linear-gradient(135deg, var(--sediment-soft) 0 6px, transparent 6px 12px);
+    border-color: color-mix(in srgb, var(--sediment) 35%, var(--line));
+  }
+  .stratum.logic { background: var(--bedrock-soft); border-color: color-mix(in srgb, var(--bedrock) 40%, var(--line)); }
+  .stratum.bedrock { background: var(--bedrock-fill); border-color: var(--bedrock-fill); color: #fff; }
+  .stratum.bedrock .meta, .stratum.bedrock .kind { color: #e4eef7; }
+  .stratum .kind { font-size: 12px; font-weight: 600; color: var(--ink-2); }
+  .stratum.logic .kind { color: var(--bedrock); }
+  .stratum .subject { font-size: 14px; margin: 2px 0 2px; overflow-wrap: anywhere; }
+  .stratum .meta { font-size: 12px; color: var(--muted); font-family: var(--mono); }
+  .pin {
+    display: inline-block; font-size: 11.5px; font-weight: 600; padding: 1px 7px; border-radius: 10px;
+    margin: 6px 6px 0 0; background: var(--panel); color: var(--ink); border: 1px solid var(--line);
+  }
+  .stratum.bedrock .pin { color: var(--ink); }
+  .pin.git { border-color: var(--sediment); }
+  .extra { font-size: 13px; color: var(--ink-2); margin: 6px 0 0; }
+  .links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
+  .links a, .links span {
+    font-size: 12.5px; max-width: 100%; overflow-wrap: anywhere; padding: 1px 8px; border-radius: 10px; text-decoration: none;
+    border: 1px solid color-mix(in srgb, var(--bedrock) 45%, var(--line)); background: var(--panel); color: var(--bedrock);
+  }
+  .links a:hover { text-decoration: underline; }
+  .links .warn { border-color: var(--sediment); color: var(--ink); }
+  .stratum.bedrock .links a, .stratum.bedrock .links span { color: var(--bedrock-fill); background: #fff; border-color: #fff; }
+
+  .agent details { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; }
+  .agent summary { cursor: pointer; padding: 9px 12px; font-size: 14px; }
+  .agent pre { margin: 0; padding: 10px 12px; font-family: var(--mono); font-size: 11.5px; overflow: auto; max-height: 360px; border-top: 1px solid var(--line); }
+  .agent p { font-size: 13px; color: var(--ink-2); margin: 8px 0 0; }
+  .loading { color: var(--ink-2); font-size: 14px; display: flex; gap: 10px; align-items: center; }
+  .spinner { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--line); border-top-color: var(--bedrock); animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
+  .error { color: var(--danger); font-size: 14px; }
+
+  /* Results and connect */
+  .page { height: 100%; overflow: auto; }
+  .page .inner { max-width: 880px; padding: 28px 24px 60px; }
+  .page h2 { font-size: 24px; margin: 0 0 6px; letter-spacing: -0.01em; }
+  .page h3 { font-size: 17px; margin: 30px 0 8px; }
+  .page p { max-width: 72ch; color: var(--ink-2); margin: 0 0 12px; }
+  .note { border-left: 3px solid var(--sediment); padding: 4px 0 4px 12px; color: var(--ink-2); max-width: 72ch; }
+  .bars { display: grid; grid-template-columns: minmax(180px, 280px) 1fr 56px; gap: 6px 14px; align-items: center; margin: 14px 0 6px; }
+  .bars .label { font-size: 14px; }
+  .bars .label small { display: block; color: var(--muted); font-size: 12px; }
+  .bars .track { position: relative; height: 22px; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; }
+  .bars .fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--muted); border-radius: 3px 4px 4px 3px; }
+  .bars .fill.ours { background: var(--bedrock); }
+  .bars .ci { position: absolute; top: 9px; height: 2px; background: var(--ink); opacity: 0.55; }
+  .bars .val { font-size: 13px; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 12px 0; }
+  .fact { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; }
+  .fact b { display: block; font-size: 22px; letter-spacing: -0.01em; }
+  .fact span { font-size: 13px; color: var(--ink-2); }
+  .steps { padding-left: 20px; max-width: 72ch; }
+  .steps li { margin-bottom: 14px; color: var(--ink-2); }
+  .steps li strong { color: var(--ink); }
+  .cmd { display: block; font-family: var(--mono); font-size: 13px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 9px 12px; margin-top: 6px; overflow-x: auto; white-space: pre; color: var(--ink); }
+
+  @media (max-width: 1100px) {
+    #explore { grid-template-columns: 220px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
+    .story { grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--line); max-height: 55vh; }
+  }
+  @media (max-width: 720px) {
+    main { height: auto; }
+    #explore { display: block; }
+    .files ul { max-height: 30vh; }
+    .listing { max-height: 60vh; }
+    .story { max-height: none; }
+    nav.tabs { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <h1>Provenance</h1>
+    <p>Why does this line exist?</p>
+  </div>
+  <div class="repo-pick">
+    <label for="repo">Repository</label>
+    <select id="repo"></select>
+    <span id="rev" class="mono"></span>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-view="explore" aria-selected="true">Explore</button>
+    <button role="tab" data-view="results" aria-selected="false">Results</button>
+    <button role="tab" data-view="connect" aria-selected="false">Connect an agent</button>
+  </nav>
+</header>
+
+<main>
+  <section id="explore" class="view">
+    <aside class="files">
+      <label for="filter">Find a file</label>
+      <input id="filter" type="search" placeholder="e.g. hashers.py" autocomplete="off">
+      <div class="count" id="file-count"></div>
+      <ul id="file-list"></ul>
+    </aside>
+
+    <section class="code">
+      <div class="code-head" id="code-head" hidden>
+        <span class="path" id="path"></span>
+        <span class="summary" id="summary"></span>
+        <span class="jump">
+          <button class="btn" id="prev" title="Previous line where git blame misleads (k)">Previous misleading line</button>
+          <button class="btn" id="next" title="Next line where git blame misleads (j)">Next</button>
+        </span>
+      </div>
+      <div class="listing" id="listing">
+        <div class="placeholder">
+          <h2>Pick a file, then click any line</h2>
+          <p>Provenance traces each line back past reformatting, renames and moves to the change that gave it its behaviour.</p>
+          <p>Lines marked <span class="legend-inline"></span> are where plain <code>git blame</code> points at a change that didn't alter behaviour.</p>
+          <p>Try <a href="#django:django/contrib/auth/hashers.py:114" id="example">the password check in Django's <code>hashers.py</code></a>.</p>
+        </div>
+      </div>
+    </section>
+
+    <aside class="story" id="story" aria-live="polite">
+      <h2>Line history</h2>
+      <p class="where">Click a line to see where it really came from.</p>
+    </aside>
+  </section>
+
+  <section id="results" class="view page" hidden>
+    <div class="inner" id="results-inner"><p class="loading"><span class="spinner"></span>Loading results</p></div>
+  </section>
+
+  <section id="connect" class="view page" hidden>
+    <div class="inner">
+      <h2>Connect an AI agent</h2>
+      <p>Agents reach Provenance through MCP, a standard way for AI tools to call local programs. The server runs on your laptop, only reads history, and gives the agent the same evidence you see in the Explore view.</p>
+      <ol class="steps">
+        <li><strong>Prepare a repository</strong> if you haven't already. This clones it, loads its history and classifies every change.
+          <span class="cmd">uv run provenance clone django
+uv run provenance ingest django
+uv run provenance classify django</span></li>
+        <li><strong>Register the server with Claude Code,</strong> from the project folder.
+          <span class="cmd">claude mcp add provenance -- uv run provenance mcp django</span></li>
+        <li><strong>Ask the agent to change protective code.</strong> For example: "Simplify make_password() in django/contrib/auth/hashers.py". Before deleting a check, it can call <code>why_line</code> or <code>why_range</code> and see the commit that added it.</li>
+        <li><strong>Check from the terminal</strong> without an agent:
+          <span class="cmd">uv run provenance why django django/contrib/auth/hashers.py 114</span></li>
+      </ol>
+      <h3>What the agent is told</h3>
+      <p>Both tools are read-only. Commit messages are returned in a field marked untrusted, because anyone can write a commit message, including one that tries to give the agent instructions. When no history is found, the answer says so, and never says a change is safe.</p>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const state = { repo: null, repos: [], files: [], path: null, file: null, line: null, misleading: [] };
+
+  const el = (tag, props = {}, ...children) => {
+    const node = document.createElement(tag);
+    for (const [key, value] of Object.entries(props)) {
+      if (key === "class") node.className = value;
+      else if (key === "text") node.textContent = value;
+      else node.setAttribute(key, value);
+    }
+    for (const child of children) if (child != null) node.append(child);
+    return node;
+  };
+
+  async function api(route, params) {
+    const query = new URLSearchParams(params).toString();
+    const response = await fetch(`/api/${route}${query ? "?" + query : ""}`);
+    const body = await response.json();
+    if (!response.ok) throw new Error(body.error || `Request failed (${response.status})`);
+    return body;
+  }
+
+  const short = (sha) => (sha || "").slice(0, 10);
+  const pct = (x) => (x == null ? "n/a" : `${(x * 100).toFixed(1)}%`);
+  const KIND_TEXT = {
+    cosmetic: "Only the layout changed",
+    rename: "Only names changed",
+    move: "Moved unchanged",
+    logic: "Behaviour changed",
+    origin: "First appeared",
+    unknown: "Not classified",
+  };
+
+  /* ---------- tabs ---------- */
+  document.querySelectorAll("nav.tabs button").forEach((button) => {
+    button.addEventListener("click", () => showView(button.dataset.view));
+  });
+  function showView(name) {
+    document.querySelectorAll("nav.tabs button").forEach((b) => b.setAttribute("aria-selected", String(b.dataset.view === name)));
+    document.querySelectorAll(".view").forEach((v) => (v.hidden = v.id !== name));
+    if (name === "results") loadResults();
+  }
+
+  /* ---------- repos and files ---------- */
+  async function init() {
+    try {
+      state.repos = await api("repos");
+    } catch (error) {
+      $("listing").replaceChildren(el("p", { class: "placeholder error", text: error.message }));
+      return;
+    }
+    if (!state.repos.length) {
+      $("listing").replaceChildren(el("div", { class: "placeholder" },
+        el("h2", { text: "No repositories yet" }),
+        el("p", { text: "Run clone, ingest and classify for a repository, then restart the UI." })));
+      return;
+    }
+    $("repo").replaceChildren(...state.repos.map((r) => el("option", { value: r.name, text: r.name })));
+    $("repo").addEventListener("change", () => selectRepo($("repo").value));
+    if (location.hash === "#results" || location.hash === "#connect") showView(location.hash.slice(1));
+    const target = parseHash();
+    await selectRepo(target && state.repos.some((r) => r.name === target.repo) ? target.repo : state.repos[0].name);
+    if (target) openTarget(target);
+  }
+
+  async function selectRepo(name) {
+    state.repo = name;
+    $("repo").value = name;
+    const info = state.repos.find((r) => r.name === name);
+    $("rev").textContent = `at ${short(info.rev)}`;
+    $("rev").title = `${info.commits.toLocaleString()} commits loaded`;
+    $("file-list").replaceChildren(el("li", { class: "loading" }, el("span", { class: "spinner" }), "Listing files"));
+    state.files = await api("files", { repo: name });
+    renderFiles();
+  }
+
+  function renderFiles() {
+    const needle = $("filter").value.trim().toLowerCase();
+    const matches = state.files.filter((f) => f.toLowerCase().includes(needle));
+    const shown = matches.slice(0, 400);
+    $("file-count").textContent = needle
+      ? `${matches.length.toLocaleString()} matching files`
+      : `${state.files.length.toLocaleString()} source files`;
+    $("file-list").replaceChildren(...shown.map((path) => {
+      const button = el("button", { type: "button", text: path, title: path });
+      if (path === state.path) button.setAttribute("aria-current", "true");
+      button.addEventListener("click", () => openFile(path));
+      return el("li", {}, button);
+    }));
+  }
+  $("filter").addEventListener("input", renderFiles);
+
+  /* ---------- file view ---------- */
+  async function openFile(path, line) {
+    state.path = path;
+    state.line = null;
+    renderFiles();
+    $("code-head").hidden = false;
+    $("path").textContent = path;
+    $("summary").textContent = "";
+    $("listing").replaceChildren(el("p", { class: "placeholder loading" }, el("span", { class: "spinner" }),
+      "Running git blame twice, with and without the skip list. Large files take a few seconds."));
+    try {
+      state.file = await api("file", { repo: state.repo, path });
+    } catch (error) {
+      $("listing").replaceChildren(el("p", { class: "placeholder error", text: error.message }));
+      return;
+    }
+    if (state.path !== path) return;
+    renderFile();
+    if (line) selectLine(line, true);
+    else setHash();
+  }
+
+  function renderFile() {
+    const { lines, differs } = state.file;
+    state.misleading = lines.filter((l) => l.blame !== l.ours).map((l) => l.n);
+    const summary = $("summary");
+    summary.replaceChildren();
+    if (differs) {
+      summary.append(el("b", { text: `${differs} of ${lines.length} lines` }),
+        " where git blame points at a change that didn't alter behaviour");
+    } else {
+      summary.append(`${lines.length} lines. Here git blame and Provenance agree on every line.`);
+    }
+    $("prev").disabled = $("next").disabled = !differs;
+    const fragment = document.createDocumentFragment();
+    for (const line of lines) {
+      const row = el("div", { class: "row" + (line.blame !== line.ours ? " misleads" : ""), "data-n": line.n, role: "button", tabindex: "-1" },
+        el("span", { class: "n", text: line.n }), el("span", { class: "mark" }), el("span", { class: "t", text: line.text || " " }));
+      fragment.append(row);
+    }
+    $("listing").replaceChildren(fragment);
+  }
+
+  $("listing").addEventListener("click", (event) => {
+    const row = event.target.closest(".row");
+    if (row) selectLine(Number(row.dataset.n));
+  });
+
+  function jump(direction) {
+    if (!state.misleading.length) return;
+    const current = state.line || 0;
+    const list = state.misleading;
+    const target = direction > 0
+      ? list.find((n) => n > current) ?? list[0]
+      : [...list].reverse().find((n) => n < current) ?? list[list.length - 1];
+    selectLine(target, true);
+  }
+  $("next").addEventListener("click", () => jump(1));
+  $("prev").addEventListener("click", () => jump(-1));
+  document.addEventListener("keydown", (event) => {
+    if (event.target.matches("input, select, textarea") || $("explore").hidden || !state.file) return;
+    if (event.key === "j") jump(1);
+    if (event.key === "k") jump(-1);
+  });
+
+  /* ---------- line story ---------- */
+  let requestId = 0;
+  async function selectLine(number, scroll) {
+    if (!state.file) return;
+    state.line = number;
+    document.querySelectorAll(".row[aria-selected]").forEach((r) => r.removeAttribute("aria-selected"));
+    const row = document.querySelector(`.row[data-n="${number}"]`);
+    if (row) {
+      row.setAttribute("aria-selected", "true");
+      if (scroll) row.scrollIntoView({ block: "center" });
+    }
+    setHash();
+    const story = $("story");
+    const text = state.file.lines[number - 1]?.text ?? "";
+    story.replaceChildren(
+      el("h2", { text: `Line ${number}` }),
+      el("p", { class: "where", text: state.path }),
+      el("div", { class: "theline", text: text.trim() || "(blank line)" }),
+      el("p", { class: "loading" }, el("span", { class: "spinner" }), "Tracing through history"));
+    const mine = ++requestId;
+    let data;
+    try {
+      data = await api("line", { repo: state.repo, path: state.path, line: number });
+    } catch (error) {
+      if (mine === requestId) story.lastChild.replaceWith(el("p", { class: "error", text: error.message }));
+      return;
+    }
+    if (mine !== requestId) return;
+    story.lastChild.replaceWith(...renderStory(data));
+  }
+
+  function renderStory(data) {
+    const agent = data.agent_view;
+    const info = (sha) => data.commits[sha] || { short: short(sha), subject_untrusted: "", date: null };
+    if (agent.status !== "traced") {
+      return [el("p", { class: "error", text: `Couldn't trace this line: ${agent.reason}.` }), agentBlock(agent)];
+    }
+    const last = agent.last_logic_change.commit;
+    const first = agent.first_appearance?.commit;
+    const plain = data.plain_blame;
+    const strongest = data.strongest_blame;
+    const plainKind = info(plain).kind;
+
+    const verdict = el("p", { class: "verdict" });
+    if (plain === last) {
+      verdict.append("Plain git blame already names the change that set this behaviour: ",
+        el("strong", { text: `${short(last)}` }), ` (${info(last).date}).`);
+    } else {
+      verdict.append(`Plain git blame names ${short(plain)}`,
+        plainKind && plainKind !== "logic" ? `, where ${KIND_TEXT[plainKind].toLowerCase()}. ` : ". ",
+        "The behaviour on this line comes from ", el("strong", { text: short(last) }), ` (${info(last).date}).`);
+    }
+
+    const core = el("div", { class: "core" }, el("h3", { text: "History, newest first" }));
+    const inChain = new Set(agent.chain.map((h) => h.commit));
+    agent.chain.forEach((hop, index) => {
+      const commit = info(hop.commit);
+      const isLast = hop.commit === last;
+      const isFirst = hop.commit === first;
+      const layout = ["cosmetic", "rename", "move"].includes(hop.kind);
+      const bedrock = isFirst && index === agent.chain.length - 1;
+      const cls = bedrock ? "bedrock" : layout ? "layout" : "logic";
+      let kindText = KIND_TEXT[hop.kind] || hop.kind;
+      if (layout) kindText += ", so skipped";
+      const pins = [];
+      if (hop.commit === plain) pins.push(el("span", { class: "pin git", text: "git blame stops here" }));
+      if (hop.commit === strongest && strongest !== plain) pins.push(el("span", { class: "pin git", text: "git blame -w -M -C -C stops here" }));
+      if (isLast) pins.push(el("span", { class: "pin", text: "Last logic change" }));
+      if (isFirst) pins.push(el("span", { class: "pin", text: "First appearance" }));
+      core.append(el("div", { class: `stratum ${cls}` },
+        el("div", { class: "kind", text: `${kindText}  (confidence ${Number(hop.confidence).toFixed(2)})` }),
+        el("div", { class: "subject", text: commit.subject_untrusted || "(no message)" }),
+        el("div", { class: "meta", text: `${commit.short}  ${commit.date || ""}  ${hop.path}:${hop.line}` }),
+        pins.length ? el("div", {}, ...pins) : null,
+        linkChips(agent.links?.[hop.commit] || [])));
+    });
+    const outside = [];
+    if (plain && !inChain.has(plain)) outside.push(`Plain git blame names ${short(plain)}, "${info(plain).subject_untrusted}".`);
+    if (strongest && !inChain.has(strongest) && strongest !== plain) {
+      outside.push(`git blame -w -M -C -C names ${short(strongest)}, "${info(strongest).subject_untrusted}", which may be copied code elsewhere.`);
+    }
+    for (const text of outside) core.append(el("p", { class: "extra", text }));
+    core.append(el("p", { class: "extra", text: "Hatched layers didn't change behaviour. Commit messages are shown as written by their authors." }));
+    return [verdict, core, agentBlock(agent)];
+  }
+
+  const RELATION_TEXT = {
+    closes: "fixes", references: "mentions", merged_from: "merged from", reverts: "reverts",
+    reverted_by: "later reverted by", backport_of: "backport of", backported_as: "backported as",
+    discussion: "discussed in",
+  };
+  function linkChips(links) {
+    if (!links.length) return null;
+    const box = el("div", { class: "links" });
+    for (const link of links) {
+      let text = `${RELATION_TEXT[link.relation] || link.relation} ${link.label}`;
+      if (link.title_untrusted) text += `: ${link.title_untrusted}`;
+      const warn = link.relation === "reverted_by" || link.relation === "reverts";
+      if (link.url) {
+        box.append(el("a", { href: link.url, target: "_blank", rel: "noopener noreferrer", class: warn ? "warn" : "", text }));
+      } else {
+        box.append(el("span", { class: warn ? "warn" : "", text }));
+      }
+    }
+    return box;
+  }
+
+  function agentBlock(agent) {
+    return el("div", { class: "agent" },
+      el("h3", { text: "What an AI agent receives" }),
+      el("details", {}, el("summary", { text: "Show the why_line reply from the MCP server" }),
+        el("pre", { text: JSON.stringify(agent, null, 2) })),
+      el("p", { text: "The agent gets this as data. Commit messages stay in the untrusted field, so text inside them is never treated as instructions." }));
+  }
+
+  /* ---------- deep links ---------- */
+  function parseHash() {
+    const match = decodeURIComponent(location.hash.slice(1)).match(/^([\w-]+):(.+?)(?::(\d+))?$/);
+    return match ? { repo: match[1], path: match[2], line: match[3] ? Number(match[3]) : null } : null;
+  }
+  function setHash() {
+    const hash = `#${state.repo}:${state.path}${state.line ? ":" + state.line : ""}`;
+    if (location.hash !== hash) history.replaceState(null, "", hash);
+  }
+  async function openTarget(target) {
+    if (target.repo !== state.repo) await selectRepo(target.repo);
+    if (state.files.includes(target.path)) openFile(target.path, target.line);
+  }
+  window.addEventListener("hashchange", () => {
+    const target = parseHash();
+    if (target && (target.path !== state.path || target.line !== state.line)) openTarget(target);
+  });
+  $("example").addEventListener("click", (event) => {
+    event.preventDefault();
+    openTarget({ repo: "django", path: "django/contrib/auth/hashers.py", line: 114 });
+  });
+
+  /* ---------- results ---------- */
+  let resultsLoaded = false;
+  const METHODS = [
+    ["B0", "git blame", "no options"],
+    ["B1", "git blame -w -M", "ignores whitespace and moves within a file"],
+    ["B2", "git blame -w -M -C -C", "git's strongest settings"],
+    ["B2t", "git blame -w -M60 -C60 -C60", "our thresholds, no skip lists"],
+    ["B3", "Django's hand-kept skip list", "Django only"],
+    ["Ours-A", "Provenance, skip lists", "layers A and B"],
+    ["Ours-C", "Provenance, full tracer", "layers A, B and C"],
+  ];
+  async function loadResults() {
+    if (resultsLoaded) return;
+    const box = $("results-inner");
+    let data;
+    try { data = await api("results"); } catch (error) {
+      box.replaceChildren(el("p", { class: "error", text: error.message })); return;
+    }
+    resultsLoaded = true;
+    const parts = [el("h2", { text: "How often each method finds the right commit" })];
+    const gold = data.gold_scores;
+    if (gold) {
+      parts.push(el("p", { text: `Scored on ${gold.labelled} labelled lines from Django and Redis. A method is right when it names the most recent commit that changed what the line does. Accuracy is weighted back to the real mix of lines, and the thin line on each bar is the 95% confidence range.` }));
+      const bars = el("div", { class: "bars" });
+      for (const [key, name, note] of METHODS) {
+        const m = gold.methods[key];
+        if (!m) continue;
+        const track = el("div", { class: "track" });
+        const fill = el("div", { class: "fill" + (key.startsWith("Ours") ? " ours" : "") });
+        fill.style.width = `${m.weighted * 100}%`;
+        const ci = el("div", { class: "ci" });
+        ci.style.left = `${m.ci[0] * 100}%`; ci.style.width = `${(m.ci[1] - m.ci[0]) * 100}%`;
+        track.append(fill, ci);
+        bars.append(el("div", { class: "label" }, name, el("small", { text: note })), track,
+          el("div", { class: "val", text: pct(m.weighted) }));
+      }
+      parts.push(bars);
+      const b2 = gold.methods.B2?.vs_ours_c;
+      if (b2) parts.push(el("p", { text: `Against git's strongest settings, the full tracer was right on ${b2.only_second} lines where git was wrong, and wrong on ${b2.only_first} where git was right (McNemar exact test, ${b2.p < 0.001 ? "p < 0.001" : "p = " + b2.p.toFixed(3)}).` }));
+      const firstOurs = gold.methods["first:Ours-C"]?.weighted, firstB2 = gold.methods["first:B2"]?.weighted;
+      if (firstOurs != null) parts.push(el("p", { text: `For the commit where the line first appeared, the full tracer scored ${pct(firstOurs)}, against ${pct(firstB2)} for git's strongest settings.` }));
+      parts.push(el("p", { class: "note", text: "These labels were made by Claude, an AI that also built the method, by reading git's own line history for each line. They are not yet checked by a person, so treat these numbers as provisional until someone labels an overlapping sample." }));
+    } else {
+      parts.push(el("p", { text: "No scored labels yet. Fill in eval/gold/annotations.csv and run eval/score_gold.py." }));
+    }
+
+    const gap = data.method_gap;
+    const hand = data.ignore_list_django;
+    const ast = data.ast_oracle_django;
+    parts.push(el("h3", { text: "Checks that need no labels" }));
+    const facts = el("div", { class: "facts" });
+    if (gap) for (const [name, r] of Object.entries(gap.repos)) {
+      facts.append(el("div", { class: "fact" }, el("b", { text: pct(r.share_B2_vs_OursA) }),
+        el("span", { text: `of ${name} logic lines where our skip lists change git's best answer` })));
+    }
+    if (hand) {
+      const t = hand.blame_effect.totals;
+      facts.append(el("div", { class: "fact" }, el("b", { text: pct(t.auto_on_listed / t.lines) }),
+        el("span", { text: `of Django lines still land on a known formatting commit, against ${pct(t.strongest_on_listed / t.lines)} for git's strongest settings` })));
+    }
+    if (ast) {
+      facts.append(el("div", { class: "fact" }, el("b", { text: pct(ast.cosmetic_precision_imports_sorted) }),
+        el("span", { text: `of changes we call cosmetic have the same Python syntax tree (${pct(ast.cosmetic_precision_strict)} if import order counts)` })));
+    }
+    parts.push(facts);
+    box.replaceChildren(...parts);
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>

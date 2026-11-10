@@ -13,6 +13,7 @@ from mcp.types import ToolAnnotations
 
 from provenance.config import Repo
 from provenance.gitio import GitError
+from provenance.graph.build import commit_links
 from provenance.store.db import Store
 from provenance.trace.chain import Tracer
 
@@ -43,6 +44,9 @@ class Explainer:
         when = self._store.commit_time(sha)
         date = datetime.fromtimestamp(when, UTC).date().isoformat() if when else None
         return {"commit": sha, "date": date}
+
+    def links(self, sha: str) -> list[dict]:
+        return commit_links(self._store, sha)
 
     def _messages(self, shas: set[str]) -> dict[str, str]:
         messages = {}
@@ -83,6 +87,9 @@ class Explainer:
                     for hop in chain.hops
                 ],
                 "stop_reason": chain.stop_reason,
+                "links": {
+                    hop.commit: found for hop in chain.hops if (found := self.links(hop.commit))
+                },
                 "commit_messages_untrusted": self._messages({hop.commit for hop in chain.hops}),
                 "note": _NOT_A_GUARANTEE,
             }
@@ -127,6 +134,7 @@ def build_server(repo: Repo) -> MCPServer:
                 {
                     "last_logic_change": result["last_logic_change"],
                     "commit_message_untrusted": result["commit_messages_untrusted"].get(commit),
+                    "links": result["links"].get(commit, []),
                     "lines": [],
                 },
             )

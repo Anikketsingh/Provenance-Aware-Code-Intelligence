@@ -1,0 +1,5 @@
+{
+  "id": "L047",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\n  \"last_logic_change\": \"0270abda82\",\n  \"first_appearance\": \"0270abda82\",\n  \"ambiguous\": \"no\",\n  \"notes\": \"Copied line first appeared in 0270abda82 and has not changed logic since.\"\n}\n```"
+}

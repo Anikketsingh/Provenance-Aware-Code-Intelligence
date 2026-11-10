@@ -1,0 +1,5 @@
+{
+  "id": "L010",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"f1db8c36e9\", \"first_appearance\": \"f1db8c36e9\", \"ambiguous\": \"no\", \"notes\": \"Line introduced in f1db8c36e9; subsequent commits only dedented and reformatted it.\"}\n```"
+}

@@ -1,0 +1,5 @@
+{
+  "id": "L023",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"c93e4a62c6\", \"first_appearance\": \"c93e4a62c6\", \"ambiguous\": \"no\", \"notes\": \"Line introduced when src/chk.c was added as a new file.\"}\n```"
+}

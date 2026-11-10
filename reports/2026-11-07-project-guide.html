@@ -1,0 +1,888 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Provenance Project Guide</title>
+<style>
+  :root {
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --muted: #7d7c76;
+    --rule: #e2e1dc;
+    --paper: #ffffff;
+    --panel: #f5f4f0;
+    --blue: #2a78d6;
+    --blue-deep: #184f95;
+    --blue-soft: #e6f0fc;
+    --base-bar: #a9a8a1;
+    --good: #0ca30c;
+    --warning: #fab219;
+    --critical: #d03b3b;
+    --code-bg: #f3f2ee;
+  }
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--paper); color: var(--ink); }
+  body {
+    font-family: -apple-system, "Helvetica Neue", system-ui, Arial, sans-serif;
+    font-size: 10pt;
+    line-height: 1.45;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm;
+    height: 297mm;
+    padding: 15mm 17mm 16mm;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+    break-after: page;
+  }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+  .run {
+    font-size: 7.5pt;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 2.2mm;
+    margin-bottom: 6mm;
+    display: flex;
+    justify-content: space-between;
+  }
+  .foot {
+    position: absolute;
+    left: 17mm; right: 17mm; bottom: 8mm;
+    font-size: 7.5pt;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+  }
+  h1 { font-size: 27pt; line-height: 1.12; margin: 0 0 4mm; letter-spacing: -0.01em; }
+  h2 { font-size: 17pt; line-height: 1.2; margin: 0 0 1.5mm; letter-spacing: -0.005em; }
+  h2 .num { color: var(--blue); margin-right: 2mm; }
+  h3 { font-size: 11.5pt; margin: 5mm 0 1.5mm; }
+  .lede { font-size: 11pt; color: var(--ink-2); margin: 0 0 5mm; }
+  p { margin: 0 0 2.6mm; }
+  ul, ol { margin: 0 0 2.6mm; padding-left: 5mm; }
+  li { margin-bottom: 1.2mm; }
+  strong { font-weight: 650; }
+  code, .mono { font-family: "SF Mono", Menlo, Monaco, monospace; font-size: 8.6pt; }
+  p code, li code, td code { background: var(--code-bg); padding: 0.2mm 1mm; border-radius: 2px; }
+  pre {
+    font-family: "SF Mono", Menlo, Monaco, monospace;
+    font-size: 8.2pt;
+    line-height: 1.5;
+    background: var(--code-bg);
+    border-radius: 4px;
+    padding: 3mm 3.5mm;
+    margin: 0 0 3mm;
+    white-space: pre;
+    overflow: hidden;
+  }
+  pre .hl { background: #fff1c7; display: inline-block; width: 100%; }
+  pre .dim { color: var(--muted); }
+  .box {
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 4mm 5mm;
+    margin: 0 0 4mm;
+  }
+  .box.blue { background: var(--blue-soft); border-color: #c6dcf6; }
+  .box.panel { background: var(--panel); border-color: var(--panel); }
+  .box h3:first-child, .box h4:first-child { margin-top: 0; }
+  .box p:last-child, .box ul:last-child { margin-bottom: 0; }
+  h4 { font-size: 10pt; margin: 0 0 1.5mm; }
+  table { width: 100%; border-collapse: collapse; margin: 0 0 4mm; font-size: 9pt; }
+  th, td { text-align: left; vertical-align: top; padding: 1.6mm 2mm; border-bottom: 1px solid var(--rule); }
+  th { font-size: 8pt; color: var(--ink-2); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; border-bottom: 1.5px solid var(--ink-2); }
+  td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3.5mm; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; }
+  .card { border: 1px solid var(--rule); border-radius: 6px; padding: 3.5mm 4mm; }
+  .card .tag { font-size: 7.5pt; font-weight: 650; color: var(--blue); text-transform: uppercase; letter-spacing: 0.05em; }
+  .card h4 { margin-top: 1mm; }
+  .card p { font-size: 9pt; margin-bottom: 1.5mm; }
+  .card p:last-child { margin-bottom: 0; }
+  .stat { border: 1px solid var(--rule); border-radius: 6px; padding: 3mm 3.5mm; }
+  .stat .v { font-size: 19pt; font-weight: 650; letter-spacing: -0.01em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .stat .l { font-size: 8.4pt; color: var(--ink-2); margin-top: 1mm; line-height: 1.35; }
+  .stat.warn { border-color: #f3c66a; }
+  .caption { font-size: 8pt; color: var(--muted); margin: 1mm 0 4mm; }
+  .chart-title { font-size: 10pt; font-weight: 650; margin: 0 0 0.5mm; }
+  .chart-sub { font-size: 8.5pt; color: var(--ink-2); margin: 0 0 2mm; }
+  .legend { display: flex; gap: 5mm; font-size: 8.5pt; color: var(--ink-2); margin: 0 0 1mm; }
+  .legend span::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 1.5mm; vertical-align: -1px; background: var(--c); }
+  .legend span.hollow::before { border: 1.5px solid var(--muted); box-sizing: border-box; border-radius: 50%; }
+  td code { white-space: nowrap; }
+  svg { display: block; width: 100%; height: auto; }
+  svg text { font-family: -apple-system, "Helvetica Neue", system-ui, Arial, sans-serif; }
+  .status { display: inline-flex; align-items: center; gap: 1.2mm; font-size: 8pt; font-weight: 600; white-space: nowrap; }
+  .status i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .s-built i { background: var(--good); }
+  .s-part i { background: var(--warning); }
+  .s-plan i { background: transparent; border: 1.5px solid var(--muted); }
+  .cover-band { height: 4mm; background: var(--blue); margin: -15mm -17mm 18mm; }
+  .toc { display: grid; grid-template-columns: 8mm 1fr; row-gap: 1.6mm; font-size: 10pt; }
+  .toc .k { color: var(--blue); font-weight: 650; }
+  .steps { counter-reset: s; list-style: none; padding: 0; margin: 0; }
+  .steps > li { counter-increment: s; display: grid; grid-template-columns: 8mm 1fr 1fr; gap: 3mm; padding: 2mm 0; border-bottom: 1px solid var(--rule); margin: 0; font-size: 9pt; }
+  .steps > li::before { content: counter(s); font-weight: 700; color: var(--blue); font-size: 11pt; }
+  .steps .why { color: var(--ink-2); }
+  .steps-head { display: grid; grid-template-columns: 8mm 1fr 1fr; gap: 3mm; font-size: 8pt; color: var(--ink-2); font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; border-bottom: 1.5px solid var(--ink-2); padding-bottom: 1.2mm; }
+  .tok { display: inline-block; font-family: "SF Mono", Menlo, monospace; font-size: 8pt; background: #fff; border: 1px solid #c6dcf6; border-radius: 3px; padding: 0.3mm 1.3mm; margin: 0 0.8mm 1.2mm 0; }
+  .q { border-left: 3px solid var(--blue); padding: 1mm 0 1mm 4mm; margin: 0 0 3.5mm; }
+  .q h4 { margin-bottom: 0.8mm; }
+  .q p { margin-bottom: 0.8mm; font-size: 9.2pt; }
+  .rec { font-size: 8.8pt; color: var(--ink-2); }
+  .check { list-style: none; padding-left: 0; }
+  .check li { padding-left: 6mm; position: relative; }
+  .check li::before { content: ""; position: absolute; left: 0; top: 1mm; width: 3mm; height: 3mm; border: 1.3px solid var(--ink-2); border-radius: 2px; }
+  .small { font-size: 8.8pt; }
+  .muted { color: var(--ink-2); }
+</style>
+</head>
+<body>
+
+<!-- 1. COVER -->
+<section class="page">
+  <div class="cover-band"></div>
+  <div style="font-size:9pt;color:var(--blue);font-weight:650;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4mm">Major Project · DTU CSE · Project guide</div>
+  <h1>Provenance-Aware Code Intelligence</h1>
+  <p class="lede" style="font-size:12.5pt;max-width:150mm">What we are building, how it works, what has been done so far and why, and what comes next before the Project-I evaluation on about 21 November.</p>
+
+  <div class="box blue" style="margin-top:8mm">
+    <h3 style="margin-top:0">The short version</h3>
+    <ul style="margin-bottom:0">
+      <li><strong>Goal:</strong> before an AI coding agent deletes or weakens a line of code, tell it <em>why that line exists</em>, using the repository's own history.</li>
+      <li><strong>The hard part:</strong> finding the commit that really created a line. <code>git blame</code> often points to a reformat or rename instead.</li>
+      <li><strong>What works today:</strong> a tracing engine that skips those non-logic changes, a command-line tool, and an MCP server agents can call. It has been run on the full histories of Django and Redis, and 146 tests pass.</li>
+      <li><strong>The biggest unknown:</strong> how accurate it is. That needs 60 lines labelled by hand, which is your next job.</li>
+    </ul>
+  </div>
+
+  <h3 style="margin-top:9mm">Inside</h3>
+  <div class="toc">
+    <span class="k">1</span><span>The problem we are solving, with a real Django example</span>
+    <span class="k">2</span><span>The full system, and which parts exist today</span>
+    <span class="k">3</span><span>How line tracing works: three layers</span>
+    <span class="k">4</span><span>Layer A up close: deciding that only the look changed</span>
+    <span class="k">5</span><span>How an AI agent uses it, through MCP</span>
+    <span class="k">6</span><span>The tech stack, and why each piece</span>
+    <span class="k">7</span><span>What we have done, step by step, and why</span>
+    <span class="k">8</span><span>Results so far</span>
+    <span class="k">9</span><span>How we checked it without human labels</span>
+    <span class="k">10</span><span>What we don't know yet</span>
+    <span class="k">11</span><span>What happens next, and why</span>
+    <span class="k">12</span><span>Key decisions and their trade-offs</span>
+    <span class="k">13</span><span>Where your suggestions matter most</span>
+  </div>
+
+  <div class="box panel" style="position:absolute;left:17mm;right:17mm;bottom:22mm;margin:0">
+    <p class="small" style="margin:0"><strong>How to read this.</strong> Sections 1–6 explain the idea and the design. Sections 7–10 cover what has been built and measured, including the weak spots. Sections 11–13 cover what's next and the decisions where your view matters. The code is on the <code>project-i-evaluation</code> branch, and every number here comes from a saved result file in <code>eval/results/</code>.</p>
+  </div>
+  <div class="foot"><span>Prepared 7 Nov 2026 for Aniket Singh Kushwaha · Guide: Prof. Shailender Kumar</span><span>1 / 14</span></div>
+</section>
+
+<!-- 2. PROBLEM -->
+<section class="page">
+  <div class="run"><span>Provenance · project guide</span><span>1 · The problem</span></div>
+  <h2><span class="num">1</span>The problem we are solving</h2>
+  <p class="lede">AI coding agents change code quickly, and they often "tidy up" lines whose purpose they can't see, such as a check, a retry, a lock or a timeout.</p>
+
+  <p>The reason a line exists is usually written down somewhere, in a commit message, a pull request or a bug ticket. The standard way to find it is <code>git blame</code>, which names the last commit that touched each line. That commit is often just a reformat, a rename or a move, which says nothing about why the code is there.</p>
+
+  <h3>A real example from Django</h3>
+  <p class="small muted" style="margin-bottom:2mm">From <code>django/contrib/auth/hashers.py</code>, which isn't in your annotation sample. The marked line is part of a deliberate type check in <code>make_password()</code>.</p>
+<pre><span class="dim">111</span>        )
+<span class="dim">112</span>    if not isinstance(password, (bytes, str)):
+<span class="dim">113</span>        raise TypeError(
+<span class="hl"><span class="dim">114</span>            "Password must be a string or bytes, got %s." % type(password).__qualname__</span>
+<span class="dim">115</span>        )</pre>
+
+  <svg viewBox="0 0 660 215" role="img" aria-label="Timeline: git blame stops at the 2022 reformat, our tracer reaches the 2020 fix">
+    <line x1="40" y1="100" x2="625" y2="100" stroke="#cfcec8" stroke-width="2"/>
+    <!-- 2020 -->
+    <circle cx="150" cy="100" r="8" fill="#2a78d6"/>
+    <text x="150" y="22" text-anchor="middle" font-size="10.5" font-weight="650" fill="#0b0b0b">31 Mar 2020 · 8aa71f4e87</text>
+    <text x="150" y="38" text-anchor="middle" font-size="10" fill="#52514e">"Fixed #31375 -- Made make_password()</text>
+    <text x="150" y="52" text-anchor="middle" font-size="10" fill="#52514e">accept only bytes or strings."</text>
+    <rect x="88" y="62" width="124" height="18" rx="9" fill="#e6f0fc"/>
+    <text x="150" y="75" text-anchor="middle" font-size="9" font-weight="650" fill="#184f95">The real reason</text>
+    <!-- 2022 -->
+    <circle cx="390" cy="100" r="7" fill="#fff" stroke="#7d7c76" stroke-width="2"/>
+    <text x="390" y="22" text-anchor="middle" font-size="10.5" font-weight="650" fill="#0b0b0b">7 Feb 2022 · 9c19aff7c7</text>
+    <text x="390" y="38" text-anchor="middle" font-size="10" fill="#52514e">"Refs #33476 -- Reformatted</text>
+    <text x="390" y="52" text-anchor="middle" font-size="10" fill="#52514e">code with Black."</text>
+    <rect x="322" y="62" width="136" height="18" rx="9" fill="#f5f4f0"/>
+    <text x="390" y="75" text-anchor="middle" font-size="9" font-weight="650" fill="#52514e">Only the layout changed</text>
+    <!-- today -->
+    <rect x="596" y="92" width="16" height="16" rx="3" fill="#0b0b0b"/>
+    <text x="604" y="52" text-anchor="middle" font-size="10.5" font-weight="650" fill="#0b0b0b">Today</text>
+    <text x="604" y="68" text-anchor="middle" font-size="9" fill="#52514e">pinned d9d05f1</text>
+    <!-- arrows -->
+    <defs>
+      <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7d7c76"/></marker>
+      <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2a78d6"/></marker>
+    </defs>
+    <line x1="596" y1="138" x2="400" y2="138" stroke="#7d7c76" stroke-width="2" marker-end="url(#ag)"/>
+    <text x="410" y="128" font-size="10" fill="#52514e"><tspan font-weight="650" fill="#0b0b0b">git blame -w -M -C -C</tspan> (strongest) stops here</text>
+    <line x1="596" y1="180" x2="161" y2="180" stroke="#2a78d6" stroke-width="2.5" marker-end="url(#ab)"/>
+    <text x="172" y="170" font-size="10" fill="#52514e"><tspan font-weight="650" fill="#184f95">Our tracer</tspan> sees the 2022 commit only changed the layout, skips it, and stops here</text>
+    <text x="172" y="203" font-size="9" fill="#7d7c76">Real output of  provenance why django django/contrib/auth/hashers.py 114</text>
+  </svg>
+
+  <div class="grid2" style="margin-top:2mm">
+    <div class="box" style="margin:0">
+      <h4>Why this matters to an agent</h4>
+      <p class="small">An agent told "Reformatted code with Black" learns nothing, so deleting the check looks harmless. An agent told "Fixed #31375: accept only bytes or strings" knows this is a deliberate guard, so it should keep it or ask first.</p>
+    </div>
+    <div class="box blue" style="margin:0">
+      <h4>The research question for Project-I</h4>
+      <p class="small">Can we automatically find the change that really introduced a line, more accurately than the best <code>git blame</code> setup, and hand that to an agent?</p>
+      <p class="small"><strong>Long-term question:</strong> does this actually stop agents making unsafe changes? That's the agent study planned for Phase III.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Provenance · project guide</span><span>2 / 14</span></div>
+</section>
+
+<!-- 3. FULL SYSTEM -->
+<section class="page">
+  <div class="run"><span>Provenance · project guide</span><span>2 · The full system</span></div>
+  <h2><span class="num">2</span>The full system, and which parts exist today</h2>
+  <p class="lede">The finished system has six stages and three ways to reach it. Project-I builds the stage everything else depends on, which is finding the right commit.</p>
+
+  <svg viewBox="0 0 660 360" role="img" aria-label="System map with build status of each stage">
+    <defs>
+      <marker id="ak" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7c76"/></marker>
+    </defs>
+    <text x="10" y="16" font-size="9" font-weight="650" fill="#7d7c76" letter-spacing=".06em">BUILT ONCE PER REPO, THEN UPDATED</text>
+    <text x="10" y="140" font-size="9" font-weight="650" fill="#7d7c76" letter-spacing=".06em">RUN FOR EACH QUESTION</text>
+    <text x="10" y="264" font-size="9" font-weight="650" fill="#7d7c76" letter-spacing=".06em">WHERE PEOPLE AND AGENTS USE IT</text>
+
+    <!-- row 1 -->
+    <rect x="10" y="24" width="190" height="84" rx="7" fill="#fff" stroke="#0b0b0b" stroke-width="1.3"/>
+    <text x="22" y="45" font-size="11.5" font-weight="650">1  Ingest history</text>
+    <text x="22" y="62" font-size="9.5" fill="#52514e">Commits, files and diffs into SQLite.</text>
+    <text x="22" y="76" font-size="9.5" fill="#52514e">PR, issue and Trac crawl comes later.</text>
+    <circle cx="26" cy="94" r="4.5" fill="#fab219"/><text x="36" y="97.5" font-size="9" font-weight="650">Partly built (git history done)</text>
+
+    <rect x="235" y="24" width="190" height="84" rx="7" fill="#fff" stroke="#a9a8a1" stroke-width="1.2" stroke-dasharray="4 3"/>
+    <text x="247" y="45" font-size="11.5" font-weight="650" fill="#52514e">2  Link graph</text>
+    <text x="247" y="62" font-size="9.5" fill="#7d7c76">commit → PR → issue,</text>
+    <text x="247" y="76" font-size="9.5" fill="#7d7c76">plus which commits revert which.</text>
+    <circle cx="251" cy="94" r="4" fill="#fff" stroke="#7d7c76" stroke-width="1.5"/><text x="261" y="97.5" font-size="9" font-weight="650" fill="#52514e">Planned, Phase II</text>
+
+    <rect x="460" y="24" width="190" height="84" rx="7" fill="#fff" stroke="#a9a8a1" stroke-width="1.2" stroke-dasharray="4 3"/>
+    <text x="472" y="45" font-size="11.5" font-weight="650" fill="#52514e">3  Search index</text>
+    <text x="472" y="62" font-size="9.5" fill="#7d7c76">Keyword search plus meaning-based</text>
+    <text x="472" y="76" font-size="9.5" fill="#7d7c76">search over PRs and issues.</text>
+    <circle cx="476" cy="94" r="4" fill="#fff" stroke="#7d7c76" stroke-width="1.5"/><text x="486" y="97.5" font-size="9" font-weight="650" fill="#52514e">Planned, Phase II</text>
+
+    <line x1="200" y1="66" x2="233" y2="66" stroke="#7d7c76" stroke-width="1.5" marker-end="url(#ak)"/>
+    <line x1="425" y1="66" x2="458" y2="66" stroke="#7d7c76" stroke-width="1.5" marker-end="url(#ak)"/>
+    <line x1="330" y1="110" x2="330" y2="146" stroke="#7d7c76" stroke-width="1.5" marker-end="url(#ak)"/>
+
+    <!-- row 2 -->
+    <rect x="10" y="148" width="190" height="84" rx="7" fill="#e6f0fc" stroke="#2a78d6" stroke-width="2"/>
+    <text x="22" y="169" font-size="11.5" font-weight="650" fill="#184f95">4  Trace the line</text>
+    <text x="22" y="186" font-size="9.5" fill="#52514e">Find the commit that really</text>
+    <text x="22" y="200" font-size="9.5" fill="#52514e">introduced it. Layers A, B and C.</text>
+    <circle cx="26" cy="218" r="4.5" fill="#0ca30c"/><text x="36" y="221.5" font-size="9" font-weight="650">Built · the Project-I focus</text>
+
+    <rect x="235" y="148" width="190" height="84" rx="7" fill="#fff" stroke="#a9a8a1" stroke-width="1.2" stroke-dasharray="4 3"/>
+    <text x="247" y="169" font-size="11.5" font-weight="650" fill="#52514e">5  Find evidence</text>
+    <text x="247" y="186" font-size="9.5" fill="#7d7c76">Rank PRs and issues by causal</text>
+    <text x="247" y="200" font-size="9.5" fill="#7d7c76">links, not just similar wording.</text>
+    <circle cx="251" cy="218" r="4" fill="#fff" stroke="#7d7c76" stroke-width="1.5"/><text x="261" y="221.5" font-size="9" font-weight="650" fill="#52514e">Planned, Phase II</text>
+
+    <rect x="460" y="148" width="190" height="84" rx="7" fill="#fff" stroke="#0b0b0b" stroke-width="1.3"/>
+    <text x="472" y="169" font-size="11.5" font-weight="650">6  Explain or abstain</text>
+    <text x="472" y="186" font-size="9.5" fill="#52514e">Gemini writes a cited answer, or</text>
+    <text x="472" y="200" font-size="9.5" fill="#52514e">says "not enough evidence".</text>
+    <circle cx="476" cy="218" r="4.5" fill="#fab219"/><text x="486" y="221.5" font-size="9" font-weight="650">Started (Gemini link only)</text>
+
+    <line x1="200" y1="190" x2="233" y2="190" stroke="#7d7c76" stroke-width="1.5" marker-end="url(#ak)"/>
+    <line x1="425" y1="190" x2="458" y2="190" stroke="#7d7c76" stroke-width="1.5" marker-end="url(#ak)"/>
+    <line x1="330" y1="234" x2="330" y2="270" stroke="#7d7c76" stroke-width="1.5" marker-end="url(#ak)"/>
+
+    <!-- row 3 -->
+    <rect x="10" y="272" width="190" height="78" rx="7" fill="#fff" stroke="#0b0b0b" stroke-width="1.3"/>
+    <text x="22" y="293" font-size="11.5" font-weight="650">MCP server</text>
+    <text x="22" y="310" font-size="9.5" fill="#52514e">AI agents call why_line, why_range.</text>
+    <circle cx="26" cy="334" r="4.5" fill="#0ca30c"/><text x="36" y="337.5" font-size="9" font-weight="650">Built (trace results only)</text>
+
+    <rect x="235" y="272" width="190" height="78" rx="7" fill="#fff" stroke="#0b0b0b" stroke-width="1.3"/>
+    <text x="247" y="293" font-size="11.5" font-weight="650">Command line</text>
+    <text x="247" y="310" font-size="9.5" fill="#52514e">provenance why &lt;repo&gt; &lt;file&gt; &lt;line&gt;</text>
+    <circle cx="251" cy="334" r="4.5" fill="#0ca30c"/><text x="261" y="337.5" font-size="9" font-weight="650">Built</text>
+
+    <rect x="460" y="272" width="190" height="78" rx="7" fill="#fff" stroke="#a9a8a1" stroke-width="1.2" stroke-dasharray="4 3"/>
+    <text x="472" y="293" font-size="11.5" font-weight="650" fill="#52514e">CI check on PRs</text>
+    <text x="472" y="310" font-size="9.5" fill="#7d7c76">Warns when a PR removes</text>
+    <text x="472" y="323" font-size="9.5" fill="#7d7c76">protective code.</text>
+    <circle cx="476" cy="334" r="4" fill="#fff" stroke="#7d7c76" stroke-width="1.5"/><text x="486" y="337.5" font-size="9" font-weight="650" fill="#52514e">Planned, Phase II</text>
+  </svg>
+  <div class="legend" style="margin-top:2mm">
+    <span style="--c:#0ca30c">Built</span><span style="--c:#fab219">Partly built</span><span class="hollow" style="--c:#fff;">Planned (dashed box)</span>
+  </div>
+
+  <h3>Why tracing comes first</h3>
+  <p>Every later stage starts from the commit we find. If the tracer lands on the Black reformat, the PR, the issue and the explanation are all about formatting, and they're all wrong. That's why Project-I spends its time making stage 4 accurate and measuring how accurate it is.</p>
+
+  <table style="margin-top:3mm">
+    <tr><th style="width:24%">Phase</th><th style="width:22%">When</th><th>Main goal</th></tr>
+    <tr><td><strong>Project-I</strong></td><td>Now to about 21 Nov 2026</td><td>Line tracing, compared against <code>git blame</code> on hand-labelled lines. MCP and CLI demo.</td></tr>
+    <tr><td><strong>Phase II</strong></td><td>Jan to Mar 2027</td><td>Stages 1–3 and 5–6: crawl PRs and issues, link and search them, write cited explanations, and detect protective code in PRs.</td></tr>
+    <tr><td><strong>Phase III</strong></td><td>Mar to May 2027</td><td>Agent study (RQ5): do agents with the tool make fewer unsafe edits? Then the paper and the final report.</td></tr>
+  </table>
+  <div class="foot"><span>Provenance · project guide</span><span>3 / 14</span></div>
+</section>
+
+<!-- 4. THREE LAYERS -->
+<section class="page">
+  <div class="run"><span>Provenance · project guide</span><span>3 · How tracing works</span></div>
+  <h2><span class="num">3</span>How line tracing works: three layers</h2>
+  <p class="lede">We don't replace <code>git blame</code>. We tell it which commits to skip, then step through the commits it can't skip.</p>
+
+  <p class="small muted" style="margin-bottom:1mm">Made-up history for one line, newest on the right:</p>
+  <svg viewBox="0 0 660 290" role="img" aria-label="How each layer moves further back through a line's history">
+    <defs>
+      <marker id="g2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7d7c76"/></marker>
+      <marker id="b2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2a78d6"/></marker>
+      <marker id="d2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#184f95"/></marker>
+    </defs>
+    <!-- commits -->
+    <g font-size="9.5">
+      <rect x="10" y="8" width="130" height="70" rx="6" fill="#e6f0fc" stroke="#2a78d6" stroke-width="1.5"/>
+      <text x="20" y="26" font-weight="650" font-size="10.5">C1 · 2015</text>
+      <text x="20" y="42" fill="#52514e">Adds the check.</text>
+      <text x="20" y="68" font-weight="650" fill="#184f95">logic</text>
+
+      <rect x="160" y="8" width="130" height="70" rx="6" fill="#fff" stroke="#0b0b0b" stroke-width="1.2"/>
+      <text x="170" y="26" font-weight="650" font-size="10.5">C2 · 2018</text>
+      <text x="170" y="42" fill="#52514e">Fixes a bug elsewhere in</text>
+      <text x="170" y="55" fill="#52514e">the file, re-wraps our line.</text>
+      <text x="170" y="68" font-weight="650">mixed</text>
+
+      <rect x="310" y="8" width="130" height="70" rx="6" fill="#fff" stroke="#a9a8a1" stroke-width="1.2"/>
+      <text x="320" y="26" font-weight="650" font-size="10.5">C3 · 2020</text>
+      <text x="320" y="42" fill="#52514e">Renames a variable</text>
+      <text x="320" y="55" fill="#52514e">across the file.</text>
+      <text x="320" y="68" font-weight="650" fill="#7d7c76">rename</text>
+
+      <rect x="460" y="8" width="130" height="70" rx="6" fill="#fff" stroke="#a9a8a1" stroke-width="1.2"/>
+      <text x="470" y="26" font-weight="650" font-size="10.5">C4 · 2022</text>
+      <text x="470" y="42" fill="#52514e">Black reformats the</text>
+      <text x="470" y="55" fill="#52514e">whole file.</text>
+      <text x="470" y="68" font-weight="650" fill="#7d7c76">cosmetic</text>
+
+      <rect x="612" y="30" width="38" height="26" rx="5" fill="#0b0b0b"/>
+      <text x="631" y="47" text-anchor="middle" fill="#fff" font-weight="650">Now</text>
+    </g>
+
+    <!-- plain blame -->
+    <text x="10" y="106" font-size="10" font-weight="650">Plain git blame</text>
+    <text x="10" y="120" font-size="9" fill="#52514e">Names the last commit that touched the line.</text>
+    <line x1="625" y1="128" x2="532" y2="128" stroke="#7d7c76" stroke-width="2" marker-end="url(#g2)"/>
+    <text x="470" y="132" font-size="9" text-anchor="end" fill="#52514e">answer: C4 (wrong)</text>
+
+    <!-- A+B -->
+    <text x="10" y="164" font-size="10" font-weight="650" fill="#184f95">Layers A + B</text>
+    <text x="10" y="178" font-size="9" fill="#52514e">Layer A finds C3 and C4 changed nothing in this file. Layer B runs git blame with them skipped.</text>
+    <line x1="625" y1="190" x2="232" y2="190" stroke="#2a78d6" stroke-width="2" marker-end="url(#b2)"/>
+    <text x="300" y="203" font-size="9" fill="#52514e">lands on C2, which can't be skipped whole</text>
+
+    <!-- C -->
+    <text x="10" y="228" font-size="10" font-weight="650" fill="#184f95">Layer C</text>
+    <text x="10" y="242" font-size="9" fill="#52514e">Inside C2's diff, our line was only re-wrapped. So step to its older version and blame again.</text>
+    <path d="M225,254 L82,254" stroke="#184f95" stroke-width="2.6" fill="none" marker-end="url(#d2)"/>
+    <text x="232" y="258" font-size="9" fill="#184f95" font-weight="650">answer: C1, both the last logic change and the first appearance</text>
+  </svg>
+
+  <div class="grid3" style="margin-top:3mm">
+    <div class="card">
+      <div class="tag">Layer A · classify</div>
+      <h4>Which file changes kept the behaviour?</h4>
+      <p>For every commit and every file it touched, parse the file before and after with tree-sitter and compare the code tokens. Label each change <strong>cosmetic</strong>, <strong>rename</strong>, <strong>move</strong> or <strong>logic</strong>.</p>
+      <p class="muted">Runs once per repo: 5.2 min for all 35,104 Django commits.</p>
+    </div>
+    <div class="card">
+      <div class="tag">Layer B · skip</div>
+      <h4>Let git skip those commits</h4>
+      <p>Give <code>git blame</code> a skip list for this file through <code>--ignore-revs-file</code>. Git does the hard line matching, and it's fast and well tested.</p>
+      <p class="muted">Each file gets its own list, so a commit that reformats one file but fixes another is skipped only for the first file.</p>
+    </div>
+    <div class="card">
+      <div class="tag">Layer C · step</div>
+      <h4>Look inside mixed commits</h4>
+      <p>For the one line we care about, look at the commit's diff. If the same tokens were removed nearby, it was only reformatted, so step back. If a similar line was removed, it was edited, so record a logic change and keep going.</p>
+      <p class="muted">Less certain than A, so its confidence scores are lower. Not yet checked against labels.</p>
+    </div>
+  </div>
+
+  <div class="box panel" style="margin-top:1mm">
+    <p class="small" style="margin:0"><strong>Two answers per line.</strong> The tracer reports the <strong>last logic change</strong> and the <strong>first appearance</strong>, because the "why" can live in either. Of 150 random traced Django lines, 33% had been edited after first appearing (23% for Redis), so the two answers often differ.</p>
+  </div>
+  <div class="foot"><span>Provenance · project guide</span><span>4 / 14</span></div>
+</section>
+
+<!-- 5. LAYER A -->
+<section class="page">
+  <div class="run"><span>Provenance · project guide</span><span>4 · Layer A up close</span></div>
+  <h2><span class="num">4</span>Layer A up close: deciding that only the look changed</h2>
+  <p class="lede">The idea: turn the code into a stream of meaningful tokens. If the stream is the same before and after, the change can't have altered behaviour.</p>
+
+  <div class="chart-title">Before, in 2020</div>
+<pre style="font-size:8pt">raise TypeError(
+    'Password must be a string or bytes, got %s.'
+    % type(password).__qualname__
+)</pre>
+  <div class="chart-title">After Black, in 2022</div>
+<pre style="font-size:8pt">raise TypeError(
+    "Password must be a string or bytes, got %s." % type(password).__qualname__
+)</pre>
+  <p class="small muted" style="margin-top:-1mm">The quote style changed and two lines became one. The text differs, but the code means the same.</p>
+
+  <div class="box blue">
+    <h4>Both versions become the same token stream (simplified)</h4>
+    <div style="margin-top:2mm">
+      <span class="tok">raise</span><span class="tok">TypeError</span><span class="tok">(</span><span class="tok">"Password must be … %s."</span><span class="tok">%</span><span class="tok">type</span><span class="tok">(</span><span class="tok">password</span><span class="tok">)</span><span class="tok">.</span><span class="tok">__qualname__</span><span class="tok">)</span>
+    </div>
+    <p class="small" style="margin:1mm 0 0">Equal streams, so this file change is <strong>cosmetic</strong> and goes on <code>hashers.py</code>'s skip list.</p>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h3 style="margin-top:1mm">Ignored, because it can't change behaviour</h3>
+      <ul class="small">
+        <li>Whitespace, line wrapping and blank lines</li>
+        <li>Comments, and docstrings without examples</li>
+        <li>Quote style, string prefixes like <code>u''</code>, and adjacent strings joined</li>
+        <li>Trailing commas and redundant brackets</li>
+        <li>Import order within a block</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="margin-top:1mm">Kept, because it can</h3>
+      <ul class="small">
+        <li>Any change to the real tokens</li>
+        <li>Python indentation that moves code into or out of a block</li>
+        <li>Where one statement ends and the next begins</li>
+        <li>Docstrings containing doctests (<code>&gt;&gt;&gt;</code>), since those run as tests</li>
+        <li>Brackets that change what an expression means</li>
+      </ul>
+    </div>
+  </div>
+
+  <table>
+    <tr><th style="width:17%">Label</th><th>Rule</th></tr>
+    <tr><td><strong>rename</strong></td><td>The tokens match once names are swapped consistently, and every changed name is defined in that file. That second rule stopped <code>base64.encodestring</code> → <code>b64encode</code> looking like a rename, since that's a different library call.</td></tr>
+    <tr><td><strong>move</strong></td><td>The same code appears elsewhere unchanged, for example a function moved down the file.</td></tr>
+    <tr><td><strong>logic</strong></td><td>Anything else, plus anything we can't parse or don't support.</td></tr>
+  </table>
+
+  <div class="box panel">
+    <h4>The safety rule: when unsure, call it logic</h4>
+    <p class="small">The two possible mistakes don't cost the same. Wrongly calling a change cosmetic skips the commit, which can hide a line's true origin. Wrongly calling it logic just gives the same answer <code>git blame</code> would. So unparsable files, unknown languages and unclear cases all count as logic. This is also why the four bugs found so far (section 9) mattered: each one made a real change look cosmetic.</p>
+  </div>
+  <div class="foot"><span>Provenance · project guide</span><span>5 / 14</span></div>
+</section>
+
+<!-- 6. MCP -->
+<section class="page">
+  <div class="run"><span>Provenance · project guide</span><span>5 · How an agent uses it</span></div>
+  <h2><span class="num">5</span>How an AI agent uses it, through MCP</h2>
+  <p class="lede">MCP (Model Context Protocol) is a standard way for AI apps to find and call outside tools. We write one small server, and Claude Code, Cursor and other agents can all use it.</p>
+
+  <svg viewBox="0 0 660 300" role="img" aria-label="Sequence: developer, agent, MCP server and git history">
+    <defs>
+      <marker id="s1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0b0b0b"/></marker>
+      <marker id="s2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2a78d6"/></marker>
+    </defs>
+    <g font-size="10.5" font-weight="650" text-anchor="middle">
+      <rect x="20" y="6" width="110" height="32" rx="6" fill="#f5f4f0"/><text x="75" y="27">You</text>
+      <rect x="195" y="6" width="110" height="32" rx="6" fill="#f5f4f0"/><text x="250" y="27">AI agent</text>
+      <rect x="360" y="6" width="140" height="32" rx="6" fill="#e6f0fc" stroke="#2a78d6"/><text x="430" y="21" fill="#184f95">Our MCP server</text><text x="430" y="33" font-size="8.5" font-weight="400" fill="#52514e">on your laptop</text>
+      <rect x="530" y="6" width="120" height="32" rx="6" fill="#f5f4f0"/><text x="590" y="21">Git + SQLite</text><text x="590" y="33" font-size="8.5" font-weight="400" fill="#52514e">history, skip lists</text>
+    </g>
+    <g stroke="#d6d5cf" stroke-width="1.2" stroke-dasharray="3 3">
+      <line x1="75" y1="40" x2="75" y2="295"/><line x1="250" y1="40" x2="250" y2="295"/>
+      <line x1="430" y1="40" x2="430" y2="295"/><line x1="590" y1="40" x2="590" y2="295"/>
+    </g>
+    <g font-size="9.5" fill="#0b0b0b">
+      <line x1="75" y1="70" x2="246" y2="70" stroke="#0b0b0b" stroke-width="1.4" marker-end="url(#s1)"/>
+      <text x="84" y="63">1 "Simplify make_password()"</text>
+
+      <line x1="250" y1="110" x2="426" y2="110" stroke="#2a78d6" stroke-width="1.8" marker-end="url(#s2)"/>
+      <text x="259" y="96">2 Before deleting the check:</text>
+      <text x="259" y="105" font-family="SF Mono, Menlo, monospace" font-size="8.5" fill="#184f95">why_line("…/hashers.py", 114)</text>
+
+      <line x1="430" y1="148" x2="586" y2="148" stroke="#0b0b0b" stroke-width="1.4" marker-end="url(#s1)"/>
+      <text x="438" y="141">3 Trace: layers A, B, C</text>
+
+      <line x1="590" y1="186" x2="434" y2="186" stroke="#0b0b0b" stroke-width="1.4" stroke-dasharray="5 3" marker-end="url(#s1)"/>
+      <text x="582" y="179" text-anchor="end">4 Commits and their kinds</text>
+
+      <line x1="430" y1="228" x2="254" y2="228" stroke="#2a78d6" stroke-width="1.8" stroke-dasharray="5 3" marker-end="url(#s2)"/>
+      <text x="422" y="214" text-anchor="end">5 Evidence: last logic change</text>
+      <text x="422" y="223" text-anchor="end" font-family="SF Mono, Menlo, monospace" font-size="8.5" fill="#184f95">8aa71f4e87 "Fixed #31375…"</text>
+
+      <line x1="250" y1="272" x2="79" y2="272" stroke="#0b0b0b" stroke-width="1.4" stroke-dasharray="5 3" marker-end="url(#s1)"/>
+      <text x="242" y="258" text-anchor="end">6 "This check was added on</text>
+      <text x="242" y="268" text-anchor="end">purpose in #31375. I'll keep it."</text>
+    </g>
+  </svg>
+  <p class="caption">Steps 1 and 6 are an illustration of how an agent should behave. Steps 2–5 are what our server really does.</p>
+
+  <div class="grid2">
+    <div>
+      <div class="chart-title">What the server really returns (shortened)</div>
+<pre style="font-size:7.4pt;line-height:1.45">{
+  "status": "traced",
+  "file": "django/contrib/auth/hashers.py",
+  "line": 114,
+  "last_logic_change": {
+    "commit": "8aa71f4e87…", "date": "2020-03-31" },
+  "first_appearance": {
+    "commit": "8aa71f4e87…", "date": "2020-03-31" },
+  "chain": [
+    { "commit": "9c19aff7c7…", "kind": "cosmetic",
+      "confidence": 0.95 },
+    { "commit": "8aa71f4e87…", "kind": "origin",
+      "confidence": 0.9 } ],
+  "commit_messages_untrusted": { … },
+  "note": "Missing history doesn't mean a
+           change is safe. …"
+}</pre>
+    </div>
+    <div>
+      <div class="chart-title">Safety rules built in</div>
+      <ul class="small" style="margin-top:2mm">
+        <li><strong>Read-only.</strong> Both tools only read. They can't edit files or run commands.</li>
+        <li><strong>Commit messages are marked untrusted.</strong> Anyone can write a commit message, including one that says "ignore your instructions". So messages go in a separate field that is labelled as data.</li>
+        <li><strong>It never says "safe".</strong> Finding no history doesn't mean a change is safe, and every answer says so.</li>
+        <li><strong>Paths are checked,</strong> so an agent can't use the tool to read outside the repo.</li>
+        <li><strong>It returns evidence, not prose.</strong> The calling agent already has a strong LLM, so we don't spend a Gemini call here.</li>
+      </ul>
+      <p class="small muted">Today it returns trace results and commit messages. PR and issue evidence arrives in Phase II.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Provenance · project guide</span><span>6 / 14</span></div>
+</section>
+
+<!-- 7. TECH STACK -->
+<section class="page">
+  <div class="run"><span>Provenance · project guide</span><span>6 · Tech stack</span></div>
+  <h2><span class="num">6</span>The tech stack, and why each piece</h2>
+  <p class="lede">Everything runs on your MacBook Air M1, with 8 GB of RAM. The only part that leaves the laptop is Gemini, and nothing calls it yet.</p>
+
+  <table>
+    <tr><th style="width:21%">Piece</th><th style="width:36%">What it does here</th><th>Why we chose it</th></tr>
+    <tr><td><strong>Python 3.12, uv</strong></td><td>The whole codebase. uv installs and pins every dependency in <code>uv.lock</code>.</td><td>Best libraries for parsing, git and MCP. uv makes the setup repeatable on any machine.</td></tr>
+    <tr><td><strong>git</strong></td><td>Bare clones of each repo. <code>git blame</code>, <code>git diff</code> and <code>git cat-file</code> read history.</td><td>Git's blame is fast and well tested. Bare clones skip the working copy, which saves disk.</td></tr>
+    <tr><td><strong>tree-sitter</strong></td><td>Parses Python, C and JavaScript into syntax trees for Layer A.</td><td>One library for many languages, and it copes with broken or old code without crashing.</td></tr>
+    <tr><td><strong>SQLite</strong></td><td>One database file per repo: commits, parents, file changes and their labels.</td><td>No server to run, and it handles millions of rows. WAL mode lets the MCP server read during long jobs.</td></tr>
+    <tr><td><strong>MCP Python SDK</strong></td><td>The server that exposes <code>why_line</code> and <code>why_range</code> to agents over stdio.</td><td>The official SDK. Stdio means the agent starts the server itself, so nothing needs hosting.</td></tr>
+    <tr><td><strong>Gemini API</strong></td><td>Planned for written explanations in Phase II, and for the agent in the RQ5 study.</td><td>8 GB of RAM can't run a good local model. The model is pinned to <code>gemini-3.8-flash</code> behind an interface, so it can be swapped.</td></tr>
+    <tr><td><strong>Typer</strong></td><td>The <code>provenance</code> command: <code>clone</code>, <code>ingest</code>, <code>classify</code>, <code>why</code>, <code>mcp</code>.</td><td>Small, typed and quick to build.</td></tr>
+    <tr><td><strong>pytest, ruff</strong></td><td>146 tests, including tiny made-up git repos built during the tests. Ruff checks style.</td><td>Each bug found becomes a permanent test, so it can't return unnoticed.</td></tr>
+    <tr><td><strong>Process pool</strong></td><td>Layer A runs on 4 worker processes.</td><td>Uses the M1's cores while staying inside 8 GB.</td></tr>
+  </table>
+
+  <h3>The corpus</h3>
+  <table>
+    <tr><th>Repo</th><th>Language</th><th class="n">Commits</th><th>Role</th><th>Status</th></tr>
+    <tr><td><strong>Django</strong></td><td>Python</td><td class="n">35,104</td><td>Main repo for Project-I. It keeps a hand-made skip list, which we can test against.</td><td><span class="status s-built"><i></i>Run</span></td></tr>
+    <tr><td><strong>Redis</strong></td><td>C</td><td class="n">13,415</td><td>Second repo, a second language</td><td><span class="status s-built"><i></i>Run</span></td></tr>
+    <tr><td><strong>React</strong></td><td>JavaScript</td><td class="n" style="white-space:nowrap">≈ 21,800</td><td>Third language, planned for December</td><td><span class="status s-plan"><i></i>Not run</span></td></tr>
+    <tr><td><strong>PostgreSQL</strong></td><td>C</td><td class="n" style="white-space:nowrap">≈ 65,900</td><td>Line tracing only. Its GitHub mirror has no PRs or issues.</td><td><span class="status s-plan"><i></i>Not run</span></td></tr>
+  </table>
+  <p class="small muted">Django and Redis data together use 588 MB, and 19 GB of disk is free. Each repo is pinned to one commit (<code>eval/corpus.lock.json</code>), so results can be reproduced.</p>
+  <div class="foot"><span>Provenance · project guide</span><span>7 / 14</span></div>
+</section>
+
+<!-- 8. WHAT WE DID -->
+<section class="page">
+  <div class="run"><span>Provenance · project guide</span><span>7 · What we have done</span></div>
+  <h2><span class="num">7</span>What we have done, step by step, and why</h2>
+  <p class="lede">In order, from reading the synopsis to the annotation packet that's now waiting for you.</p>
+
+  <div class="steps-head"><span>#</span><span>What was done</span><span>Why</span></div>
+  <ol class="steps">
+    <li><span>Read the synopsis and research plan, then checked all four repos through the GitHub API.</span><span class="why">The plan assumed every repo had PRs and issues on GitHub. PostgreSQL has none, and Django keeps its tickets on Trac, so the design had to change.</span></li>
+    <li><span>Wrote eight plan documents in <code>plans/</code>, from a plain overview to engine details.</span><span class="why">To settle the design and record decisions before writing code, so nothing gets rebuilt later.</span></li>
+    <li><span>Built ingestion: bare clones, plus every commit and file change in SQLite.</span><span class="why">Every later step reads from one fast local store, instead of asking git again.</span></li>
+    <li><span>Built Layer A, the tree-sitter classifier, and Layer B, blame with per-file skip lists.</span><span class="why">The cheapest way to remove most noise. It reuses git's own matching, so our work goes into deciding what to skip.</span></li>
+    <li><span>Compared our automatic skip list with the one Django's developers keep by hand.</span><span class="why">It's the only real answer key available without hand labelling.</span></li>
+    <li><span>Built an independent check using Python's own parser, and fixed the bugs it found. The rules went through 6 versions.</span><span class="why">A second opinion that doesn't share our code. It found real cases where we called a logic change cosmetic.</span></li>
+    <li><span>Built Layer C and the "first appearance" answer.</span><span class="why">Commits that mix a reformat with a real fix can't be skipped whole, so the line has to be followed through the diff.</span></li>
+    <li><span>Built the CLI and the MCP server, and tested the server with a real MCP client as a separate process.</span><span class="why">This is how an agent uses the tool, and it's the demo for the evaluation.</span></li>
+    <li><span>Ran everything on Redis, and read its flagged commits by hand.</span><span class="why">C has no parser check like Python's, so reading was the only check available for the second language.</span></li>
+    <li><span>Built the scoring pipeline and a blind 60-line annotation packet. Tested the scorer on fake labels with a known answer.</span><span class="why">Real accuracy needs human labels. Testing the scorer first means your labelling time won't be wasted on a broken script.</span></li>
+    <li><span>Stress-tested the full tracer on 300 random real lines.</span><span class="why">To catch crashes and measure speed before the demo. There were no crashes, but one line was too slow.</span></li>
+  </ol>
+
+  <div class="box panel" style="margin-top:4mm">
+    <p class="small" style="margin:0"><strong>Where it lives:</strong> engine in <code>src/provenance/</code>, evaluation scripts in <code>eval/</code>, results in <code>eval/results/</code>, labelling files in <code>eval/gold/</code>. There are six commits on the <code>project-i-evaluation</code> branch, and nothing has been pushed to GitHub yet.</p>
+  </div>
+  <div class="foot"><span>Provenance · project guide</span><span>8 / 14</span></div>
+</section>
+
+<!-- 9. RESULTS -->
+<section class="page">
+  <div class="run"><span>Provenance · project guide</span><span>8 · Results so far</span></div>
+  <h2><span class="num">8</span>Results so far</h2>
+  <p class="lede">Two kinds of result: how we compare with Django's hand-kept list, and how often our method gives a different answer from git's best settings.</p>
+
+  <div class="chart-title">Lines whose answer is a known formatting commit (lower is better)</div>
+  <p class="chart-sub">Django, 5,366 logic lines from 40 random files. A "known formatting commit" is one listed in Django's hand-kept skip file.</p>
+  <svg viewBox="0 0 660 150" role="img" aria-label="Bar chart: strongest blame 22.7 percent, hand list 1.2 percent, ours 1.7 percent">
+    <g stroke="#ecebe7" stroke-width="1">
+      <line x1="250" y1="10" x2="250" y2="128"/><line x1="326" y1="10" x2="326" y2="128"/><line x1="402" y1="10" x2="402" y2="128"/>
+      <line x1="478" y1="10" x2="478" y2="128"/><line x1="554" y1="10" x2="554" y2="128"/><line x1="630" y1="10" x2="630" y2="128"/>
+    </g>
+    <g font-size="9" fill="#7d7c76" text-anchor="middle">
+      <text x="250" y="142">0%</text><text x="326" y="142">5%</text><text x="402" y="142">10%</text><text x="478" y="142">15%</text><text x="554" y="142">20%</text><text x="630" y="142">25%</text>
+    </g>
+    <g font-size="10" text-anchor="end" fill="#0b0b0b">
+      <text x="240" y="30">Strongest git blame (-w -M -C -C)</text>
+      <text x="240" y="70">Django's hand-kept skip list</text>
+      <text x="240" y="110" font-weight="650">Our automatic skip list</text>
+    </g>
+    <rect x="250" y="16" width="345" height="22" rx="3" fill="#a9a8a1"/>
+    <rect x="250" y="56" width="18.2" height="22" rx="3" fill="#a9a8a1"/>
+    <rect x="250" y="96" width="25.8" height="22" rx="3" fill="#2a78d6"/>
+    <g font-size="10" font-weight="650" fill="#0b0b0b">
+      <text x="601" y="31">22.7%</text><text x="274" y="71">1.2%</text><text x="282" y="111">1.7%</text>
+    </g>
+  </svg>
+  <p class="small" style="margin-top:2mm">Our automatic method gets almost as close as a list Django's developers maintain by hand. Most projects keep no such list, which is the point of doing it automatically. We also skip 95.7% of the code files in Django's listed commits (3,603 of 3,764).</p>
+
+  <div class="chart-title" style="margin-top:5mm">How often two methods give a different answer for the same line</div>
+  <p class="chart-sub">40 random files per repo. Grey shows how much git's own flags change plain blame. Blue shows how much our skip lists change git's best result.</p>
+  <div class="legend"><span style="--c:#a9a8a1">Plain blame vs strongest git flags</span><span style="--c:#2a78d6">Strongest git flags vs our Layers A + B</span></div>
+  <svg viewBox="0 0 660 150" role="img" aria-label="Grouped bars: Django 12.3 and 28.6 percent, Redis 14.7 and 0.29 percent">
+    <g stroke="#ecebe7" stroke-width="1">
+      <line x1="250" y1="8" x2="250" y2="130"/><line x1="376.7" y1="8" x2="376.7" y2="130"/><line x1="503.3" y1="8" x2="503.3" y2="130"/><line x1="630" y1="8" x2="630" y2="130"/>
+    </g>
+    <g font-size="9" fill="#7d7c76" text-anchor="middle">
+      <text x="250" y="144">0%</text><text x="376.7" y="144">10%</text><text x="503.3" y="144">20%</text><text x="630" y="144">30%</text>
+    </g>
+    <g font-size="10" text-anchor="end">
+      <text x="240" y="38" font-weight="650">Django</text><text x="240" y="51" font-size="9" fill="#52514e">5,529 lines</text>
+      <text x="240" y="98" font-weight="650">Redis</text><text x="240" y="111" font-size="9" fill="#52514e">18,750 lines</text>
+    </g>
+    <rect x="250" y="16" width="155.3" height="18" rx="3" fill="#a9a8a1"/>
+    <rect x="250" y="38" width="362.9" height="18" rx="3" fill="#2a78d6"/>
+    <rect x="250" y="78" width="186.4" height="18" rx="3" fill="#a9a8a1"/>
+    <rect x="250" y="100" width="3.6" height="18" rx="1.5" fill="#2a78d6"/>
+    <g font-size="10" font-weight="650">
+      <text x="411" y="30">12.3%</text><text x="618" y="52">28.6%</text>
+      <text x="442" y="92">14.7%</text><text x="259" y="114">0.29%</text>
+    </g>
+  </svg>
+
+  <div class="grid2" style="margin-top:3mm">
+    <div class="box" style="margin:0">
+      <h4>Reading the Django result</h4>
+      <p class="small">For more than a quarter of Django's logic lines, our method gives a different commit from git's best settings. That's mostly the 2022 Black reformat, which git's flags can't see through.</p>
+    </div>
+    <div class="box" style="margin:0;border-color:#f3c66a">
+      <h4>Reading the Redis result</h4>
+      <p class="small">Redis barely changes. Its non-logic commits are mostly comment edits, and logic lines rarely sit on them. Our headline claims should come from Django, with results reported per repo.</p>
+    </div>
+  </div>
+  <p class="small muted" style="margin-top:3mm"><strong>Important:</strong> a different answer isn't automatically a better one. These charts show where methods disagree. Only the hand labels can show which one is right.</p>
+  <div class="foot"><span>Provenance · project guide</span><span>9 / 14</span></div>
+</section>
+
+<!-- 10. CHECKS -->
+<section class="page">
+  <div class="run"><span>Provenance · project guide</span><span>9 · How we checked it</span></div>
+  <h2><span class="num">9</span>How we checked it without human labels</h2>
+  <p class="lede">Python ships its own parser, the <code>ast</code> module. If the syntax trees before and after a change are equal, the change almost certainly kept the behaviour. That gives us a second opinion that doesn't use our code.</p>
+
+  <p class="chart-title">Checked on 74,840 Django file changes</p>
+  <div class="grid4" style="margin-top:2mm">
+    <div class="stat"><div class="v">99.91%</div><div class="l">of changes we call cosmetic have the same tree, treating import order as layout (10,639 of 10,649)</div></div>
+    <div class="stat"><div class="v">91.96%</div><div class="l">under a strict check, where reordering imports counts as a difference</div></div>
+    <div class="stat"><div class="v">385 / 385</div><div class="l">renames keep the same tree shape once names are blanked out</div></div>
+    <div class="stat"><div class="v">98.9%</div><div class="l">of changes with equal trees were treated as non-logic by us</div></div>
+  </div>
+  <p class="small muted" style="margin-top:2mm">8.8% of changes couldn't be parsed, mostly old Python 2 code, so they are left out. The 10 remaining disagreements were read by hand: all are docstring or import placement, with no change to behaviour. Import order is a choice, and it matters if imports have side effects, so we report both figures.</p>
+
+  <h3>Bugs this checking found</h3>
+  <p class="small">Each one made a real change look cosmetic, which is the dangerous direction. Each is fixed and now has a permanent test.</p>
+  <table>
+    <tr><th style="width:46%">Bug</th><th>Example</th><th style="width:22%">Found by</th></tr>
+    <tr><td>Moving code into an <code>if</code> looked like no change</td><td>A statement indented into a block runs only sometimes</td><td>Synthetic test</td></tr>
+    <tr><td>A library swap looked like a rename</td><td><code>base64.encodestring</code> → <code>b64encode</code></td><td>Reading flagged commits</td></tr>
+    <tr><td>Changed doctests looked like docstring edits</td><td>Docstrings containing <code>&gt;&gt;&gt;</code> run as tests</td><td>Reading flagged commits</td></tr>
+    <tr><td>Two statements became one call</td><td><code>self.check</code> then <code>(a, b)</code> on the next line, versus <code>self.check(a, b)</code></td><td>Python parser check</td></tr>
+  </table>
+
+  <h3>Speed and stability: 300 random real lines</h3>
+  <div class="grid4">
+    <div class="stat"><div class="v">0</div><div class="l">crashes across Django and Redis</div></div>
+    <div class="stat"><div class="v">0.03 s</div><div class="l">median time to trace one line</div></div>
+    <div class="stat"><div class="v">2.7–4.3 s</div><div class="l">90th percentile: Django, then Redis</div></div>
+    <div class="stat warn"><div class="v">19.2 s</div><div class="l"><strong>Slowest line, on Redis.</strong> Misses the 10 s target. Django's slowest was 7.0 s.</div></div>
+  </div>
+
+  <h3>The C language check was weaker</h3>
+  <p class="small">Redis is written in C, which has no built-in parser check like Python's. Claude read all 18 Redis renames and 40 sampled cosmetic commits and found no errors, but read only the first 6 changed lines of each. Please spot-check a few in <code>eval/results/review_redis_flagged.json</code>.</p>
+  <div class="foot"><span>Provenance · project guide</span><span>10 / 14</span></div>
+</section>
+
+<!-- 11. UNKNOWNS -->
+<section class="page">
+  <div class="run"><span>Provenance · project guide</span><span>10 · What we don't know yet</span></div>
+  <h2><span class="num">10</span>What we don't know yet</h2>
+  <p class="lede">An examiner will look for these weak spots, so it's better that we name them first.</p>
+
+  <table>
+    <tr><th style="width:30%">Gap</th><th>What it means</th><th style="width:28%">How we close it</th></tr>
+    <tr><td><strong>Accuracy is unmeasured</strong></td><td>Every number so far shows where methods differ, or that a change kept its syntax tree. None says whether our final answer is the right commit.</td><td>Your 60 labels, then <code>eval/score_gold.py</code></td></tr>
+    <tr><td><strong>Redis gains little</strong></td><td>Layers A and B change only 0.29% of Redis answers. A claim like "better on every repo" may not hold.</td><td>Report per repo, and see whether Layer C helps Redis</td></tr>
+    <tr><td><strong>Layer C is unproven</strong></td><td>It ran on real lines without crashing, but nobody has checked its answers. Its confidence numbers are fixed guesses, not measured.</td><td>Labels; decide on 14 Nov whether it goes in the headline</td></tr>
+    <tr><td><strong>C has no parser check</strong></td><td>Only a quick read by Claude of the first few changed lines.</td><td>Your spot-check of the Redis review file</td></tr>
+    <tr><td><strong>Import order is our assumption</strong></td><td>Usually layout, but not always.</td><td>Report both the 99.91% and the 91.96%</td></tr>
+    <tr><td><strong>React and PostgreSQL not run</strong></td><td>The JavaScript rules have only had small synthetic tests.</td><td>December</td></tr>
+    <tr><td><strong>One slow line</strong></td><td>19.2 s, against a 10 s target.</td><td>Profile it, unless the labels need the time</td></tr>
+    <tr><td><strong>One labeller</strong></td><td>Without a second person, the gold set is one person's opinion.</td><td>A teammate labels about 15 of the same lines</td></tr>
+  </table>
+
+  <h3>Similar tools already exist</h3>
+  <p class="small">A web search on 7 Nov found several open-source tools that also answer "why is this code here" from git history, some of them through MCP: <strong>why</strong> (quangdang46, archived April 2026), <strong>WhyGraph</strong>, <strong>Ctxo</strong> and <strong>Git Archaeologist</strong>. There's also a July 2026 paper, <strong>Rekal</strong>, that treats git as memory for agents.</p>
+  <div class="box blue">
+    <p class="small" style="margin:0"><strong>What this means for our claim:</strong> we can't say we're the first tool that explains code history to agents. None of the tools we looked at showed automatic per-file cosmetic filtering, or any measured accuracy for line tracing. So our difference is <strong>an evaluated method that traces lines past non-logic changes, compared against fair baselines</strong>. That's only from reading their READMEs, so check their source before the paper.</p>
+  </div>
+  <div class="foot"><span>Provenance · project guide</span><span>11 / 14</span></div>
+</section>
+
+<!-- 12. NEXT -->
+<section class="page">
+  <div class="run"><span>Provenance · project guide</span><span>11 · What happens next</span></div>
+  <h2><span class="num">11</span>What happens next, and why</h2>
+  <p class="lede">Two weeks to the Project-I evaluation. Week 1 is labelling, and week 2 turns the labels into results.</p>
+
+  <svg viewBox="0 0 660 230" role="img" aria-label="Plan from 7 to 21 November">
+    <g font-size="8.5" fill="#7d7c76" text-anchor="middle">
+      <text x="219.5" y="14">7</text><text x="248.5" y="14">8</text><text x="277.5" y="14">9</text><text x="306.5" y="14">10</text><text x="335.5" y="14">11</text>
+      <text x="364.5" y="14">12</text><text x="393.5" y="14">13</text><text x="422.5" y="14">14</text><text x="451.5" y="14">15</text><text x="480.5" y="14">16</text>
+      <text x="509.5" y="14">17</text><text x="538.5" y="14">18</text><text x="567.5" y="14">19</text><text x="596.5" y="14">20</text><text x="625.5" y="14">21</text>
+    </g>
+    <text x="205" y="14" font-size="8.5" fill="#7d7c76" text-anchor="end">Nov</text>
+    <g stroke="#f0efeb" stroke-width="1">
+      <line x1="234" y1="22" x2="234" y2="214"/><line x1="263" y1="22" x2="263" y2="214"/><line x1="292" y1="22" x2="292" y2="214"/><line x1="321" y1="22" x2="321" y2="214"/>
+      <line x1="350" y1="22" x2="350" y2="214"/><line x1="379" y1="22" x2="379" y2="214"/><line x1="408" y1="22" x2="408" y2="214"/><line x1="437" y1="22" x2="437" y2="214"/>
+      <line x1="466" y1="22" x2="466" y2="214"/><line x1="495" y1="22" x2="495" y2="214"/><line x1="524" y1="22" x2="524" y2="214"/><line x1="553" y1="22" x2="553" y2="214"/>
+      <line x1="582" y1="22" x2="582" y2="214"/><line x1="611" y1="22" x2="611" y2="214"/>
+    </g>
+    <line x1="219.5" y1="20" x2="219.5" y2="214" stroke="#0b0b0b" stroke-width="1.2" stroke-dasharray="3 2"/>
+    <text x="219.5" y="226" font-size="8.5" text-anchor="middle" fill="#0b0b0b" font-weight="650">today</text>
+
+    <g font-size="9.8" fill="#0b0b0b">
+      <text x="0" y="41">Label 10 lines, then review rules</text>
+      <text x="0" y="67">Label the other 50, plus teammate's 15</text>
+      <text x="0" y="93">Score, review the wrong answers</text>
+      <text x="0" y="119">Fix what labels show, then freeze</text>
+      <text x="0" y="145">Failure taxonomy, final frozen run</text>
+      <text x="0" y="171">Report, slides, demo, backup video</text>
+      <text x="0" y="197" font-weight="650">Project-I evaluation</text>
+    </g>
+    <g fill="#2a78d6">
+      <rect x="234" y="30" width="58" height="15" rx="3"/>
+      <rect x="263" y="56" width="145" height="15" rx="3"/>
+      <rect x="379" y="82" width="58" height="15" rx="3"/>
+      <rect x="437" y="108" width="87" height="15" rx="3"/>
+      <rect x="495" y="134" width="58" height="15" rx="3"/>
+      <rect x="524" y="160" width="87" height="15" rx="3"/>
+    </g>
+    <path d="M437,82 l7,7.5 l-7,7.5 l-7,-7.5 z" fill="#0b0b0b"/>
+    <text x="448" y="93" font-size="8.5" fill="#0b0b0b" font-weight="650">checkpoint: Layer C in headline?</text>
+    <path d="M625.5,186 l8,8 l-8,8 l-8,-8 z" fill="#d03b3b"/>
+  </svg>
+
+  <div class="grid2" style="margin-top:3mm">
+    <div class="box blue" style="margin:0">
+      <h4>What labelling involves</h4>
+      <p class="small">For each of the 60 lines in <code>eval/gold/packet.md</code>, read the candidate commits and the line's history, then record two answers in <code>annotations.csv</code>:</p>
+      <ol class="small" style="margin-bottom:1.5mm">
+        <li>Which commit last changed this line's <strong>logic</strong>?</li>
+        <li>Which commit first <strong>introduced</strong> it?</li>
+      </ol>
+      <p class="small">If you can't decide, mark the line ambiguous. Those are reported separately, not dropped. The rules are in <code>RULES.md</code>. Expect 2–3 hours.</p>
+    </div>
+    <div class="box" style="margin:0">
+      <h4>Why it's done this way</h4>
+      <ul class="small" style="margin-bottom:0">
+        <li><strong>Blind:</strong> the packet doesn't say which method picked which commit, so your labels can't favour ours. Don't open <code>sample_key.json</code>.</li>
+        <li><strong>A second labeller:</strong> their agreement with you (Cohen's kappa) shows the labels aren't just one person's view.</li>
+        <li><strong>Freeze before the final run,</strong> so the rules aren't tuned to fit the test lines.</li>
+        <li><strong>Mixed sample:</strong> lines were sampled by repo and type, then weighted back, so accuracy isn't skewed.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>What the scorer will produce</h3>
+  <p class="small">An accuracy table for every method: plain blame, two stronger git settings, Django's hand list, our Layers A + B, and our full tracer with Layer C. It includes 95% confidence ranges and a statistical test (McNemar) of whether ours beats git's best setting on the same lines. Then we sort every wrong answer into a <strong>failure taxonomy</strong>, meaning a list of the kinds of mistakes and how often each occurs.</p>
+  <div class="foot"><span>Provenance · project guide</span><span>12 / 14</span></div>
+</section>
+
+<!-- 13. DECISIONS -->
+<section class="page">
+  <div class="run"><span>Provenance · project guide</span><span>12 · Key decisions</span></div>
+  <h2><span class="num">12</span>Key decisions and their trade-offs</h2>
+  <p class="lede">The choices that shaped the system. Any of them can be revisited, so this is where your suggestions can change the direction.</p>
+
+  <table>
+    <tr><th style="width:27%">Decision</th><th style="width:40%">Why</th><th>What it costs</th></tr>
+    <tr><td><strong>Trace lines on request</strong>, not every line at every version as the research plan proposed</td><td>The plan needed about 100 GB. Evaluation and CI only ever need some lines, so on-request tracing fits in 20 GB.</td><td>The first question about a file is slower. The slowest so far took 19 s.</td></tr>
+    <tr><td><strong>Reuse <code>git blame</code></strong> with skip lists</td><td>Git is fast and trusted, so our effort goes into deciding what to skip.</td><td>We inherit git's line matching, including its mistakes.</td></tr>
+    <tr><td><strong>Classify each file</strong>, not each commit</td><td>Many commits reformat one file and fix another. Judging the whole commit loses that.</td><td>More rows in the database.</td></tr>
+    <tr><td><strong>When unsure, call it logic</strong></td><td>Wrongly skipping hides the real origin. Wrongly keeping only falls back to git's answer.</td><td>Some genuine cosmetic changes aren't skipped.</td></tr>
+    <tr><td><strong>Compare against git's strongest settings</strong> and Django's hand list, not just plain blame</td><td>Beating only plain blame would be a weak, unfair comparison, and an examiner would point that out.</td><td>Our improvement looks smaller, but it's honest.</td></tr>
+    <tr><td><strong>Gemini instead of a local LLM</strong></td><td>8 GB of RAM can't run a capable model alongside everything else.</td><td>Code and evidence go to Google when explaining. It needs the guide's approval, and it costs money.</td></tr>
+    <tr><td><strong>MCP returns evidence, not prose</strong></td><td>The calling agent already has a strong LLM to reason with.</td><td>Agents get raw data, so they must read it.</td></tr>
+    <tr><td><strong>PostgreSQL for tracing only</strong></td><td>Its GitHub mirror has no PRs or issues. Its discussions are on mailing lists.</td><td>One repo fewer for the Phase II evidence search.</td></tr>
+    <tr><td><strong>Add the agent study (RQ5)</strong></td><td>The title promises to <em>prevent unsafe changes</em>, and the original plan never tested an agent.</td><td>More work in Phase III.</td></tr>
+    <tr><td><strong>Keep the 60-line sample frozen</strong>, even though it was drawn before the last two rule fixes</td><td>Re-drawing after seeing results would let the results choose the test.</td><td>The sample was drawn from slightly older rules.</td></tr>
+    <tr><td><strong>Ship only what's measured</strong></td><td>Layer C stays out of the headline until labels show it helps.</td><td>The headline claim may be smaller.</td></tr>
+  </table>
+  <div class="foot"><span>Provenance · project guide</span><span>13 / 14</span></div>
+</section>
+
+<!-- 14. YOUR INPUT -->
+<section class="page">
+  <div class="run"><span>Provenance · project guide</span><span>13 · Your suggestions</span></div>
+  <h2><span class="num">13</span>Where your suggestions matter most</h2>
+  <p class="lede">These are open choices. Each has my current recommendation, but your view should decide.</p>
+
+  <div class="q"><h4>1. Is the goal framed the way you see it?</h4><p>Project-I claims <em>more accurate line origins than git's best setup</em>, with the agent study saved for later. Would you rather show a demo that's closer to the agent story by 21 Nov?</p><p class="rec">Recommendation: keep the accuracy claim as the result, and show the MCP demo alongside it.</p></div>
+  <div class="q"><h4>2. Which repos count for Project-I?</h4><p>Django is the main repo and Redis the second. React could add a third language, but would take time away from labelling.</p><p class="rec">Recommendation: Django and Redis only, and React in December.</p></div>
+  <div class="q"><h4>3. Should Layer C be in the headline result?</h4><p>It's built but unchecked. It could improve the result, or it could add errors.</p><p class="rec">Recommendation: decide at the 14 Nov checkpoint, using the labels.</p></div>
+  <div class="q"><h4>4. What should the demo be?</h4><p>Options: the CLI live, an agent calling <code>why_line</code> live, or both with a recorded backup.</p><p class="rec">Recommendation: the CLI live, plus a recorded MCP agent session in case the live demo fails.</p></div>
+  <div class="q"><h4>5. Fix the slow 19 s line now, or later?</h4><p class="rec">Recommendation: after labelling, unless a demo line hits it.</p></div>
+  <div class="q"><h4>6. How should we position against the similar tools?</h4><p class="rec">Recommendation: present them as related work, and claim the evaluated method rather than "the first tool".</p></div>
+
+  <div class="box panel" style="margin-top:4mm">
+    <h4>Things only you can do</h4>
+    <ul class="check small">
+      <li><strong>Label the 60 lines,</strong> using <code>RULES.md</code>, <code>packet.md</code> and <code>annotations.csv</code>. Do 10, then re-read the rules.</li>
+      <li><strong>Ask a teammate to label about 15 of the same lines,</strong> without seeing yours. It takes 30–45 minutes.</li>
+      <li><strong>Tell Prof. Shailender Kumar</strong> about Gemini replacing the local LLM, PostgreSQL being tracing-only, and the added agent study.</li>
+      <li><strong>Replace the Gemini key and set a spending limit,</strong> since the old key was pasted into chat.</li>
+      <li><strong>Create a private GitHub repo</strong> as a backup. Right now everything exists only on your laptop.</li>
+    </ul>
+  </div>
+  <p class="small muted">After labelling, run <code>uv run python eval/score_gold.py</code> and share the table, so we can go through the wrong answers together.</p>
+  <div class="foot"><span>Provenance · project guide</span><span>14 / 14</span></div>
+</section>
+
+</body>
+</html>

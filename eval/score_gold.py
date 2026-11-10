@@ -27,9 +27,15 @@ BOOTSTRAPS = 2000
 SEED = 7
 
 
-def same_commit(a: str, b: str) -> bool:
-    a, b = a.strip().lower(), b.strip().lower()
-    return len(a) >= MIN_SHA and len(b) >= MIN_SHA and (a.startswith(b) or b.startswith(a))
+def same_commit(answer: str, label: str) -> bool:
+    """True if the answer matches the label, or any alternative in a label like `abc|def`."""
+    answer = answer.strip().lower()
+    for option in label.lower().split("|"):
+        option = option.strip()
+        if len(answer) >= MIN_SHA and len(option) >= MIN_SHA:
+            if answer.startswith(option) or option.startswith(answer):
+                return True
+    return False
 
 
 def load_labels(path: Path) -> list[dict]:
@@ -94,11 +100,14 @@ def method_answers(items: list[dict], methods_for) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--labels", type=Path, default=GOLD / "annotations.csv")
+    parser.add_argument("--set", choices=("dev", "test"), default="dev")
+    parser.add_argument("--labels", type=Path)
     parser.add_argument("--second", type=Path)
     args = parser.parse_args()
 
-    key = json.loads((GOLD / "sample_key.json").read_text())
+    folder = GOLD if args.set == "dev" else GOLD / "test"
+    args.labels = args.labels or folder / "annotations.csv"
+    key = json.loads((folder / "sample_key.json").read_text())
     by_id = {item["id"]: item for item in key["items"]}
     labelled = [
         r for r in load_labels(args.labels) if r["ambiguous"].strip().lower() not in ("y", "yes")
@@ -121,18 +130,25 @@ def main() -> None:
             for label in (r for r in labelled if r["repo"] == name):
                 item = by_id[label["id"]]
                 blamed = baselines.blame_all(item["path"])
-                row = {"repo": name, "stratum": item["stratum"]}
+                row = {"id": label["id"], "repo": name, "stratum": item["stratum"]}
+                answers = {}
                 for method, lines in blamed.items():
                     commit = lines[item["line"] - 1].commit
+                    answers[method] = commit[:10]
                     row[method] = same_commit(commit, label["last_logic_change"])
                 chain = tracer.trace(item["path"], item["line"], rev)
+                answers["Ours-C"] = (chain.origin or "")[:10]
+                answers["Ours-C first"] = (chain.first_seen or "")[:10]
+                row["answers"] = answers
                 row["Ours-C"] = same_commit(chain.origin or "", label["last_logic_change"])
                 first = label["first_appearance"]
                 row["first:Ours-C"] = same_commit(chain.first_seen or "", first)
                 row["first:B2"] = same_commit(blamed["B2"][item["line"] - 1].commit, first)
                 rows.append(row)
 
-    methods = [m for m in ("B0", "B1", "B2", "B3", "Ours-A", "Ours-C") if all(m in r for r in rows)]
+    methods = [
+        m for m in ("B0", "B1", "B2", "B2t", "B3", "Ours-A", "Ours-C") if all(m in r for r in rows)
+    ]
     weights = stratum_weights(key["meta"])
     report: dict = {"labelled": len(rows), "ambiguous": ambiguous, "methods": {}}
     print(f"\n{'Method':8} {'Weighted':>9} {'95% CI':>17} {'Raw':>7}  vs Ours-C")
@@ -169,7 +185,9 @@ def main() -> None:
         report["agreement"] = {"lines": len(shared), "percent": agreement, "kappa": kappa}
         print(f"\nAnnotator agreement on {len(shared)} lines: {agreement}, kappa {kappa}")
 
-    (RESULTS / "gold_scores.json").write_text(json.dumps(report, indent=2) + "\n")
+    report["lines"] = rows
+    name = "gold_scores.json" if args.set == "dev" else "gold_scores_test.json"
+    (RESULTS / name).write_text(json.dumps(report, indent=2) + "\n")
 
 
 if __name__ == "__main__":

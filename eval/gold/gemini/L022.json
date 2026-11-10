@@ -1,0 +1,5 @@
+{
+  "id": "L022",
+  "model": "gemini-3.8-flash",
+  "reply": "```json\n{\"last_logic_change\": \"e0b456bee7\", \"first_appearance\": \"e0b456bee7\", \"ambiguous\": \"no\", \"notes\": \"Line introduced when raster base metadata functionality was added.\"}\n```"
+}

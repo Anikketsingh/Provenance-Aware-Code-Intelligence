@@ -427,11 +427,13 @@ dependencies = [
     { name = "google-genai" },
     { name = "mcp", extra = ["cli"] },
     { name = "python-dotenv" },
+    { name = "starlette" },
     { name = "tree-sitter" },
     { name = "tree-sitter-c" },
     { name = "tree-sitter-javascript" },
     { name = "tree-sitter-python" },
     { name = "typer" },
+    { name = "uvicorn" },
 ]
 
 [package.dev-dependencies]
@@ -445,11 +447,13 @@ requires-dist = [
     { name = "google-genai", specifier = ">=3.0.0" },
     { name = "mcp", extras = ["cli"], specifier = ">=2.3.0" },
     { name = "python-dotenv", specifier = ">=1.2.4" },
+    { name = "starlette", specifier = ">=1.0" },
     { name = "tree-sitter", specifier = ">=0.26,<0.27" },
     { name = "tree-sitter-c", specifier = ">=0.24" },
     { name = "tree-sitter-javascript", specifier = ">=0.25" },
     { name = "tree-sitter-python", specifier = ">=0.25" },
     { name = "typer", specifier = ">=0.15" },
+    { name = "uvicorn", specifier = ">=0.30" },
 ]
 
 [package.metadata.requires-dev]

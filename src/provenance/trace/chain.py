@@ -6,7 +6,7 @@ from provenance.config import Repo
 from provenance.gitio import git
 from provenance.model import CONTINUES_TRACING, Chain, ChangeKind, Hop
 from provenance.store.db import Store
-from provenance.trace.blame import BlameLine, blame_file
+from provenance.trace.blame import TRACE_FLAGS, BlameLine, blame_file
 from provenance.trace.classify import CONFIDENCE
 from provenance.trace.hop import Hunk, parse_diff, step_back
 
@@ -19,9 +19,10 @@ _MAX_CACHED_DIFFS = 32
 class Tracer:
     """Traces lines in one repo, blaming each file only once per revision."""
 
-    def __init__(self, repo: Repo, store: Store):
+    def __init__(self, repo: Repo, store: Store, flags: tuple[str, ...] = TRACE_FLAGS):
         self._repo = repo
         self._store = store
+        self._flags = flags
         self._blames: dict[tuple[str, str, bool], list[BlameLine]] = {}
         self._diffs: OrderedDict[str, list[Hunk]] = OrderedDict()
 
@@ -29,7 +30,9 @@ class Tracer:
         key = (path, rev, skip_cosmetic)
         if key not in self._blames:
             ignore = self._store.non_logic_commits(path) if skip_cosmetic else ()
-            self._blames[key] = blame_file(self._repo.git_dir, path, rev, ignore_revs=ignore)
+            self._blames[key] = blame_file(
+                self._repo.git_dir, path, rev, flags=self._flags, ignore_revs=ignore
+            )
         return self._blames[key]
 
     def _hunks(self, commit: str, parent: str) -> list[Hunk]:
