@@ -26,3 +26,21 @@ Layer C fixed 3 lines that layers A and B got wrong: L018, L019 and L029. In eac
 
 - Claude made these labels and also built the method. Category B depends most on how the rules are read.
 - Any fix found here must be re-checked on lines outside this sample. Otherwise the method is tuned to its own test set.
+
+## After the fixes (10 Nov, frozen in commit c84fa8e)
+
+Two changes came out of this list. Both were chosen on this development set, so the test set is what counts.
+
+- **Category C fixed:** Layer C ignores comments.
+- **Category D fixed:** Layer C compares the words inside strings, so re-split strings match.
+- **Category A mostly fixed:** the tracer now uses `-w -M60 -C60 -C60`. `eval/tune_flags.py` compared five settings:
+
+| Setting | Weighted accuracy | Wrong lines |
+|---|---:|---|
+| `-w -M -C -C` (old) | 86.8% | 11 |
+| `-w -M -C` | 86.8% | 11 |
+| `-w -M` | 85.3% | 14 |
+| `-w` | 87.0% | 10 |
+| **`-w -M60 -C60 -C60` (chosen)** | **88.8%** | **7** |
+
+These rows already include the C and D fixes. Still wrong: L014, L024 and L051 (category B), L030 and L058 (copies of longer blocks), L031 (category E), and L050. L050 is now marked ambiguous, because a recheck showed it's a copy, not a move.

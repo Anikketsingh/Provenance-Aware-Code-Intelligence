@@ -1,0 +1,521 @@
+{
+  "meta": {
+    "seed": 20261110,
+    "repos": {
+      "django": {
+        "rev": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
+        "files_eligible": 627,
+        "files_sampled": 120,
+        "lines": 13105,
+        "strata": {
+          "agree": {
+            "population": 7865,
+            "sampled": 15
+          },
+          "disagree": {
+            "population": 5230,
+            "sampled": 25
+          }
+        }
+      },
+      "redis": {
+        "rev": "5b69ba2ce91fea8e9fc70ebac8ce341b37e75533",
+        "files_eligible": 219,
+        "files_sampled": 120,
+        "lines": 64622,
+        "strata": {
+          "agree": {
+            "population": 57558,
+            "sampled": 8
+          },
+          "disagree": {
+            "population": 7056,
+            "sampled": 12
+          }
+        }
+      }
+    }
+  },
+  "items": [
+    {
+      "repo": "django",
+      "path": "django/conf/global_settings.py",
+      "line": 504,
+      "code": "SESSION_COOKIE_SAMESITE = \"Lax\"",
+      "stratum": "disagree",
+      "id": "T001"
+    },
+    {
+      "repo": "redis",
+      "path": "src/t_zset.c",
+      "line": 1627,
+      "code": "unsigned char *zl = lpNew(0);",
+      "stratum": "disagree",
+      "id": "T002"
+    },
+    {
+      "repo": "django",
+      "path": "django/conf/global_settings.py",
+      "line": 118,
+      "code": "(\"mr\", gettext_noop(\"Marathi\")),",
+      "stratum": "disagree",
+      "id": "T003"
+    },
+    {
+      "repo": "redis",
+      "path": "src/t_zset.c",
+      "line": 1542,
+      "code": "while (eptr != NULL) {",
+      "stratum": "disagree",
+      "id": "T004"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/migrations/graph.py",
+      "line": 335,
+      "code": "def __contains__(self, node):",
+      "stratum": "agree",
+      "id": "T005"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/migrations/state.py",
+      "line": 356,
+      "code": "field.to_fields = tuple(",
+      "stratum": "disagree",
+      "id": "T006"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/sessions/backends/file.py",
+      "line": 52,
+      "code": "session_key = self._get_or_create_session_key()",
+      "stratum": "agree",
+      "id": "T007"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/backends/postgresql/features.py",
+      "line": 140,
+      "code": "expected_failures.update(",
+      "stratum": "disagree",
+      "id": "T008"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/admin/options.py",
+      "line": 2194,
+      "code": "media = self.media + admin_form.media",
+      "stratum": "disagree",
+      "id": "T009"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/backends/postgresql/features.py",
+      "line": 119,
+      "code": "\"backends.base.test_base.ExecuteWrapperTests.\"",
+      "stratum": "agree",
+      "id": "T010"
+    },
+    {
+      "repo": "redis",
+      "path": "src/t_stream.c",
+      "line": 1757,
+      "code": "si->lp_ele = lpNext(si->lp,si->lp_ele);",
+      "stratum": "disagree",
+      "id": "T011"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/models/fields/json.py",
+      "line": 507,
+      "code": "JSONField.register_lookup(DataContains)",
+      "stratum": "agree",
+      "id": "T012"
+    },
+    {
+      "repo": "redis",
+      "path": "src/cluster.h",
+      "line": 123,
+      "code": "int clusterNodeCoversSlot(clusterNode *n, int slot);",
+      "stratum": "disagree",
+      "id": "T013"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/admin/options.py",
+      "line": 2618,
+      "code": "\"pagination_required\": paginator.count > 100,",
+      "stratum": "disagree",
+      "id": "T014"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/backends/postgresql/client.py",
+      "line": 53,
+      "code": "env[\"PGPASSFILE\"] = str(passfile)",
+      "stratum": "disagree",
+      "id": "T015"
+    },
+    {
+      "repo": "redis",
+      "path": "src/acl.c",
+      "line": 2100,
+      "code": "open_bracket_start = j;",
+      "stratum": "agree",
+      "id": "T016"
+    },
+    {
+      "repo": "redis",
+      "path": "src/t_set.c",
+      "line": 3936,
+      "code": "const setTypeOps *ops = setTypeGetOps(set->encoding);",
+      "stratum": "disagree",
+      "id": "T017"
+    },
+    {
+      "repo": "redis",
+      "path": "src/server.c",
+      "line": 2726,
+      "code": "val = server.oom_score_adj_values[process_class];",
+      "stratum": "disagree",
+      "id": "T018"
+    },
+    {
+      "repo": "redis",
+      "path": "src/zset_btree.c",
+      "line": 2524,
+      "code": "zbtScoreLeafScoreBytes(leaf->n.count, leaf->score_bits) +",
+      "stratum": "agree",
+      "id": "T019"
+    },
+    {
+      "repo": "redis",
+      "path": "src/defrag.c",
+      "line": 794,
+      "code": "struct zskiplistNode *newheader;",
+      "stratum": "disagree",
+      "id": "T020"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/admin/options.py",
+      "line": 1361,
+      "code": "bit = unescape_string_literal(bit)",
+      "stratum": "agree",
+      "id": "T021"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/gis/utils/ogrinspect.py",
+      "line": 199,
+      "code": "ogr_fields, layer.field_widths, layer.field_precisions, layer.field_types",
+      "stratum": "disagree",
+      "id": "T022"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/models/options.py",
+      "line": 984,
+      "code": "for constraint in self.constraints",
+      "stratum": "agree",
+      "id": "T023"
+    },
+    {
+      "repo": "redis",
+      "path": "src/module.c",
+      "line": 8469,
+      "code": "vsnprintf(msg + name_len, sizeof(msg) - name_len, fmt, ap);",
+      "stratum": "disagree",
+      "id": "T024"
+    },
+    {
+      "repo": "redis",
+      "path": "src/t_set.c",
+      "line": 2637,
+      "code": "const int keepExpire = setTypeHasExpireSupport(set);",
+      "stratum": "agree",
+      "id": "T025"
+    },
+    {
+      "repo": "django",
+      "path": "django/test/utils.py",
+      "line": 223,
+      "code": "keepdb=keepdb,",
+      "stratum": "disagree",
+      "id": "T026"
+    },
+    {
+      "repo": "redis",
+      "path": "src/t_set.c",
+      "line": 2634,
+      "code": "zfree(ps);",
+      "stratum": "agree",
+      "id": "T027"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/postgres/fields/ranges.py",
+      "line": 270,
+      "code": "\"smallint\": \"int4range\",",
+      "stratum": "disagree",
+      "id": "T028"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/syndication/views.py",
+      "line": 120,
+      "code": "return {}",
+      "stratum": "agree",
+      "id": "T029"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/models/options.py",
+      "line": 220,
+      "code": "if not self.abstract:",
+      "stratum": "agree",
+      "id": "T030"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/models/functions/window.py",
+      "line": 5,
+      "code": "\"CumeDist\",",
+      "stratum": "disagree",
+      "id": "T031"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/auth/password_validation.py",
+      "line": 245,
+      "code": "return Path(__file__).resolve().parent / \"common-passwords.txt.gz\"",
+      "stratum": "disagree",
+      "id": "T032"
+    },
+    {
+      "repo": "django",
+      "path": "django/test/utils.py",
+      "line": 934,
+      "code": "\"APP_DIRS\": True,",
+      "stratum": "disagree",
+      "id": "T033"
+    },
+    {
+      "repo": "redis",
+      "path": "src/t_stream.c",
+      "line": 5673,
+      "code": "addReplyStreamID(c,&s->last_id);",
+      "stratum": "disagree",
+      "id": "T034"
+    },
+    {
+      "repo": "redis",
+      "path": "src/defrag.c",
+      "line": 216,
+      "code": "return newptr;",
+      "stratum": "disagree",
+      "id": "T035"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/migrations/state.py",
+      "line": 409,
+      "code": "except LookupError:",
+      "stratum": "disagree",
+      "id": "T036"
+    },
+    {
+      "repo": "redis",
+      "path": "src/t_list.c",
+      "line": 1307,
+      "code": "robj *o;",
+      "stratum": "agree",
+      "id": "T037"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/backends/mysql/features.py",
+      "line": 16,
+      "code": "supports_regex_backreferencing = False",
+      "stratum": "disagree",
+      "id": "T038"
+    },
+    {
+      "repo": "redis",
+      "path": "src/debug.c",
+      "line": 1958,
+      "code": "(unsigned long) uc->uc_mcontext.__gregs[25],",
+      "stratum": "agree",
+      "id": "T039"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/auth/migrations/0001_initial.py",
+      "line": 132,
+      "code": "models.CharField(",
+      "stratum": "disagree",
+      "id": "T040"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/models/fields/files.py",
+      "line": 207,
+      "code": "instance.__dict__[self.field.attname] = attr",
+      "stratum": "disagree",
+      "id": "T041"
+    },
+    {
+      "repo": "redis",
+      "path": "src/endianconv.c",
+      "line": 81,
+      "code": "return v;",
+      "stratum": "disagree",
+      "id": "T042"
+    },
+    {
+      "repo": "redis",
+      "path": "src/pubsub.c",
+      "line": 502,
+      "code": "dictSetVal(type.clientPubSubChannels(c), client_de, NULL);",
+      "stratum": "agree",
+      "id": "T043"
+    },
+    {
+      "repo": "django",
+      "path": "django/utils/crypto.py",
+      "line": 23,
+      "code": "def salted_hmac(key_salt, value, secret=None, *, algorithm=None):",
+      "stratum": "agree",
+      "id": "T044"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/admin/options.py",
+      "line": 2706,
+      "code": "model = None",
+      "stratum": "agree",
+      "id": "T045"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/contenttypes/fields.py",
+      "line": 852,
+      "code": "async def aget_or_create(self, **kwargs):",
+      "stratum": "agree",
+      "id": "T046"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/backends/mysql/features.py",
+      "line": 13,
+      "code": "has_select_for_update_nowait = True",
+      "stratum": "agree",
+      "id": "T047"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/models/functions/window.py",
+      "line": 81,
+      "code": "\"%s requires a non-null source expression.\" % self.__class__.__name__",
+      "stratum": "disagree",
+      "id": "T048"
+    },
+    {
+      "repo": "django",
+      "path": "django/test/client.py",
+      "line": 887,
+      "code": "self._login(user, backend)",
+      "stratum": "disagree",
+      "id": "T049"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/postgres/fields/ranges.py",
+      "line": 250,
+      "code": "isinstance(self.rhs, models.Expression)",
+      "stratum": "disagree",
+      "id": "T050"
+    },
+    {
+      "repo": "django",
+      "path": "django/utils/dateparse.py",
+      "line": 101,
+      "code": "return datetime.time(**kw)",
+      "stratum": "disagree",
+      "id": "T051"
+    },
+    {
+      "repo": "redis",
+      "path": "src/fwtree.c",
+      "line": 92,
+      "code": "result = current;",
+      "stratum": "agree",
+      "id": "T052"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/models/fields/json.py",
+      "line": 530,
+      "code": "previous = previous.lhs",
+      "stratum": "disagree",
+      "id": "T053"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/backends/sqlite3/base.py",
+      "line": 280,
+      "code": "violations = chain.from_iterable(",
+      "stratum": "disagree",
+      "id": "T054"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/postgres/fields/ranges.py",
+      "line": 196,
+      "code": "return \"numrange\"",
+      "stratum": "disagree",
+      "id": "T055"
+    },
+    {
+      "repo": "django",
+      "path": "django/utils/lorem_ipsum.py",
+      "line": 152,
+      "code": "\"ab\",",
+      "stratum": "disagree",
+      "id": "T056"
+    },
+    {
+      "repo": "redis",
+      "path": "src/module.c",
+      "line": 15686,
+      "code": "struct redisCommand *cmd;",
+      "stratum": "disagree",
+      "id": "T057"
+    },
+    {
+      "repo": "django",
+      "path": "django/core/management/commands/sqlmigrate.py",
+      "line": 69,
+      "code": "target = (app_label, migration.name)",
+      "stratum": "agree",
+      "id": "T058"
+    },
+    {
+      "repo": "django",
+      "path": "django/db/backends/ddl_references.py",
+      "line": 36,
+      "code": "def rename_column_references(self, table, old_column, new_column):",
+      "stratum": "agree",
+      "id": "T059"
+    },
+    {
+      "repo": "django",
+      "path": "django/contrib/admin/options.py",
+      "line": 1191,
+      "code": "return action.plural_description % model_format_dict(self.opts)",
+      "stratum": "agree",
+      "id": "T060"
+    }
+  ]
+}
