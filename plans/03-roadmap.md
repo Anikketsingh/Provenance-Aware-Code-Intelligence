@@ -1,6 +1,6 @@
 # Roadmap
 
-**Level:** project. **Updated:** 7 Nov 2026.
+**Level:** project. **Updated:** 16 Nov 2026.
 
 ## 1. Where we stand
 
@@ -32,6 +32,17 @@ The research plan's milestone is "working provenance engine with git blame compa
 **One small request to a teammate:** the agreement score needs a second person to label about 15 of the 60 lines. That's roughly 30–45 minutes of work, and it's the only part that can't be done alone. Without it, the report must say that one person labelled the gold set.
 
 ## 4. Two-week plan
+
+### Status on 16 Nov
+
+The method was frozen on 10 Nov (commit `c84fa8e`), and a held-out test set of 60 new lines was drawn after the freeze and scored once. **Headline: the full tracer scores 83.5% weighted (95% CI 67.6–96.7%) on the test set, against 69.2% for git's strongest settings**, winning on 20 lines and losing on 2 (McNemar p < 0.001). Layer C added 7 right answers with no losses (p = 0.016), so it stays in the headline. Labels are AI labels: Claude labelled, Gemini checked blind, agreement after review 57/60 (dev) and 60/60 (test). No human labelling will happen; the report must say so.
+
+Built on 16 Nov, for the beta evaluation on 17 Nov (Phase II stages 3 and 6, first versions):
+
+- `provenance explain` and an **Ask Gemini** button in the UI: trace the line, gather the commit messages and fetched Trac tickets behind it, and have Gemini write a 2–4 sentence explanation that must cite that evidence, or abstain when it doesn't say why the line exists. Replies are cached in SQLite, so the demo can replay offline.
+- Full-text search (SQLite FTS5) over fetched tickets: `provenance search` and a Tickets tab in the UI.
+- All ~17,200 linked Django Trac tickets being fetched politely at 1 request/second.
+- `eval/reproduce.py`: the one command that reproduces the results table (`eval/results/summary.md`).
 
 ### Status on 9 Nov
 
@@ -72,12 +83,14 @@ Crawl Redis, Django and React, including Trac. Extend tracing to JavaScript and 
 - A tested GitHub GraphQL crawler, which needs a `GITHUB_TOKEN`.
 - Links and ticket titles in the MCP replies, the `why` command and the UI.
 
+**Done on 16 Nov:** the remaining linked Trac tickets fetched (titles and descriptions), the FTS5 search index, and first versions of the Gemini cited explanations with abstention, cached in SQLite.
+
 **Next, in order:**
 
-1. Crawl Redis PRs and issues, then Django PRs. This needs a read-only GitHub token from Aniket.
-2. Fetch Trac comments, then the remaining linked tickets overnight.
-3. Build a search index over ticket and PR text: SQLite FTS5 first, embeddings second.
-4. Have Gemini write cited explanations, and abstain when the evidence is weak.
+1. Crawl Redis PRs and issues, then Django PRs. This needs a read-only GitHub token from Aniket, who decided on 16 Nov to skip it for now.
+2. Fetch Trac comments, which the CSV export doesn't include.
+3. Add meaning-based (embedding) search beside FTS5.
+4. Measure the explanations: when does Gemini abstain, and are the citations right?
 5. Build the protective-code detector and the CI check.
 
 | Month | Goal |

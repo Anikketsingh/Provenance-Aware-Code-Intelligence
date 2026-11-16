@@ -20,6 +20,8 @@ from provenance.config import DATA_DIR, PROJECT_ROOT, Repo
 from provenance.gitio import GitError, git, validate_rev
 from provenance.store.db import Store
 from provenance.surfaces.mcp_server import Explainer, safe_path
+from provenance.synth.backend import GeminiBackend, MissingKeyError
+from provenance.synth.explain import explain_line
 from provenance.trace.blame import STRONGEST_FLAGS, BlameLine, blame_file
 from provenance.trace.tokens import language_for
 
@@ -29,6 +31,17 @@ LOCK_FILE = PROJECT_ROOT / "eval" / "corpus.lock.json"
 #: Blaming a file takes seconds, so keep a few recent ones.
 _CACHED_FILES = 6
 _SHORT = 10
+
+
+_backend: GeminiBackend | None = None
+
+
+def _gemini() -> GeminiBackend:
+    """One shared Gemini client, created on the first explanation."""
+    global _backend
+    if _backend is None:
+        _backend = GeminiBackend()
+    return _backend
 
 
 def pinned_revs() -> dict[str, str]:
@@ -114,6 +127,21 @@ class RepoView:
             )
         differs = sum(line["blame"] != line["ours"] for line in lines)
         return {"lines": lines, "commits": commits, "differs": differs}
+
+    def search(self, query: str) -> list[dict]:
+        with self._lock:
+            return self._store.search_artefacts(query, limit=25)
+
+    def explain(self, path: str, number: int, fresh: bool = False) -> dict:
+        """Trace the line, then a cited Gemini explanation or an abstention."""
+        path = self._check(path)
+        try:
+            backend = _gemini()
+        except MissingKeyError as error:
+            return {"status": "unavailable", "reason": str(error)}
+        with self._lock:
+            why = self._explainer.why_line(path, number, self.rev)
+            return explain_line(self._store, why, backend, fresh=fresh)
 
     def line(self, path: str, number: int) -> dict:
         path = self._check(path)
@@ -205,6 +233,19 @@ def build_app(repos: dict[str, RepoView]) -> Starlette:
     async def api_results(_request: Request) -> JSONResponse:
         return await guarded(load_results)
 
+    async def api_search(request: Request) -> JSONResponse:
+        return await guarded(lambda: view_for(request).search(request.query_params.get("q", "")))
+
+    async def api_explain(request: Request) -> JSONResponse:
+        def work() -> dict:
+            number = int(request.query_params.get("line", "0"))
+            if number < 1:
+                raise ValueError("line numbers start at 1")
+            fresh = request.query_params.get("fresh") == "1"
+            return view_for(request).explain(request.query_params.get("path", ""), number, fresh)
+
+        return await guarded(work)
+
     return Starlette(
         routes=[
             Route("/", index),
@@ -213,6 +254,8 @@ def build_app(repos: dict[str, RepoView]) -> Starlette:
             Route("/api/file", api_file),
             Route("/api/line", api_line),
             Route("/api/results", api_results),
+            Route("/api/search", api_search),
+            Route("/api/explain", api_explain),
         ]
     )
 

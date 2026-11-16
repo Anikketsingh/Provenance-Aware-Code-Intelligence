@@ -85,6 +85,62 @@ def fetch_tickets_command(
 
 
 @app.command()
+def search(repo: str, query: list[str], limit: int = 10) -> None:
+    """Full-text search over fetched tickets and pull requests."""
+    with Store(Repo.named(repo).db_path) as store:
+        hits = store.search_artefacts(" ".join(query), limit)
+        if not hits:
+            typer.echo("No matches. Have tickets been fetched for this repo?")
+            raise typer.Exit(1)
+        for hit in hits:
+            typer.echo(f"{hit['id']}  [{hit['state']}]  {hit['title']}")
+            typer.echo(f"    {hit['snippet']}")
+            typer.echo(f"    {hit['url']}")
+
+
+@app.command()
+def explain(
+    repo: str,
+    path: str,
+    line: int,
+    rev: str = "HEAD",
+    fresh: Annotated[bool, typer.Option(help="Call Gemini even if a saved reply exists.")] = False,
+) -> None:
+    """Trace a line, then have Gemini explain why it exists, with citations, or abstain."""
+    from provenance.surfaces.mcp_server import Explainer
+    from provenance.synth.backend import GeminiBackend, MissingKeyError
+    from provenance.synth.explain import explain_line
+
+    target = Repo.named(repo)
+    why_reply = Explainer(target).why_line(path, line, rev)
+    if why_reply["status"] != "traced":
+        typer.echo(f"Could not trace {path}:{line} ({why_reply.get('reason')}).")
+        raise typer.Exit(1)
+    try:
+        backend = GeminiBackend()
+    except MissingKeyError as error:
+        typer.echo(str(error))
+        raise typer.Exit(1) from None
+    with Store(target.db_path) as store:
+        result = explain_line(store, why_reply, backend, fresh=fresh)
+    typer.echo(f"{path}:{line}  {why_reply.get('code', '')}\n")
+    if result["status"] == "explained":
+        source = "saved reply" if result["cached"] else "live call"
+        typer.echo(result["answer"])
+        typer.echo(f"\nConfidence: {result['confidence']}  ({result['model']}, {source})")
+        cited = {item["id"]: item for item in result["evidence"]}
+        typer.echo("Citations:")
+        for cid in result["citations"]:
+            item = cited.get(cid)
+            if item:
+                where = item["url"] or f"commit {item['ref']}"
+                typer.echo(f"  [{cid}] {item['kind']} {item['ref']}: {item['title']}  {where}")
+    else:
+        typer.echo(f"Abstained: {result.get('reason', 'not enough evidence')}")
+        typer.echo("The trace itself still stands. Run `provenance why` to see it.")
+
+
+@app.command()
 def mcp(repo: str) -> None:
     """Run the MCP server for a repo, over stdio."""
     from provenance.surfaces.mcp_server import build_server  # slow import, needed only here

@@ -14,6 +14,7 @@ class Store:
         """`shared` allows use from several threads, one at a time under the caller's lock."""
         path.parent.mkdir(parents=True, exist_ok=True)
         self._db = sqlite3.connect(path, check_same_thread=not shared)
+        self._db.execute("PRAGMA busy_timeout=10000")  # a crawler may be writing at the same time
         self._db.execute("PRAGMA journal_mode=WAL")
         self._db.execute("PRAGMA synchronous=NORMAL")
         schema = resources.files("provenance.store").joinpath("schema.sql").read_text()
@@ -229,6 +230,53 @@ class Store:
         """Add edges of (src, dst, type, conf, evidence) without removing existing ones."""
         rows = [(*edge, origin, version) for edge in edges]
         self._db.executemany("INSERT OR IGNORE INTO edges VALUES (?, ?, ?, ?, ?, ?, ?)", rows)
+        self._db.commit()
+
+    def search_artefacts(self, query: str, limit: int = 20) -> list[dict]:
+        """Full-text search over fetched tickets and pull requests, best match first.
+
+        The query is plain words. Each word is quoted before it reaches FTS5, so
+        punctuation like `make_password()` can't change the query's meaning.
+        """
+        words = [word.replace('"', '""') for word in query.split()]
+        if not words:
+            return []
+        self._sync_search()
+        rows = self._db.execute(
+            """SELECT a.id, a.kind, a.title, a.state, a.url,
+                      snippet(artefacts_fts, 1, '[', ']', ' … ', 24)
+               FROM artefacts_fts JOIN artefacts a ON a.rowid = artefacts_fts.rowid
+               WHERE artefacts_fts MATCH ? AND a.state != 'missing'
+               ORDER BY rank LIMIT ?""",
+            (" ".join(f'"{word}"' for word in words), limit),
+        )
+        keys = ("id", "kind", "title", "state", "url", "snippet")
+        return [dict(zip(keys, row, strict=True)) for row in rows]
+
+    def _sync_search(self) -> None:
+        """Backfill the search index for rows stored before the triggers existed.
+
+        `count(*)` on an external-content FTS table reads the content table, so the real
+        index size comes from FTS5's own per-document table.
+        """
+        (indexed,) = self._db.execute("SELECT count(*) FROM artefacts_fts_docsize").fetchone()
+        (stored,) = self._db.execute("SELECT count(*) FROM artefacts").fetchone()
+        if indexed != stored:
+            self.rebuild_search()
+
+    def rebuild_search(self) -> None:
+        self._db.execute("INSERT INTO artefacts_fts(artefacts_fts) VALUES ('rebuild')")
+        self._db.commit()
+
+    def cached_reply(self, key: str) -> str | None:
+        row = self._db.execute("SELECT reply FROM llm_cache WHERE key = ?", (key,)).fetchone()
+        return row[0] if row else None
+
+    def save_reply(self, key: str, model: str, prompt: str, reply: str) -> None:
+        self._db.execute(
+            "INSERT OR REPLACE INTO llm_cache VALUES (?, ?, ?, ?, strftime('%s','now'))",
+            (key, model, prompt, reply),
+        )
         self._db.commit()
 
     def crawl_state(self, key: str) -> tuple[str | None, int, bool]:

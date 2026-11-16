@@ -189,6 +189,26 @@
   .steps li strong { color: var(--ink); }
   .cmd { display: block; font-family: var(--mono); font-size: 13px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 9px 12px; margin-top: 6px; overflow-x: auto; white-space: pre; color: var(--ink); }
 
+  /* Explain and search */
+  .explain { margin: 0 0 18px; }
+  .explain h3 { font-size: 13px; color: var(--ink-2); font-weight: 600; margin: 0 0 8px; }
+  .explain .card { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; }
+  .explain .answer { font-size: 14px; margin: 0 0 8px; }
+  .explain .meta-line { font-size: 12px; color: var(--muted); margin: 0 0 6px; }
+  .explain .reason { font-size: 13.5px; color: var(--ink-2); margin: 0; }
+  .explain .reason b { color: var(--ink); }
+  .search-form { display: flex; gap: 8px; align-items: center; margin: 14px 0 18px; flex-wrap: wrap; }
+  .search-form input { flex: 1; min-width: 220px; max-width: 480px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); }
+  .search-count { font-size: 13px; color: var(--muted); }
+  .hit { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 10px 14px; margin-bottom: 8px; max-width: 760px; }
+  .hit .title { font-size: 14.5px; font-weight: 600; margin: 0; }
+  .hit .title a { text-decoration: none; }
+  .hit .title a:hover { text-decoration: underline; }
+  .hit .state { display: inline-block; font-size: 11.5px; font-weight: 600; padding: 0 7px; border-radius: 10px; border: 1px solid var(--line); color: var(--ink-2); margin-left: 8px; vertical-align: 1px; }
+  .hit .snip { font-size: 13px; color: var(--ink-2); margin: 4px 0 0; }
+  .hit .snip mark { background: var(--sediment-soft); color: var(--ink); padding: 0 2px; border-radius: 3px; }
+  .hit .ref { font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin: 4px 0 0; }
+
   @media (max-width: 1100px) {
     #explore { grid-template-columns: 220px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
     .story { grid-column: 1 / -1; border-left: 0; border-top: 1px solid var(--line); max-height: 55vh; }
@@ -216,6 +236,7 @@
   </div>
   <nav class="tabs" role="tablist">
     <button role="tab" data-view="explore" aria-selected="true">Explore</button>
+    <button role="tab" data-view="search" aria-selected="false">Tickets</button>
     <button role="tab" data-view="results" aria-selected="false">Results</button>
     <button role="tab" data-view="connect" aria-selected="false">Connect an agent</button>
   </nav>
@@ -253,6 +274,19 @@
       <h2>Line history</h2>
       <p class="where">Click a line to see where it really came from.</p>
     </aside>
+  </section>
+
+  <section id="search" class="view page" hidden>
+    <div class="inner">
+      <h2>Search tickets and pull requests</h2>
+      <p>Full-text search over the discussions this repository's commits link to, fetched politely and stored locally. A line's explanation cites these.</p>
+      <form id="search-form" class="search-form">
+        <input id="search-q" type="search" placeholder="e.g. password bytes TypeError" autocomplete="off" aria-label="Search query">
+        <button class="btn" type="submit">Search</button>
+        <span id="search-count" class="search-count"></span>
+      </form>
+      <div id="search-results"></div>
+    </div>
   </section>
 
   <section id="results" class="view page" hidden>
@@ -341,7 +375,7 @@ uv run provenance classify django</span></li>
     }
     $("repo").replaceChildren(...state.repos.map((r) => el("option", { value: r.name, text: r.name })));
     $("repo").addEventListener("change", () => selectRepo($("repo").value));
-    if (location.hash === "#results" || location.hash === "#connect") showView(location.hash.slice(1));
+    if (["#results", "#connect", "#search"].includes(location.hash)) showView(location.hash.slice(1));
     const target = parseHash();
     await selectRepo(target && state.repos.some((r) => r.name === target.repo) ? target.repo : state.repos[0].name);
     if (target) openTarget(target);
@@ -522,7 +556,51 @@ uv run provenance classify django</span></li>
     }
     for (const text of outside) core.append(el("p", { class: "extra", text }));
     core.append(el("p", { class: "extra", text: "Hatched layers didn't change behaviour. Commit messages are shown as written by their authors." }));
-    return [verdict, core, agentBlock(agent)];
+    return [verdict, explainBlock(), core, agentBlock(agent)];
+  }
+
+  /* ---------- Gemini explanation ---------- */
+  function explainBlock() {
+    const box = el("div", { class: "explain" }, el("h3", { text: "Why, in plain words" }));
+    const button = el("button", { class: "btn", type: "button", text: "Ask Gemini, with citations" });
+    button.addEventListener("click", () => loadExplanation(box, state.path, state.line));
+    box.append(button);
+    return box;
+  }
+
+  async function loadExplanation(box, path, line) {
+    box.replaceChildren(el("h3", { text: "Why, in plain words" }),
+      el("p", { class: "loading" }, el("span", { class: "spinner" }), "Reading the linked tickets and commit messages"));
+    let data;
+    try {
+      data = await api("explain", { repo: state.repo, path, line });
+    } catch (error) {
+      box.lastChild.replaceWith(el("p", { class: "error", text: error.message }));
+      return;
+    }
+    if (state.path !== path || state.line !== line) return;
+    const card = el("div", { class: "card" });
+    if (data.status === "explained") {
+      card.append(el("p", { class: "answer", text: data.answer }));
+      card.append(el("p", { class: "meta-line", text: `Written by ${data.model} from the evidence below, ${data.cached ? "replayed from a saved reply" : "live"}. Confidence: ${data.confidence}.` }));
+      const chips = el("div", { class: "links" });
+      const byId = Object.fromEntries((data.evidence || []).map((e) => [e.id, e]));
+      for (const cid of data.citations) {
+        const ev = byId[cid];
+        if (!ev) continue;
+        const text = `${cid} · ${ev.kind} ${ev.ref}${ev.title ? ": " + ev.title.slice(0, 80) : ""}`;
+        chips.append(ev.url
+          ? el("a", { href: ev.url, target: "_blank", rel: "noopener noreferrer", text })
+          : el("span", { text }));
+      }
+      card.append(chips);
+    } else if (data.status === "unavailable") {
+      card.append(el("p", { class: "reason", text: `Gemini isn't configured: ${data.reason}` }));
+    } else {
+      card.append(el("p", { class: "reason" }, el("b", { text: "Not enough evidence to say. " }),
+        `${data.reason || ""} Abstaining is deliberate: the tool only explains what the history supports.`));
+    }
+    box.lastChild.replaceWith(card);
   }
 
   const RELATION_TEXT = {
@@ -574,6 +652,38 @@ uv run provenance classify django</span></li>
   $("example").addEventListener("click", (event) => {
     event.preventDefault();
     openTarget({ repo: "django", path: "django/contrib/auth/hashers.py", line: 114 });
+  });
+
+  /* ---------- ticket search ---------- */
+  function snippetNodes(text) {
+    const parts = String(text || "").split(/\[(.+?)\]/g);
+    return parts.map((part, index) => index % 2 ? el("mark", { text: part }) : part);
+  }
+  $("search-form").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const query = $("search-q").value.trim();
+    if (!query) return;
+    $("search-count").textContent = "";
+    $("search-results").replaceChildren(el("p", { class: "loading" }, el("span", { class: "spinner" }), "Searching"));
+    let hits;
+    try {
+      hits = await api("search", { repo: state.repo, q: query });
+    } catch (error) {
+      $("search-results").replaceChildren(el("p", { class: "error", text: error.message }));
+      return;
+    }
+    $("search-count").textContent = hits.length
+      ? `${hits.length} match${hits.length === 1 ? "" : "es"} in ${state.repo}`
+      : `No matches in ${state.repo}. Tickets are fetched with: uv run provenance fetch-tickets ${state.repo}`;
+    $("search-results").replaceChildren(...hits.map((hit) => {
+      const title = el("p", { class: "title" },
+        hit.url ? el("a", { href: hit.url, target: "_blank", rel: "noopener noreferrer", text: hit.title || hit.id })
+                : (hit.title || hit.id));
+      if (hit.state) title.append(el("span", { class: "state", text: hit.state }));
+      return el("div", { class: "hit" }, title,
+        el("p", { class: "snip" }, ...snippetNodes(hit.snippet)),
+        el("p", { class: "ref", text: hit.id }));
+    }));
   });
 
   /* ---------- results ---------- */

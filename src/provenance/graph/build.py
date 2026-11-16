@@ -48,5 +48,7 @@ def commit_links(store: Store, sha: str) -> list[dict]:
         if artefact := store.artefact(other):
             link["title_untrusted"] = artefact["title"][:200]
             link["state"] = artefact["state"]
+            if artefact["body"]:
+                link["excerpt_untrusted"] = artefact["body"][:400]
         found.append(link)
     return sorted(found, key=lambda link: (link["relation"], link["target"]))

@@ -75,3 +75,31 @@ CREATE TABLE IF NOT EXISTS crawl_state (
     pages INTEGER NOT NULL,
     done INTEGER NOT NULL
 );
+
+-- Full-text search over artefact titles and bodies. Kept in step by the triggers below;
+-- rows stored before the triggers existed are backfilled by Store.rebuild_search().
+CREATE VIRTUAL TABLE IF NOT EXISTS artefacts_fts USING fts5(
+    title, body, content='artefacts', content_rowid='rowid'
+);
+CREATE TRIGGER IF NOT EXISTS artefacts_fts_insert AFTER INSERT ON artefacts BEGIN
+    INSERT INTO artefacts_fts(rowid, title, body) VALUES (new.rowid, new.title, new.body);
+END;
+CREATE TRIGGER IF NOT EXISTS artefacts_fts_delete AFTER DELETE ON artefacts BEGIN
+    INSERT INTO artefacts_fts(artefacts_fts, rowid, title, body)
+    VALUES ('delete', old.rowid, old.title, old.body);
+END;
+CREATE TRIGGER IF NOT EXISTS artefacts_fts_update AFTER UPDATE ON artefacts BEGIN
+    INSERT INTO artefacts_fts(artefacts_fts, rowid, title, body)
+    VALUES ('delete', old.rowid, old.title, old.body);
+    INSERT INTO artefacts_fts(rowid, title, body) VALUES (new.rowid, new.title, new.body);
+END;
+
+-- Saved LLM replies, so a result can be shown again without a network call and the report
+-- can say exactly which reply produced each explanation.
+CREATE TABLE IF NOT EXISTS llm_cache (
+    key TEXT PRIMARY KEY,
+    model TEXT NOT NULL,
+    prompt TEXT NOT NULL,
+    reply TEXT NOT NULL,
+    created_at INTEGER NOT NULL
+);

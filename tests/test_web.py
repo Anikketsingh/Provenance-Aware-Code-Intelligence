@@ -67,3 +67,31 @@ def test_serves_the_page(client):
     response = client.get("/")
     assert response.status_code == 200
     assert "Provenance" in response.text
+
+
+def test_search_endpoint_reads_fetched_artefacts(client, git_repo):
+    assert client.get("/api/search", params={"repo": "demo", "q": "retry"}).json() == []
+    with Store(git_repo.repo.db_path) as store:
+        store.add_artefact(
+            "ticket:demo/7",
+            "ticket",
+            "Add a retry",
+            "Retry twice on timeout.",
+            "fixed",
+            "https://x/7",
+            "{}",
+        )
+    hits = client.get("/api/search", params={"repo": "demo", "q": "retry timeout"}).json()
+    assert [hit["id"] for hit in hits] == ["ticket:demo/7"]
+
+
+def test_explain_without_a_key_says_unavailable(client, monkeypatch):
+    from provenance.surfaces import web
+    from provenance.synth import backend
+
+    monkeypatch.setattr(web, "_backend", None)
+    monkeypatch.setattr(backend, "load_dotenv", lambda *_: False)
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    data = client.get("/api/explain", params={"repo": "demo", "path": "a.py", "line": 3}).json()
+    assert data["status"] == "unavailable"
+    assert "GEMINI_API_KEY" in data["reason"]
