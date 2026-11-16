@@ -24,6 +24,7 @@ uv run provenance fetch-tickets django --limit 300   # Trac tickets, 1 request a
 uv run provenance why django django/db/models/query.py 214
 uv run provenance search django password bytes       # full-text search over fetched tickets
 uv run provenance explain django django/contrib/auth/hashers.py 114   # Gemini, with citations
+uv run provenance explain django django/contrib/auth/hashers.py 112 115   # a block, one answer
 ```
 
 Supported repos are listed in `src/provenance/config.py`.
