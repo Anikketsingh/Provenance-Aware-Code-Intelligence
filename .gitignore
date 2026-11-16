@@ -16,8 +16,3 @@ dist/
 
 # macOS
 .DS_Store
-
-# Personal and university documents kept in this folder
-*.docx
-*.pdf
-*.jpeg
