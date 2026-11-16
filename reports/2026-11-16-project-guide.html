@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Provenance Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FAF8F3; --panel: #FFFEFA; --ink: #1C2430; --ink-2: #4A5568; --muted: #7a8494;
+    --line: #E3DCCA; --blue: #1F5F8B; --blue-soft: #E8F0F6; --amber: #C98A1B; --amber-deep: #8A5D0D;
+    --amber-soft: #FBF3E2; --dark: #16202B; --green: #1E5631; --green-soft: #DFEDE2;
+    --sans: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:#12171E; --panel:#1A212B; --ink:#DCE3EA; --ink-2:#AAB4C0; --muted:#808B98;
+      --line:#2C3540; --blue:#5A9FD0; --blue-soft:#1D3446; --amber:#E0A43A; --amber-deep:#E0A43A;
+      --amber-soft:#3A2F1A; --dark:#0D1218; --green:#7FBF8E; --green-soft:#1A2E20; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:#12171E; --panel:#1A212B; --ink:#DCE3EA; --ink-2:#AAB4C0; --muted:#808B98;
+    --line:#2C3540; --blue:#5A9FD0; --blue-soft:#1D3446; --amber:#E0A43A; --amber-deep:#E0A43A;
+    --amber-soft:#3A2F1A; --dark:#0D1218; --green:#7FBF8E; --green-soft:#1A2E20; color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.65 var(--sans); }
+  .page { max-width: 880px; margin: 0 auto; padding: 48px 16px 80px; }
+  h1 { font-size: 42px; line-height:1.15; letter-spacing:-0.01em; margin:0 0 8px; }
+  h2 { font-size: 27px; margin: 56px 0 10px; letter-spacing:-0.01em; border-top: 2px solid var(--line); padding-top: 28px; }
+  h2 .no { color: var(--amber); font-family: var(--mono); font-size: 20px; margin-right: 10px; }
+  h3 { font-size: 19px; margin: 28px 0 8px; }
+  p, li { color: var(--ink-2); max-width: 74ch; }
+  b, strong { color: var(--ink); }
+  a { color: var(--blue); }
+  code, .mono { font-family: var(--mono); font-size: 0.88em; }
+  .kicker { font-family: var(--mono); font-size: 13px; letter-spacing: 2px; color: var(--amber-deep); font-weight: 600; text-transform: uppercase; }
+  .lede { font-size: 19px; color: var(--ink-2); max-width: 70ch; }
+  .meta { color: var(--muted); font-size: 14px; margin: 18px 0 0; }
+  .box { background: var(--panel); border:1px solid var(--line); border-radius:10px; padding: 18px 22px; margin: 18px 0; }
+  .box.blue { background: var(--blue-soft); border-color: var(--blue); }
+  .box.amber { background: var(--amber-soft); border-color: var(--amber); }
+  .box p:first-child, .box p:last-child { margin-top:0; margin-bottom:0; }
+  .box p { margin: 8px 0; }
+  pre { background: var(--dark); color: #D9E2EA; border-radius: 10px; padding: 16px 20px; overflow-x: auto; font-family: var(--mono); font-size: 13.5px; line-height: 1.6; }
+  pre .c { color: #8FA8BC; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 15px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-2); }
+  th { color: var(--ink); font-weight: 600; border-bottom: 2px solid var(--line); }
+  td b { color: var(--ink); }
+  .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 18px 0; }
+  .fact { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+  .fact b { display: block; font-size: 26px; color: var(--blue); }
+  .fact span { font-size: 13.5px; color: var(--ink-2); }
+  .toc { columns: 2; column-gap: 40px; padding: 0; margin: 18px 0; list-style: none; }
+  .toc li { margin: 0 0 7px; break-inside: avoid; }
+  .toc a { text-decoration: none; }
+  .toc .no { font-family: var(--mono); color: var(--amber-deep); margin-right: 8px; font-size: 13px; }
+  .pill { display:inline-block; font-size:12.5px; font-weight:600; padding:1px 10px; border-radius:99px; vertical-align: 1px; }
+  .pill.done { background: var(--green-soft); color: var(--green); }
+  .pill.new { background: var(--amber-soft); color: var(--amber-deep); }
+  .pill.plan { background: var(--paper); color: var(--ink-2); border:1px solid var(--line); }
+  dl.gloss dt { font-weight: 600; color: var(--ink); margin-top: 14px; }
+  dl.gloss dd { margin: 2px 0 0; color: var(--ink-2); max-width: 74ch; }
+  @media (max-width: 640px) { .toc { columns: 1; } h1 { font-size: 32px; } }
+  @media print {
+    body { background: #fff; font-size: 13px; }
+    .page { max-width: none; padding: 0 8mm; }
+    h2 { break-after: avoid; margin-top: 34px; padding-top: 18px; }
+    h3 { break-after: avoid; }
+    pre, .box, table, .fact { break-inside: avoid; }
+    a { color: var(--blue); text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<p class="kicker">B.Tech Major Project · DTU CSE · Complete Project Guide</p>
+<h1>Provenance: why does this line of code exist?</h1>
+<p class="lede">Everything about the project in one document, written so that someone who has never seen it can understand all of it: the problem, how the system works, what has been built and measured, what we deliver at the final evaluation on <b>28 November 2026</b>, and how it becomes a public release next semester.</p>
+<p class="meta">Prepared 16 November 2026 · Aniket Singh Kushwaha, with Aarish and Aftab · Guide: Prof. Shailender Kumar · Code on the <code>project-i-evaluation</code> branch; every number here comes from a saved file in <code>eval/results/</code>.</p>
+
+<ul class="toc">
+  <li><a href="#s1"><span class="no">01</span>The problem, from zero</a></li>
+  <li><a href="#s2"><span class="no">02</span>What the system does today</a></li>
+  <li><a href="#s3"><span class="no">03</span>How tracing works: three layers</a></li>
+  <li><a href="#s4"><span class="no">04</span>Layer A up close</a></li>
+  <li><a href="#s5"><span class="no">05</span>Tickets, search and the link graph</a></li>
+  <li><a href="#s6"><span class="no">06</span>Explanations that cite, or abstain</a></li>
+  <li><a href="#s7"><span class="no">07</span>How an AI agent uses it</a></li>
+  <li><a href="#s8"><span class="no">08</span>The web UI</a></li>
+  <li><a href="#s9"><span class="no">09</span>The tech stack, and why</a></li>
+  <li><a href="#s10"><span class="no">10</span>How we measured accuracy</a></li>
+  <li><a href="#s11"><span class="no">11</span>The results</a></li>
+  <li><a href="#s12"><span class="no">12</span>What we don’t claim</a></li>
+  <li><a href="#s13"><span class="no">13</span>Plan to 28 November</a></li>
+  <li><a href="#s14"><span class="no">14</span>Next semester: the public release</a></li>
+  <li><a href="#s15"><span class="no">15</span>Glossary</a></li>
+</ul>
+
+<div class="box blue">
+<p><b>The whole project in four sentences.</b> AI coding agents delete code whose purpose they can’t see — a check, a retry, a lock. The reason a line exists is almost always written down in a commit message or a bug ticket, but the standard tool for finding it, <code>git blame</code>, usually points at a reformat instead. We built a system that traces any line past reformats, renames and moves to the change that really created it, attaches the ticket that explains it, and serves all of that to AI agents through a standard protocol. On a frozen, held-out test set it finds the right commit <b>83.5%</b> of the time, against <b>69.2%</b> for git’s strongest settings.</p>
+</div>
+
+<h2 id="s1"><span class="no">01</span>The problem, from zero</h2>
+<p>Every piece of software is built from thousands of small changes called <b>commits</b>, stored in a system called <b>git</b>. Each commit carries a message saying what it did and why — “Fixed #31375: make_password() must accept only bytes or strings”. Projects also keep <b>tickets</b> (bug reports and discussions). Together, this history is a diary of every decision in the codebase.</p>
+<p>When you want to know why a line of code exists, you ask <code>git blame</code>, which names the <i>last</i> commit that touched that line. And that is the problem: the last commit that touched a line is very often one that just reformatted the file, renamed a variable, or moved code around — a change that altered how the code <i>looks</i> but not what it <i>does</i>. The real reason is buried several layers deeper.</p>
+<h3>A real example from Django</h3>
+<p>Line 114 of <code>django/contrib/auth/hashers.py</code> is part of a deliberate type check in the function that hashes passwords:</p>
+<pre>if not isinstance(password, (bytes, str)):
+    raise TypeError(
+        "Password must be a string or bytes, got %s." % type(password).__qualname__
+    )</pre>
+<p>Ask git’s strongest settings (<code>git blame -w -M -C -C</code>) about that line and the answer is a 2022 commit: <i>“Refs #33476 — Reformatted code with Black.”</i> Only the layout changed. The behaviour actually comes from a 2020 commit: <i>“Fixed #31375 — Made make_password() accept only bytes or strings”</i> — a deliberate guard against weak passwords, with a ticket explaining the risk.</p>
+<div class="box amber">
+<p><b>Why this matters now.</b> Millions of developers merge code written by AI agents every day. An agent that reads “Reformatted code with Black” learns nothing — deleting the check looks like harmless clean-up. An agent that reads “accept only bytes or strings, see ticket #31375” knows the line is a guard, and keeps it or asks first. The quality of that one answer decides whether AI-assisted coding quietly erodes the protections in our software.</p>
+</div>
+<p>How common is the problem? Under git’s strongest settings, <b>22.7%</b> of lines in sampled Django files land on a commit that Django’s own developers list as pure formatting. For over a quarter of Django’s behaviour-carrying lines, our method and git’s best answer disagree about where the line came from.</p>
+
+<h2 id="s2"><span class="no">02</span>What the system does today</h2>
+<p>Provenance is a working command-line tool, web app and agent server. Preparing a repository takes three commands and a few minutes:</p>
+<pre><span class="c"># one-time setup per repository</span>
+uv run provenance clone django      <span class="c"># download its full history</span>
+uv run provenance ingest django     <span class="c"># load 35,104 commits into a local database</span>
+uv run provenance classify django   <span class="c"># find every cosmetic change — 5.2 min on an M1 Air</span>
+uv run provenance link django       <span class="c"># connect commits to tickets, reverts, backports</span>
+uv run provenance fetch-tickets django   <span class="c"># politely download the tickets, 1 request/second</span></pre>
+<p>Then you can ask questions:</p>
+<pre>uv run provenance why django django/contrib/auth/hashers.py 114
+<span class="c"># → the chain of commits, reformats marked and skipped, ticket links attached</span>
+
+uv run provenance explain django django/contrib/auth/hashers.py 112 115
+<span class="c"># → "This code was added in commit 8aa71f4e87 to resolve Ticket #31375 by
+#    restricting make_password() to only accept bytes or str arguments…"
+#    Confidence: high · citations: [commit 8aa71f4e87] [Ticket #31375]</span>
+
+uv run provenance search django password bytes
+<span class="c"># → full-text search across ~17,000 locally stored Trac tickets</span>
+
+uv run provenance ui        <span class="c"># the web interface, on your own machine</span>
+uv run provenance mcp django  <span class="c"># the server AI agents connect to</span></pre>
+<div class="facts">
+  <div class="fact"><b>83.5%</b><span>accuracy on the held-out test set, vs 69.2% for git’s best settings</span></div>
+  <div class="fact"><b>48,519</b><span>commits classified across Django and Redis</span></div>
+  <div class="fact"><b>~17,000</b><span>Trac tickets stored and searchable locally</span></div>
+  <div class="fact"><b>216</b><span>automated tests, all passing</span></div>
+</div>
+
+<h2 id="s3"><span class="no">03</span>How tracing works: three layers</h2>
+<p>We don’t replace <code>git blame</code> — git’s line-matching is fast and battle-tested. Instead we tell it which commits to <i>skip</i>, and then step through the ones it can’t skip. Imagine one line’s history, newest first:</p>
+<table>
+<tr><th>Year</th><th>What the commit did</th><th>Kind</th><th>What we do</th></tr>
+<tr><td>2022</td><td>Black reformats the whole file</td><td>cosmetic</td><td><b>Skip</b> (Layer B)</td></tr>
+<tr><td>2020</td><td>Renames a variable across the file</td><td>rename</td><td><b>Skip</b> (Layer B)</td></tr>
+<tr><td>2018</td><td>Fixes a bug elsewhere, re-wraps our line</td><td>mixed</td><td><b>Step through</b> (Layer C)</td></tr>
+<tr><td>2015</td><td><b>Adds the check — the real answer</b></td><td>logic</td><td><b>Stop here</b></td></tr>
+</table>
+<h3>Layer A — classify</h3>
+<p>Once per repository, parse every version of every changed file and ask: did the <i>meaning</i> change, or only the look? Each file-change gets a label: <b>cosmetic</b>, <b>rename</b>, <b>move</b> or <b>logic</b>. This is per file, not per commit — a commit that reformats one file and fixes another is skipped only for the first.</p>
+<h3>Layer B — skip</h3>
+<p>Give <code>git blame</code> each file’s list of cosmetic commits through its <code>--ignore-revs-file</code> option — the same mechanism Django’s developers feed by hand. Git then looks straight through the reformats.</p>
+<h3>Layer C — step</h3>
+<p>Some commits mix a reformat with a real fix and can’t be skipped whole. For the one line we care about, Layer C reads the commit’s diff: if the same tokens were just re-arranged, step to the older version and keep blaming; if the line was genuinely edited, record a logic change and continue. The tracer reports two answers — the <b>last logic change</b> and the <b>first appearance</b> — because “why” can live in either.</p>
+<div class="box">
+<p><b>The safety rule: when unsure, call it logic.</b> The two possible mistakes don’t cost the same. Wrongly skipping a commit hides the line’s true origin; wrongly keeping it just gives git’s ordinary answer. So unparsable files, unknown languages and unclear cases all count as logic. Every real bug found in development was in the dangerous direction — a real change that looked cosmetic — and each one is now a permanent test.</p>
+</div>
+
+<h2 id="s4"><span class="no">04</span>Layer A up close: proving a change is only cosmetic</h2>
+<p>The trick: turn the code into a stream of meaningful <b>tokens</b>, dropping everything that can’t affect behaviour. If the stream is identical before and after a change, the change cannot have altered what the code does. These two versions differ in text but produce the same stream:</p>
+<pre><span class="c"># before (2020)                              # after Black (2022)</span>
+raise TypeError(                             raise TypeError(
+    'Password must be … %s.'                     "Password must be … %s." % type(…)
+    % type(…)                                )
+)</pre>
+<table>
+<tr><th>Ignored — can’t change behaviour</th><th>Kept — can</th></tr>
+<tr><td>Whitespace, line wrapping, blank lines</td><td>Any change to the real tokens</td></tr>
+<tr><td>Comments; docstrings without doctests</td><td>Python indentation that moves code into or out of a block</td></tr>
+<tr><td>Quote style, string prefixes, adjacent strings joined</td><td>Where one statement ends and the next begins</td></tr>
+<tr><td>Trailing commas, redundant brackets</td><td>Docstrings containing <code>&gt;&gt;&gt;</code> — those run as tests</td></tr>
+<tr><td>Import order within a block</td><td>Brackets that change meaning</td></tr>
+</table>
+<p>A <b>rename</b> is accepted only when names are swapped consistently <i>and</i> every changed name is defined in that file — the second rule stopped a library swap (<code>base64.encodestring</code> → <code>b64encode</code>) from passing as a rename. A <b>move</b> means the same code appears elsewhere unchanged. Everything else, including anything we can’t parse, is <b>logic</b>.</p>
+<p>How do we know Layer A is right without any human labels? Python ships its own parser. If the syntax trees before and after a change are equal, the change almost certainly kept the behaviour — a second opinion that shares none of our code. Across 74,840 Django file changes, <b>99.91%</b> of the changes we call cosmetic have identical trees.</p>
+
+<h2 id="s5"><span class="no">05</span>Tickets, search and the link graph</h2>
+<p>A commit sha alone doesn’t explain anything to a person. The explanation lives in the <b>ticket</b> the commit references. So the system builds a link graph from commit messages: in Django, “Fixed #31375” links the commit to Trac ticket 31375; in Redis, “(#1987)” at the end of a subject names the pull request that merged it. It also tracks <b>reverts</b> and <b>backports</b> — if a commit was later reverted, every answer says so, because that changes its meaning.</p>
+<ul>
+<li><b>21,215</b> Django commits are linked to tickets, and <b>4,638</b> Redis commits to pull requests.</li>
+<li>The ~17,200 linked Trac tickets are downloaded by a <b>polite crawler</b>: one request per second, a descriptive user-agent, each ticket fetched once, resumable. Titles and descriptions are stored locally.</li>
+<li>Everything is searchable: an <b>FTS5 full-text index</b> answers <code>provenance search django password bytes</code> instantly, offline.</li>
+</ul>
+
+<h2 id="s6"><span class="no">06</span>Explanations that cite their sources, or abstain</h2>
+<p>The newest stage turns evidence into a short, plain-English answer. For a line (or a block of up to 40 lines), the system traces it, gathers the commit messages and ticket text behind the logic commits, and asks <b>Gemini</b> to write two to four sentences — under strict rules:</p>
+<ul>
+<li><b>Only the evidence given.</b> The model sees the gathered messages and tickets, nothing else, and may not guess from the code alone.</li>
+<li><b>Every claim must cite.</b> Answers carry citations like [E1], each resolving to a specific commit or ticket. An answer whose citations don’t check out is discarded.</li>
+<li><b>Weak evidence means abstaining.</b> If the history doesn’t say why the code exists, the system says exactly that, rather than inventing a story. For a tool meant to stop agents making confident mistakes, a trustworthy “I don’t know” is a feature.</li>
+<li><b>Quoted text is data.</b> Ticket and commit text is fenced in the prompt as untrusted material written by strangers, so text in a commit message can’t steer the model.</li>
+<li><b>Replies are cached</b> in the local database: repeating a question is free, demos work offline, and the report can show the exact reply behind every explanation.</li>
+</ul>
+<div class="box">
+<p><b>Real output</b> for the password-check block (<code>hashers.py</code> lines 112–115): <i>“This code was added in commit 8aa71f4e87 to resolve Ticket #31375 by restricting make_password() to only accept bytes or str arguments. Previously, the function accepted almost any Python object due to automatic casting, which created a potential security risk of programmers accidentally generating weak passwords…”</i> — confidence high, citing the commit and the ticket, both clickable.</p>
+</div>
+
+<h2 id="s7"><span class="no">07</span>How an AI agent uses it</h2>
+<p><b>MCP</b> (Model Context Protocol) is the standard way AI applications discover and call outside tools — one server works with Claude Code, Cursor and others. Registering takes one line:</p>
+<pre>claude mcp add provenance -- uv run provenance mcp django</pre>
+<p>The agent gets two tools: <code>why_line</code> and <code>why_range</code>. Told to “simplify make_password()”, a connected agent can ask why line 114 exists before touching it, and receives the traced chain, the linked tickets with excerpts, and the commit messages. Safety is designed in:</p>
+<ul>
+<li><b>Read-only.</b> The tools can’t edit files or run commands, and paths are validated so the server can’t be used to read outside the repository.</li>
+<li><b>Untrusted by default.</b> Commit messages and ticket text arrive in fields explicitly marked untrusted — anyone can write a commit message, including one that says “ignore your instructions”. The agent is told to treat them as data.</li>
+<li><b>It never says “safe”.</b> Finding no history only means none was found, and every reply says so.</li>
+<li><b>Evidence, not prose.</b> The calling agent has its own powerful model; our server hands it facts to reason over.</li>
+</ul>
+
+<h2 id="s8"><span class="no">08</span>The web UI</h2>
+<p><code>uv run provenance ui</code> opens a local web app (it listens only on your own machine) with four views:</p>
+<table>
+<tr><th>View</th><th>What it shows</th></tr>
+<tr><td><b>Explore</b></td><td>Pick a file; lines where plain git blame points at a non-behaviour change are marked in amber. Click a line to see its full history as labelled layers — hatched for skipped reformats, solid for the origin — plus ticket links, the exact JSON an agent would receive, and an <b>“Ask Gemini, with citations”</b> button (with an optional “through line” box for blocks).</td></tr>
+<tr><td><b>Tickets</b></td><td>Full-text search over the locally stored tickets and pull requests.</td></tr>
+<tr><td><b>Results</b></td><td>The live accuracy charts for every method, drawn from the saved evaluation runs.</td></tr>
+<tr><td><b>Connect an agent</b></td><td>Step-by-step MCP setup.</td></tr>
+</table>
+<p>Deep links like <code>#django:django/contrib/auth/hashers.py:114</code> open a file at a line — useful in a demo.</p>
+
+<h2 id="s9"><span class="no">09</span>The tech stack, and why each piece</h2>
+<table>
+<tr><th>Piece</th><th>Job</th><th>Why chosen</th></tr>
+<tr><td><b>Python 3.12 + uv</b></td><td>The whole codebase; uv pins every dependency</td><td>Best parsing/git/MCP libraries; setup reproduces identically anywhere</td></tr>
+<tr><td><b>git</b> (bare clones)</td><td>History storage; blame, diff and file reads</td><td>Blame’s matching is fast and battle-tested; bare clones save disk</td></tr>
+<tr><td><b>tree-sitter</b></td><td>Parses Python, C and JavaScript for Layer A</td><td>One library, many languages; survives old or broken code</td></tr>
+<tr><td><b>SQLite + FTS5</b></td><td>One file per repo: commits, labels, links, tickets, search, LLM cache</td><td>No server to run; millions of rows; WAL mode lets the UI read during crawls</td></tr>
+<tr><td><b>MCP Python SDK</b></td><td>The agent server, over stdio</td><td>The official SDK; agents start the server themselves — nothing to host</td></tr>
+<tr><td><b>Gemini API</b></td><td>Writes the cited explanations</td><td>8 GB of RAM can’t run a capable local model; one pinned version behind a swappable interface; the only thing that leaves the laptop</td></tr>
+<tr><td><b>Starlette + Typer</b></td><td>Web UI and CLI</td><td>Small, typed, quick to build</td></tr>
+<tr><td><b>pytest + ruff</b></td><td>216 tests — including miniature git repos built inside tests — and style checks</td><td>Every bug found becomes a permanent test</td></tr>
+</table>
+<p>The corpus: <b>Django</b> (Python, 35,104 commits — the main repo, because it keeps a hand-made skip list we can test against) and <b>Redis</b> (C, 13,415 commits — a second language). React (JavaScript) and PostgreSQL are queued for next semester. Each repo is pinned to one commit so results reproduce exactly. All of it fits in under 1 GB of disk.</p>
+
+<h2 id="s10"><span class="no">10</span>How we measured accuracy, honestly</h2>
+<p>Charts of “our answer differs from git’s” don’t prove we’re <i>right</i>. For that, someone must determine the true answer for a sample of lines — a <b>gold set</b> — and score every method against it. Our protocol, in order:</p>
+<ol>
+<li><b>Tune on a development set.</b> 60 lines were sampled from Django and Redis (stratified: oversampling lines where methods disagree, then weighted back), labelled blind, and used to find and fix failure patterns.</li>
+<li><b>Freeze the method.</b> After the fixes, the code was frozen in one commit. No rule has changed since.</li>
+<li><b>Draw a fresh test set.</b> 60 <i>new</i> lines, excluding every development line, drawn only after the freeze — so the test could not influence the method.</li>
+<li><b>Score once.</b> The frozen method ran on the test set exactly one time. That number is the headline.</li>
+</ol>
+<h3>Who labelled, and why that’s stated everywhere</h3>
+<p>The labels are <b>AI labels</b>. Claude labelled every line using only git’s own history; <b>Gemini — a different vendor’s model — labelled the same lines blind</b>, never seeing Claude’s labels or any method’s answers. First-round agreement was 86.7% on the test set (Cohen’s kappa 0.86); after a structured adjudication round showing both candidates with evidence, the two models agreed on 60 of 60 test lines. No human has labelled the gold set — one person could not blind-label 120 lines and build the system in the same two weeks — and the report says so wherever the numbers appear. Every label, both models’ raw replies, and all disagreements are committed for anyone to audit.</p>
+<p>The comparison is deliberately fair: we score against git’s <i>strongest</i> settings and Django’s hand-kept list, not just plain blame, with bootstrap confidence intervals and McNemar’s exact test on the same lines.</p>
+
+<h2 id="s11"><span class="no">11</span>The results</h2>
+<h3>Held-out test set — the headline</h3>
+<table>
+<tr><th>Method</th><th class="num">Weighted accuracy</th><th class="num">95% CI</th></tr>
+<tr><td>git blame, no options</td><td class="num">65.4%</td><td class="num">49.4–78.9%</td></tr>
+<tr><td>git blame -w -M</td><td class="num">67.1%</td><td class="num">50.7–80.6%</td></tr>
+<tr><td>git blame -w -M -C -C (strongest)</td><td class="num">69.2%</td><td class="num">52.4–82.9%</td></tr>
+<tr><td><b>Ours, layers A + B</b></td><td class="num"><b>79.1%</b></td><td class="num">62.8–92.6%</td></tr>
+<tr><td><b>Ours, full tracer</b></td><td class="num"><b>83.5%</b></td><td class="num">67.6–96.7%</td></tr>
+</table>
+<ul>
+<li>Against git’s strongest settings: <b>right on 20 lines where git was wrong, wrong on 2</b> where git was right (McNemar exact, p &lt; 0.001).</li>
+<li><b>Layer C added 7 correct answers and lost none</b> (p = 0.016) — it earns its place in the headline.</li>
+<li>For the commit where a line <i>first appeared</i>: ours 71.5% vs git’s 51.5%.</li>
+<li>The development set scored 89.5% — higher than the test set, exactly as expected for the data the method was tuned on. We report both.</li>
+</ul>
+<h3>Checks that need no labels at all</h3>
+<ul>
+<li><b>99.91%</b> of changes we call cosmetic keep Python’s own syntax tree (91.96% under a strict check where import order counts — we report both, since import order is an assumption).</li>
+<li>Lines landing on a <b>known formatting commit</b> in Django: 22.7% under git’s strongest settings → <b>1.7%</b> with our automatic lists → 1.2% with the list Django maintains by hand. We also recover 95.7% of the files in Django’s hand-kept list automatically.</li>
+<li><b>Per-repo honesty:</b> our skip lists change git’s best answer on 28.6% of Django logic lines but only 0.3% of Redis lines — Redis’s noise is comment edits, not reformats. The gains live where reformats live, and we say so.</li>
+</ul>
+<p>Speed and stability: 300 random real lines traced with zero crashes; median 0.03 s, slowest 19.2 s. Reproducibility: <code>uv run python eval/reproduce.py</code> regenerates every number above — verified to reproduce the committed results byte-for-byte.</p>
+
+<h2 id="s12"><span class="no">12</span>What we don’t claim</h2>
+<table>
+<tr><th>Limitation</th><th>What we do about it</th></tr>
+<tr><td>The gold labels are AI labels; no human has checked them. Claude also built the method.</td><td>Blind cross-vendor second annotator, frozen held-out test set scored once, everything published for audit — and the caveat stated wherever the numbers appear.</td></tr>
+<tr><td>Redis gains little, so “better on every repo” would be false.</td><td>Results reported per repo; the headline claim is about repos with reformatting history.</td></tr>
+<tr><td>Similar “why is this code here” tools exist (why, WhyGraph, Ctxo, Git Archaeologist, Rekal).</td><td>We claim the <i>evaluated method</i> — per-file cosmetic filtering with measured accuracy against fair baselines — not “the first tool”. They become related work in the paper.</td></tr>
+<tr><td>Explanation quality isn’t measured yet.</td><td>The citation-correctness and abstention study is next-semester work; every reply is already logged for it.</td></tr>
+<tr><td>The synopsis promised a fully local system; Gemini is a cloud API.</td><td>Flagged to the guide. The LLM sits behind an interface so a local model can return; everything else runs offline.</td></tr>
+<tr><td>One slow line (19.2 s vs a 10 s target).</td><td>Profile after the evaluations; no demo line hits it.</td></tr>
+</table>
+
+<h2 id="s13"><span class="no">13</span>Plan to the final evaluation, 28 November</h2>
+<p>The beta evaluation is 17 November; the final is <b>28 November</b>, where we deliver the major chunk of the project and carry it forward as our final-year major project.</p>
+<table>
+<tr><th>When</th><th>Work</th><th>Done when</th></tr>
+<tr><td>17 Nov</td><td><b>Beta evaluation</b>: deck + live demo (UI, cited explanations, ticket search, MCP)</td><td>Panel feedback collected</td></tr>
+<tr><td>18–21 Nov</td><td>Fold in panel feedback · push to a private GitHub repo · record the backup demo video</td><td>Backup exists; code is off the laptop</td></tr>
+<tr><td>21–25 Nov</td><td><b>Write the final report</b> from <code>eval/results/</code> and this guide; figures from the saved runs</td><td>Every number traces to a file</td></tr>
+<tr><td>25–27 Nov</td><td>Final deck polish, two full rehearsals, demo dry-runs on the presentation machine</td><td>Dry run under time</td></tr>
+<tr><td>28 Nov</td><td><b>Final evaluation</b></td><td>—</td></tr>
+</table>
+<p><b>What the panel receives on the 28th:</b> the working system (CLI + UI + MCP over Django and Redis with ~17,000 tickets), the measured results with their statistics and failure taxonomy, cited explanations with abstention, one-command reproducibility, the written report, and this guide.</p>
+
+<h2 id="s14"><span class="no">14</span>Next semester: the public release</h2>
+<p>Semester 8 turns a measured prototype into something people install. In order:</p>
+<ol>
+<li><b>Package and release</b> <span class="pill plan">Jan</span> — an open-source <b>MCP server anyone can run on any repository</b>: <code>pip install provenance-mcp</code> (or <code>uvx</code>), one command to index a repo, one line to register with an agent. GitHub release with docs; listed in the MCP registries and directories that agents and developers already browse.</li>
+<li><b>Extend the corpus and evidence</b> <span class="pill plan">Jan–Feb</span> — React and PostgreSQL end to end; GitHub PR/issue crawls (needs only a read-only token); Trac comments; embedding-based search beside FTS5 for questions keywords can’t catch.</li>
+<li><b>The CI check</b> <span class="pill plan">Feb–Mar</span> — a GitHub Action that warns when a pull request deletes or weakens <i>protective</i> code (guards, retries, locks, timeouts), citing the ticket that explains the code it’s protecting. This is the product form most teams would adopt first.</li>
+<li><b>Prove it on agents</b> <span class="pill plan">Mar–Apr</span> — the RQ5 study: replay real “simplify this” tasks with and without the tool and measure whether agents make fewer unsafe edits. Grow the gold set toward 500 lines, with human spot-checks of the AI labels.</li>
+<li><b>Publish and promote</b> <span class="pill plan">Apr–May</span> — the paper (benchmark, method, agent study), the public benchmark release, and promotion of the server: launch posts, MCP directory listings, and demos to developer communities. Final report and viva.</li>
+</ol>
+<div class="box blue">
+<p><b>The through-line:</b> this semester proved the method works and measured how well. Next semester ships it — as a server agents can call, a CI check teams can adopt, and a benchmark researchers can build on.</p>
+</div>
+
+<h2 id="s15"><span class="no">15</span>Glossary</h2>
+<dl class="gloss">
+<dt>commit</dt><dd>One recorded change to a codebase, with an author, date and message. Identified by a hash like <code>8aa71f4e87</code>.</dd>
+<dt>git blame</dt><dd>The git command that names, for every line of a file, the last commit that touched it.</dd>
+<dt>cosmetic change</dt><dd>A change that alters how code looks (formatting, quotes, wrapping) but not what it does.</dd>
+<dt>ignore-revs / skip list</dt><dd>A list of commits git blame should look straight through. Django keeps one by hand; we generate one per file automatically.</dd>
+<dt>token stream</dt><dd>The sequence of meaningful symbols in code, ignoring layout. Identical streams ⇒ identical behaviour.</dd>
+<dt>tree-sitter</dt><dd>A parsing library that turns source code of many languages into syntax trees, tolerating errors.</dd>
+<dt>Trac</dt><dd>Django’s ticket system — where its bug reports and feature discussions live.</dd>
+<dt>FTS5</dt><dd>SQLite’s built-in full-text search engine, used for the local ticket index.</dd>
+<dt>MCP</dt><dd>Model Context Protocol — the standard that lets AI agents discover and call outside tools like ours.</dd>
+<dt>abstention</dt><dd>The system declining to answer when the evidence doesn’t support one, instead of guessing.</dd>
+<dt>gold set</dt><dd>A sample of lines whose true origin was determined independently, used to score every method.</dd>
+<dt>held-out test set</dt><dd>Gold lines drawn <i>after</i> the method was frozen, so they can’t have influenced it. Scored once.</dd>
+<dt>Cohen’s kappa</dt><dd>Agreement between two annotators, corrected for chance. 0.86 is strong agreement.</dd>
+<dt>McNemar’s test</dt><dd>A statistical test for whether two methods’ disagreements on the same items favour one of them beyond luck.</dd>
+<dt>weighted accuracy</dt><dd>Accuracy corrected for deliberate oversampling, so it reflects the real mix of lines.</dd>
+</dl>
+
+<p class="meta">End of guide · 16 November 2026 · The companion files: <code>reports/2026-11-17-demo-script.md</code> (the demo walkthrough), <code>eval/results/summary.md</code> (the one-page numbers), <code>plans/</code> (design documents).</p>
+</div>
+</body>
+</html>

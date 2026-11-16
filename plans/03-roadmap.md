@@ -4,7 +4,7 @@
 
 ## 1. Where we stand
 
-- The Project-I evaluation is about **21 Nov 2026**, two weeks from now.
+- **Dates fixed on 16 Nov:** the beta evaluation is **17 Nov 2026** and the final Project-I evaluation is **28 Nov 2026** (not ~21 Nov as first assumed). The project carries forward as the team's final-year major project, and next semester ends in a public release of the MCP server.
 - Everything runs on one 8 GB M1 MacBook Air.
 - That leaves little time, so Project-I focuses on line tracing, with **Django as the main repo** and Redis as the second.
 
@@ -42,7 +42,11 @@ Built on 16 Nov, for the beta evaluation on 17 Nov (Phase II stages 3 and 6, fir
 - `provenance explain` and an **Ask Gemini** button in the UI: trace the line, gather the commit messages and fetched Trac tickets behind it, and have Gemini write a 2–4 sentence explanation that must cite that evidence, or abstain when it doesn't say why the line exists. Replies are cached in SQLite, so the demo can replay offline.
 - Full-text search (SQLite FTS5) over fetched tickets: `provenance search` and a Tickets tab in the UI.
 - All ~17,200 linked Django Trac tickets being fetched politely at 1 request/second.
-- `eval/reproduce.py`: the one command that reproduces the results table (`eval/results/summary.md`).
+- `eval/reproduce.py`: the one command that reproduces the results table (`eval/results/summary.md`). Verified on 16 Nov to regenerate the committed results byte-for-byte.
+- Explanations cover blocks of up to 40 lines, and malformed Gemini replies are retried once and never cached.
+- The panel deck (17 slides, three presenters), the demo script, and a 14-page beginner-friendly guide (`reports/2026-11-16-project-guide.pdf`).
+
+**Plan 17–28 Nov:** beta evaluation on the 17th; then fold in feedback, push to a private GitHub repo, record the backup demo; 21–25 Nov write the final report from `eval/results/` and the guide; 25–27 Nov rehearse; final evaluation on the 28th. **Next semester in one line:** package and release the MCP server publicly (PyPI + MCP registries), extend to React/PostgreSQL and GitHub crawls, ship the protective-code CI check, run the agent study, submit the paper, and promote the release.
 
 ### Status on 9 Nov
 
