@@ -95,3 +95,11 @@ def test_explain_without_a_key_says_unavailable(client, monkeypatch):
     data = client.get("/api/explain", params={"repo": "demo", "path": "a.py", "line": 3}).json()
     assert data["status"] == "unavailable"
     assert "GEMINI_API_KEY" in data["reason"]
+
+
+def test_explain_refuses_oversized_blocks(client):
+    response = client.get(
+        "/api/explain", params={"repo": "demo", "path": "a.py", "line": 1, "end": 99}
+    )
+    assert response.status_code == 400
+    assert "40 lines" in response.json()["error"]

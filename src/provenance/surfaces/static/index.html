@@ -192,6 +192,8 @@
   /* Explain and search */
   .explain { margin: 0 0 18px; }
   .explain h3 { font-size: 13px; color: var(--ink-2); font-weight: 600; margin: 0 0 8px; }
+  .explain-row { display: flex; gap: 8px; align-items: center; }
+  .explain .endline { width: 130px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); font-size: 13px; }
   .explain .card { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; }
   .explain .answer { font-size: 14px; margin: 0 0 8px; }
   .explain .meta-line { font-size: 12px; color: var(--muted); margin: 0 0 6px; }
@@ -563,17 +565,23 @@ uv run provenance classify django</span></li>
   function explainBlock() {
     const box = el("div", { class: "explain" }, el("h3", { text: "Why, in plain words" }));
     const button = el("button", { class: "btn", type: "button", text: "Ask Gemini, with citations" });
-    button.addEventListener("click", () => loadExplanation(box, state.path, state.line));
-    box.append(button);
+    const endInput = el("input", { class: "endline", type: "number", min: state.line,
+      placeholder: "through line…", title: "Optional: explain the block from this line to another (at most 40 lines)" });
+    button.addEventListener("click", () => {
+      const end = Number(endInput.value) || null;
+      loadExplanation(box, state.path, state.line, end && end > state.line ? end : null);
+    });
+    box.append(el("div", { class: "explain-row" }, button, endInput));
     return box;
   }
 
-  async function loadExplanation(box, path, line) {
+  async function loadExplanation(box, path, line, end) {
+    const span = end ? `lines ${line}–${end}` : `line ${line}`;
     box.replaceChildren(el("h3", { text: "Why, in plain words" }),
-      el("p", { class: "loading" }, el("span", { class: "spinner" }), "Reading the linked tickets and commit messages"));
+      el("p", { class: "loading" }, el("span", { class: "spinner" }), `Tracing ${span} and reading the linked tickets`));
     let data;
     try {
-      data = await api("explain", { repo: state.repo, path, line });
+      data = await api("explain", { repo: state.repo, path, line, ...(end ? { end } : {}) });
     } catch (error) {
       box.lastChild.replaceWith(el("p", { class: "error", text: error.message }));
       return;

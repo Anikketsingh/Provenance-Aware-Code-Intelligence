@@ -14,7 +14,15 @@ DEFAULT_GEMINI_MODEL = "gemini-3.8-flash"
 
 
 class LLMBackend(Protocol):
-    def generate(self, prompt: str, *, max_tokens: int, temperature: float, seed: int) -> str: ...
+    def generate(
+        self,
+        prompt: str,
+        *,
+        max_tokens: int,
+        temperature: float,
+        seed: int,
+        json_output: bool = False,
+    ) -> str: ...
 
 
 class MissingKeyError(RuntimeError):
@@ -32,12 +40,22 @@ class GeminiBackend:
         self.model = model or os.environ.get("GEMINI_MODEL", DEFAULT_GEMINI_MODEL)
         self._client = genai.Client(api_key=key)
 
-    def generate(self, prompt: str, *, max_tokens: int, temperature: float, seed: int) -> str:
+    def generate(
+        self,
+        prompt: str,
+        *,
+        max_tokens: int,
+        temperature: float,
+        seed: int,
+        json_output: bool = False,
+    ) -> str:
+        config = types.GenerateContentConfig(
+            max_output_tokens=max_tokens,
+            temperature=temperature,
+            seed=seed,
+            response_mime_type="application/json" if json_output else None,
+        )
         response = self._client.models.generate_content(
-            model=self.model,
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                max_output_tokens=max_tokens, temperature=temperature, seed=seed
-            ),
+            model=self.model, contents=prompt, config=config
         )
         return response.text or ""

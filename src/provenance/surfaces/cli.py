@@ -103,18 +103,27 @@ def explain(
     repo: str,
     path: str,
     line: int,
+    end: Annotated[
+        int | None, typer.Argument(help="Explain the block from LINE to END (at most 40 lines).")
+    ] = None,
     rev: str = "HEAD",
     fresh: Annotated[bool, typer.Option(help="Call Gemini even if a saved reply exists.")] = False,
 ) -> None:
-    """Trace a line, then have Gemini explain why it exists, with citations, or abstain."""
+    """Trace a line or block, then have Gemini explain it with citations, or abstain."""
     from provenance.surfaces.mcp_server import Explainer
     from provenance.synth.backend import GeminiBackend, MissingKeyError
-    from provenance.synth.explain import explain_line
+    from provenance.synth.explain import MAX_BLOCK_LINES, explain_lines
 
     target = Repo.named(repo)
-    why_reply = Explainer(target).why_line(path, line, rev)
-    if why_reply["status"] != "traced":
-        typer.echo(f"Could not trace {path}:{line} ({why_reply.get('reason')}).")
+    last = max(line, end or line)
+    if last - line + 1 > MAX_BLOCK_LINES:
+        typer.echo(f"A block can cover at most {MAX_BLOCK_LINES} lines.")
+        raise typer.Exit(1)
+    explainer = Explainer(target)
+    whys = [explainer.why_line(path, number, rev) for number in range(line, last + 1)]
+    traced = [why for why in whys if why["status"] == "traced"]
+    if not traced:
+        typer.echo(f"Could not trace {path}:{line} ({whys[0].get('reason')}).")
         raise typer.Exit(1)
     try:
         backend = GeminiBackend()
@@ -122,8 +131,9 @@ def explain(
         typer.echo(str(error))
         raise typer.Exit(1) from None
     with Store(target.db_path) as store:
-        result = explain_line(store, why_reply, backend, fresh=fresh)
-    typer.echo(f"{path}:{line}  {why_reply.get('code', '')}\n")
+        result = explain_lines(store, traced, backend, fresh=fresh)
+    span = f"{line}" if last == line else f"{line}-{last}"
+    typer.echo(f"{path}:{span}  {traced[0].get('code', '')}\n")
     if result["status"] == "explained":
         source = "saved reply" if result["cached"] else "live call"
         typer.echo(result["answer"])

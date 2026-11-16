@@ -68,9 +68,7 @@ def gold_table(title: str, data: dict, lines: list[str]) -> None:
     first_b2 = data["methods"].get("first:B2", {}).get("weighted")
     if first_ours is not None:
         lines.append("")
-        lines.append(
-            f"First appearance: ours {pct(first_ours)}, git's strongest {pct(first_b2)}."
-        )
+        lines.append(f"First appearance: ours {pct(first_ours)}, git's strongest {pct(first_b2)}.")
     agreement = data.get("agreement")
     if agreement:
         lines.append(
@@ -127,8 +125,11 @@ def main() -> None:
     args = parser.parse_args()
 
     if not args.table:
-        run(["eval/score_gold.py", "--set", "dev"])
-        run(["eval/score_gold.py", "--set", "test"])
+        run(["eval/score_gold.py", "--set", "dev", "--second", "eval/gold/annotations_gemini.csv"])
+        run(
+            ["eval/score_gold.py", "--set", "test"]
+            + ["--second", "eval/gold/test/annotations_gemini.csv"]
+        )
         if args.full:
             run(["eval/ignore_list_eval.py", "django"])
             run(["eval/ast_oracle.py", "django"])

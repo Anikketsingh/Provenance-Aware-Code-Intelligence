@@ -21,7 +21,7 @@ from provenance.gitio import GitError, git, validate_rev
 from provenance.store.db import Store
 from provenance.surfaces.mcp_server import Explainer, safe_path
 from provenance.synth.backend import GeminiBackend, MissingKeyError
-from provenance.synth.explain import explain_line
+from provenance.synth.explain import MAX_BLOCK_LINES, explain_lines
 from provenance.trace.blame import STRONGEST_FLAGS, BlameLine, blame_file
 from provenance.trace.tokens import language_for
 
@@ -132,16 +132,19 @@ class RepoView:
         with self._lock:
             return self._store.search_artefacts(query, limit=25)
 
-    def explain(self, path: str, number: int, fresh: bool = False) -> dict:
-        """Trace the line, then a cited Gemini explanation or an abstention."""
+    def explain(self, path: str, number: int, end: int | None = None, fresh: bool = False) -> dict:
+        """Trace a line or a block, then a cited Gemini explanation or an abstention."""
         path = self._check(path)
+        last = max(number, end or number)
+        if last - number + 1 > MAX_BLOCK_LINES:
+            raise ValueError(f"a block can cover at most {MAX_BLOCK_LINES} lines")
         try:
             backend = _gemini()
         except MissingKeyError as error:
             return {"status": "unavailable", "reason": str(error)}
         with self._lock:
-            why = self._explainer.why_line(path, number, self.rev)
-            return explain_line(self._store, why, backend, fresh=fresh)
+            whys = [self._explainer.why_line(path, n, self.rev) for n in range(number, last + 1)]
+            return explain_lines(self._store, whys, backend, fresh=fresh)
 
     def line(self, path: str, number: int) -> dict:
         path = self._check(path)
@@ -241,8 +244,11 @@ def build_app(repos: dict[str, RepoView]) -> Starlette:
             number = int(request.query_params.get("line", "0"))
             if number < 1:
                 raise ValueError("line numbers start at 1")
+            end = int(request.query_params.get("end", "0")) or None
             fresh = request.query_params.get("fresh") == "1"
-            return view_for(request).explain(request.query_params.get("path", ""), number, fresh)
+            return view_for(request).explain(
+                request.query_params.get("path", ""), number, end, fresh
+            )
 
         return await guarded(work)
 
