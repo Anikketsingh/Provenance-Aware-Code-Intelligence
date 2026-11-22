@@ -1,0 +1,91 @@
+{
+  "django": {
+    "commits": 35104,
+    "discussions_stored": {
+      "pr": 22239,
+      "ticket": 17178
+    },
+    "dated": {
+      "exact": 22615,
+      "estimated": 16802
+    },
+    "crawls": {
+      "github:django:pullRequests": {
+        "pages": 445,
+        "done": true
+      }
+    },
+    "edges_from_github": {
+      "closes": 10,
+      "merged_as": 9940
+    },
+    "commits_with_discussion": {
+      "before_crawl": 21180,
+      "after_crawl": 24509,
+      "share_before": 0.6033500455788514,
+      "share_after": 0.6981825432999088
+    }
+  },
+  "redis": {
+    "commits": 13415,
+    "discussions_stored": {
+      "issue": 7188,
+      "pr": 8671
+    },
+    "dated": {
+      "exact": 15859,
+      "estimated": 0
+    },
+    "crawls": {
+      "github:redis:pullRequests": {
+        "pages": 174,
+        "done": true
+      },
+      "github:redis:issues": {
+        "pages": 144,
+        "done": true
+      }
+    },
+    "edges_from_github": {
+      "closes": 896,
+      "merged_as": 461
+    },
+    "commits_with_discussion": {
+      "before_crawl": 4724,
+      "after_crawl": 5182,
+      "share_before": 0.35214312336936265,
+      "share_after": 0.386284010436079
+    }
+  },
+  "react": {
+    "commits": 21805,
+    "discussions_stored": {
+      "issue": 14857,
+      "pr": 20776
+    },
+    "dated": {
+      "exact": 35633,
+      "estimated": 0
+    },
+    "crawls": {
+      "github:react:pullRequests": {
+        "pages": 416,
+        "done": true
+      },
+      "github:react:issues": {
+        "pages": 298,
+        "done": true
+      }
+    },
+    "edges_from_github": {
+      "closes": 1805,
+      "merged_as": 864
+    },
+    "commits_with_discussion": {
+      "before_crawl": 12862,
+      "after_crawl": 13724,
+      "share_before": 0.5898647099289154,
+      "share_after": 0.62939692731025
+    }
+  }
+}
