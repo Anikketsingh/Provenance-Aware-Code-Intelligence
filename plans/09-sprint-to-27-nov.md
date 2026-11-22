@@ -27,8 +27,8 @@ Do these before anything else, in this order. Never paste a token or key into ch
 
 1. Register at **pypi.org/account/register** and verify your email.
 2. **Turn on 2FA** (Account settings → Two factor authentication), using an authenticator app. PyPI won't let you upload without it.
-3. Check that the package name is free: open **pypi.org/project/provenance-mcp**. A "Not Found" page means it's free. If it's taken, tell Claude and we'll pick another name.
-4. **Account settings → API tokens → Add API token.** Name it `provenance-mcp`, and set the scope to **Entire account**. This is only for the first upload; after that, replace it with a token scoped to the project.
+3. The package name is **`whyblame`**, checked free on 22 Nov. (`provenance-mcp` belongs to stdiolabs' unrelated Provenance platform.) Open **pypi.org/project/whyblame** right before publishing to make sure nobody has taken it since.
+4. **Account settings → API tokens → Add API token.** Name it `whyblame`, and set the scope to **Entire account**. This is only for the first upload; after that, replace it with a token scoped to the project.
 5. Add it to `.env`: `UV_PUBLISH_TOKEN=pypi-...`
 6. *Optional rehearsal:* do the same on **test.pypi.org**, to try the upload safely first, and save that token as `TEST_PYPI_TOKEN=...`.
 
@@ -91,7 +91,7 @@ The rule for every day: **CLAUDE builds during the day, and slow jobs (crawls, i
 | 1.2 | CLAUDE | **Work on any repo.** Add `Repo.at(path)`, with data kept in `<repo>/.git/provenance/`. Keep `Repo.named()` for the research corpus. | Tests pass, and `reproduce.py` still gives byte-identical results |
 | 1.3 | CLAUDE | **`provenance index [PATH]`**: ingest, then classify, then write skip lists, then link. One command, incremental, with progress output. | Running it twice on a repo adds 0 commits the second time |
 | 1.4 | CLAUDE | **`provenance mcp [PATH]`**, defaulting to the current folder, plus an **`explain_line` MCP tool**, offered only when a Gemini key exists | An MCP client test calls all three tools on a temporary repo |
-| 1.5 | CLAUDE | **Package as `provenance-mcp`**: pyproject metadata, a `provenance-mcp` entry point, licence, classifiers, and a README quickstart for "use it on your own repo" | `uv build` makes a wheel, and `uvx --from dist/*.whl provenance-mcp --help` works |
+| 1.5 | CLAUDE | **Package as `whyblame`**: pyproject metadata, a `whyblame` command (the `provenance` command keeps working), licence, classifiers, and a README quickstart for "use it on your own repo" | `uv build` makes a wheel, and `uvx --from dist/*.whl whyblame --help` works |
 | 1.6 | CLAUDE | **CI for this repo**: `.github/workflows/test.yml` runs pytest and ruff on every push | The workflow file passes a lint check (`actionlint` if available) |
 | 1.7 | CLAUDE | **Dogfood on an outside repo**: clone a small, well-known Python repo (for example `pallets/click`), index it, and call `why_line` | A traced answer comes back on a repo we never trained on |
 | 1.8 | CLAUDE, overnight | **Start React:** clone, ingest and classify (about 21,800 commits, roughly 10 min) and **start the GitHub crawl** of Redis PRs and issues | Both still running, or finished, at bedtime |
@@ -133,7 +133,7 @@ The rule for every day: **CLAUDE builds during the day, and slow jobs (crawls, i
 | 4.4 | CLAUDE | **Compatibility script** `eval/compat/run.md`: exact steps for each client, using the same task ("simplify make_password() in hashers.py") | The steps are written and Claude Code already passes |
 | 4.5 | YOU | **Run the compatibility test** in Cursor, VS Code/Copilot, Gemini CLI and Ollama, following the script, about 10 minutes each. Record "called the tool?" and "kept the guard?" in `eval/compat/results.csv`. | At least 4 clients recorded, one of them local |
 | 4.6 | CLAUDE | **RQ3 question set**: 40 "why" questions (30 answerable, 10 where the evidence is deliberately held back), labelled by Claude, checked blind by Gemini | `eval/gold/questions/` committed |
-| 4.7 | YOU | **Release v1.0**: Claude prepares it, then you run `uv publish` (try TestPyPI first), create the GitHub release, publish the Action to the Marketplace (Release page → "Publish this Action to the Marketplace"), and run `mcp-publisher login github` then `mcp-publisher publish` for the official MCP registry. Claude writes `server.json`. | `pip install provenance-mcp` works in a new folder, and the registry search finds it |
+| 4.7 | YOU | **Release v1.0**: Claude prepares it, then you run `uv publish` (try TestPyPI first), create the GitHub release, publish the Action to the Marketplace (Release page → "Publish this Action to the Marketplace"), and run `mcp-publisher login github` then `mcp-publisher publish` for the official MCP registry. Claude writes `server.json`. | `pip install whyblame` works in a new folder, and the registry search finds it |
 | 4.8 | CLAUDE, overnight | **Run all analysis jobs** (section 2) on the frozen code | Result files appear in `eval/results/` |
 
 ### Thu 26 Nov: research and analysis, then the report

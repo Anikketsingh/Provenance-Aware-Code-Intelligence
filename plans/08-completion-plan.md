@@ -71,7 +71,7 @@ What is open in the design docs (`plans/02`, `06`, `07`, `05`):
    - `provenance index [PATH]` runs `ingest_history` (`ingest/git_history.py`), then `classify_repo` and `write_ignore_file` (`trace/layer_a.py`), then `link_messages` (`graph/build.py`).
    - It is incremental: rerunning it adds only new commits, since `Store.has_commit` and `unclassified()` already support this.
 3. **MCP for any repo.**
-   - `provenance mcp [PATH]`, defaulting to the current folder, so `claude mcp add provenance -- uvx provenance-mcp` just works inside a project.
+   - `provenance mcp [PATH]`, defaulting to the current folder, so `claude mcp add whyblame -- uvx whyblame mcp` just works inside a project.
    - Add an `explain_line` MCP tool beside `why_line` and `why_range`, reusing `synth/explain.py:explain_lines`. It is optional and only offered when a Gemini key is configured.
 4. **React end to end.**
    - Clone, ingest and classify React (the JavaScript tree-sitter rules already exist), then run the label-free checks.
@@ -80,7 +80,7 @@ What is open in the design docs (`plans/02`, `06`, `07`, `05`):
    - Profile the 19.2 s Redis line from `eval/method_gap.py`'s stress test, and cap or cache the expensive step.
    - Target: p99 under 10 s.
 6. **Packaging groundwork.**
-   - `pyproject.toml` metadata, a `provenance-mcp` entry point, a check that `uvx` runs from a clean machine, a README quickstart, and GitHub Actions CI running pytest and ruff.
+   - `pyproject.toml` metadata, a `whyblame` entry point (package name `whyblame`), a check that `uvx` runs from a clean machine, a README quickstart, and GitHub Actions CI running pytest and ruff.
 
 **Exit:** on a fresh clone of some other open-source repo, `uvx … index` then `mcp` works, and an agent calls `why_line`. Tagged **v0.2-alpha**.
 
