@@ -94,7 +94,7 @@ Facts settled during setup, so they don't get re-checked:
 - **Check:** an MCP client test (the same pattern as `tests/test_mcp_server.py`) lists the tools with and without a key, and calls each one on a temporary repo.
 
 **1.5 Package as `whyblame` (CLAUDE).**
-- In `pyproject.toml`: `name = "whyblame"`, `version = "0.2.0"`, description, authors, `license = "MIT"` (matching the repo's LICENSE), keywords, classifiers, and project URLs pointing at the GitHub repo.
+- In `pyproject.toml`: `name = "whyblame"`, `version = "0.2.0"`, description, authors, `license = "Apache-2.0"` (matching the repo's LICENSE), keywords, classifiers, and project URLs pointing at the GitHub repo.
 - Two console commands: `whyblame` (the product) and `provenance` (kept for the research scripts).
 - Make sure the wheel contains `schema.sql` and `surfaces/static/index.html`. Open the built wheel and list them.
 - Check whether the `<3.13` Python cap is still needed. If the tests pass on 3.13, widen it to `>=3.12`.

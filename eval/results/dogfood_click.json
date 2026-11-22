@@ -1,0 +1,61 @@
+{
+  "repo": "pallets/click",
+  "head": "08b803cf32ceb2ae6a772c62d5da42757a897d44",
+  "commits": 3416,
+  "classes": {
+    "cosmetic": 121,
+    "logic": 1277,
+    "rename": 1,
+    "unknown": 2017
+  },
+  "links": {
+    "closes": 159,
+    "merged_as": 1094,
+    "references": 215,
+    "reverts": 6
+  },
+  "index_db_mb": 3.7,
+  "answers": [
+    {
+      "file": "src/click/core.py",
+      "line": 98,
+      "code": "raise RuntimeError(message)",
+      "status": "traced",
+      "chain_kinds": [
+        "logic",
+        "origin"
+      ],
+      "last_logic_change": "238ee070af40576d23418e41fa96d1c41e53f6b1",
+      "subject": "remove mentions of deprecated base classes",
+      "links": [],
+      "seconds": 2.414
+    },
+    {
+      "file": "src/click/types.py",
+      "line": 778,
+      "code": "raise TypeError(\"Clamping is not supported for open bounds.\")",
+      "status": "traced",
+      "chain_kinds": [
+        "origin"
+      ],
+      "last_logic_change": "d77a0aefad0ad488d7bfd46cd7cf9ea6dc62c380",
+      "subject": "refactor int, float, and range types with common bases",
+      "links": [],
+      "seconds": 0.442
+    },
+    {
+      "file": "src/click/termui.py",
+      "line": 245,
+      "code": "raise Abort() from None",
+      "status": "traced",
+      "chain_kinds": [
+        "logic",
+        "origin"
+      ],
+      "last_logic_change": "905b1bfd6e90f0fd6a2d4f0afa08f8ddebc4f488",
+      "subject": "use exception chaining",
+      "links": [],
+      "seconds": 0.588
+    }
+  ]
+}

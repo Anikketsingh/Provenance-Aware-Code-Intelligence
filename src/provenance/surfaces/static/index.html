@@ -642,7 +642,8 @@ uv run provenance classify django</span></li>
 
   /* ---------- deep links ---------- */
   function parseHash() {
-    const match = decodeURIComponent(location.hash.slice(1)).match(/^([\w-]+):(.+?)(?::(\d+))?$/);
+    // Repo names are a corpus name ("django") or a GitHub owner/name ("pallets/click").
+    const match = decodeURIComponent(location.hash.slice(1)).match(/^([\w.-]+(?:\/[\w.-]+)?):(.+?)(?::(\d+))?$/);
     return match ? { repo: match[1], path: match[2], line: match[3] ? Number(match[3]) : null } : null;
   }
   function setHash() {
