@@ -46,6 +46,9 @@ class Edge:
 
 
 def github_slug(repo: str) -> str | None:
+    """`owner/name` on GitHub. A repo keyed by its slug (any non-corpus repo) is its own slug."""
+    if "/" in repo:
+        return repo
     url = REPO_URLS.get(repo, "")
     match = re.match(r"https://github\.com/([\w.-]+/[\w.-]+?)(?:\.git)?$", url)
     return match[1] if match else None

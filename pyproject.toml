@@ -1,9 +1,25 @@
 [project]
-name = "provenance"
-version = "0.1.0"
-description = "Find out why a line of code exists by mining repository history."
+name = "whyblame"
+version = "0.2.0"
+description = "git blame tells you who. whyblame tells you why: trace any line past reformats to the change and ticket that explain it, for you and your AI agents (MCP)."
 readme = "README.md"
-requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{ name = "Aniket Singh Kushwaha" }, { name = "Aarish" }, { name = "Aftab" }]
+keywords = ["git", "blame", "mcp", "code-history", "provenance", "ai-agents", "code-review"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Version Control :: Git",
+    "Topic :: Software Development :: Quality Assurance",
+]
+requires-python = ">=3.12"
 dependencies = [
     "google-genai>=3.0.0",
     "mcp[cli]>=2.3.0",
@@ -17,7 +33,13 @@ dependencies = [
     "uvicorn>=0.30",
 ]
 
+[project.urls]
+Homepage = "https://github.com/Anikketsingh/Provenance-Aware-Code-Intelligence"
+Repository = "https://github.com/Anikketsingh/Provenance-Aware-Code-Intelligence"
+Issues = "https://github.com/Anikketsingh/Provenance-Aware-Code-Intelligence/issues"
+
 [project.scripts]
+whyblame = "provenance.surfaces.cli:app"
 provenance = "provenance.surfaces.cli:app"
 
 [dependency-groups]
@@ -29,6 +51,11 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/provenance"]
+
+# The published source package is the code only: never the reports, synopsis documents,
+# evaluation data or anything else that happens to live in the repo.
+[tool.hatch.build.targets.sdist]
+only-include = ["src", "tests", "README.md", "LICENSE", "pyproject.toml"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

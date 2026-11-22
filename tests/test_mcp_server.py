@@ -25,7 +25,7 @@ def server(git_repo):
         ingest_history(repo, store)
         classify_repo(repo, store, workers=1)
         link_messages(repo.name, store)
-    return build_server(repo)
+    return build_server(repo, backend=None)
 
 
 async def call(server, tool, **arguments):

@@ -3,7 +3,7 @@
 import os
 from typing import Protocol
 
-from dotenv import load_dotenv
+from dotenv import find_dotenv, load_dotenv
 from google import genai
 from google.genai import types
 
@@ -33,6 +33,8 @@ class GeminiBackend:
     """Calls the Gemini API. Whatever is in the prompt leaves this machine."""
 
     def __init__(self, model: str | None = None):
+        # The environment wins; then a .env in the current project; then this checkout's .env.
+        load_dotenv(find_dotenv(usecwd=True))
         load_dotenv(PROJECT_ROOT / ".env")
         key = os.environ.get("GEMINI_API_KEY")
         if not key:

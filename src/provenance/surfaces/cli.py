@@ -1,41 +1,110 @@
-"""Command line interface."""
+"""Command line interface, installed as both `whyblame` and `provenance`.
 
+Every REPO argument takes either a research corpus name (`django`, `redis`, ...) or a path to
+any local git repository (`.` for the current one).
+"""
+
+import sys
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Annotated
 
 import typer
 
-from provenance.config import Repo
+from provenance.config import Repo, RepoNotFoundError, resolve_repo
+from provenance.gitio import GitError
 from provenance.graph.build import commit_links
-from provenance.ingest.git_history import clone as clone_repo
-from provenance.ingest.git_history import ingest_history
 from provenance.store.db import Store
-from provenance.trace.chain import Tracer
-from provenance.trace.layer_a import classify_repo, write_ignore_file
 
-app = typer.Typer(no_args_is_help=True, add_completion=False)
+app = typer.Typer(
+    no_args_is_help=True,
+    add_completion=False,
+    help="Find out why a line of code exists, past reformats, renames and moves.",
+)
+
+RepoArg = Annotated[
+    str, typer.Argument(help="A path to a git repo (default: here), or a corpus name.")
+]
+
+
+def _prog() -> str:
+    return "whyblame" if Path(sys.argv[0]).name.startswith("whyblame") else "provenance"
+
+
+def _fail(message: str) -> typer.Exit:
+    typer.echo(message, err=True)
+    return typer.Exit(1)
+
+
+def _repo(arg: str, *, need_index: bool = True) -> Repo:
+    """Resolve a REPO argument, with a plain message instead of a stack trace."""
+    from provenance.indexing import is_indexed
+
+    try:
+        repo = resolve_repo(arg)
+    except RepoNotFoundError as error:
+        raise _fail(str(error)) from None
+    if need_index and not is_indexed(repo):
+        raise _fail(f"{repo.name} isn't indexed yet. Run:  {_prog()} index {arg}")
+    return repo
+
+
+@app.command()
+def index(
+    repo: RepoArg = ".",
+    rev: Annotated[str, typer.Option(help="Index history reachable from this revision.")] = "HEAD",
+    workers: Annotated[int, typer.Option(help="Parallel workers for classification.")] = 4,
+) -> None:
+    """Prepare a repo: load its history, find non-logic changes and link tickets. Incremental."""
+    from provenance.indexing import index_repo
+
+    target = _repo(repo, need_index=False)
+    if not target.git_dir.exists():
+        raise _fail(f"{target.name} isn't cloned yet. Run:  {_prog()} clone {repo}")
+    typer.echo(f"Indexing {target.name}", err=True)
+    try:
+        summary = index_repo(target, rev, workers, lambda m: typer.echo(f"  {m}", err=True))
+    except GitError as error:
+        raise _fail(f"git failed: {error}") from None
+    kinds = ", ".join(f"{count} {kind}" for kind, count in sorted(summary.classes.items()))
+    links = sum(summary.links.values())
+    typer.echo(
+        f"{summary.name}: {summary.total_commits} commits ({summary.new_commits} new), "
+        f"{kinds}. {summary.skip_list_commits} commits skipped by tracing, "
+        f"{links} links. {summary.seconds:.1f}s."
+    )
+    typer.echo(f"Next:  {_prog()} why {repo} <file> <line>    or    {_prog()} mcp {repo}")
 
 
 @app.command()
 def clone(repo: str) -> None:
-    """Bare-clone a corpus repo into data/."""
+    """Bare-clone a research corpus repo into data/."""
+    from provenance.config import REPO_URLS
+    from provenance.ingest.git_history import clone as clone_repo
+
+    if repo not in REPO_URLS:
+        raise _fail(f"Only corpus repos can be cloned here: {', '.join(sorted(REPO_URLS))}.")
     created = clone_repo(Repo.named(repo))
     typer.echo("Cloned." if created else "Already cloned.")
 
 
 @app.command()
-def ingest(repo: str, rev: str = "HEAD") -> None:
-    """Load commit history into SQLite."""
-    target = Repo.named(repo)
+def ingest(repo: RepoArg = ".", rev: str = "HEAD") -> None:
+    """Load commit history into SQLite. (`index` does this and the next steps.)"""
+    from provenance.ingest.git_history import ingest_history
+
+    target = _repo(repo, need_index=False)
     with Store(target.db_path) as store:
         added = ingest_history(target, store, rev)
         typer.echo(f"Added {added} commits, {store.commit_count()} stored.")
 
 
 @app.command()
-def classify(repo: str, workers: int = 4) -> None:
+def classify(repo: RepoArg = ".", workers: int = 4) -> None:
     """Find cosmetic commits and write the automatic ignore list."""
-    target = Repo.named(repo)
+    from provenance.trace.layer_a import classify_repo, write_ignore_file
+
+    target = _repo(repo)
 
     def progress(done: int) -> None:
         if done % 1000 == 0:
@@ -49,12 +118,13 @@ def classify(repo: str, workers: int = 4) -> None:
 
 
 @app.command()
-def link(repo: str) -> None:
+def link(repo: RepoArg = ".") -> None:
     """Find links to tickets, pull requests and reverted commits in commit messages."""
     from provenance.graph.build import link_messages
 
-    with Store(Repo.named(repo).db_path) as store:
-        total = link_messages(repo, store)
+    target = _repo(repo)
+    with Store(target.db_path) as store:
+        total = link_messages(target.name, store)
         typer.echo(f"Stored {total} links: {store.edge_counts()}")
 
 
@@ -70,28 +140,28 @@ def fetch_tickets_command(
     from provenance.graph.refs import TRAC_URLS
     from provenance.ingest.trac import fetch_tickets
 
-    if repo not in TRAC_URLS:
-        typer.echo(f"{repo} doesn't use Trac.")
-        raise typer.Exit(1)
-    with Store(Repo.named(repo).db_path) as store:
-        numbers = list(ticket or []) + store.linked_numbers(f"ticket:{repo}/")[:limit]
+    target = _repo(repo)
+    if target.name not in TRAC_URLS:
+        raise _fail(f"{target.name} doesn't use Trac.")
+    with Store(target.db_path) as store:
+        numbers = list(ticket or []) + store.linked_numbers(f"ticket:{target.name}/")[:limit]
 
         def progress(done: int, total: int) -> None:
             if done % 25 == 0 or done == total:
                 typer.echo(f"  {done}/{total} tickets", err=True)
 
-        added = fetch_tickets(repo, store, list(dict.fromkeys(numbers)), progress=progress)
+        added = fetch_tickets(target.name, store, list(dict.fromkeys(numbers)), progress=progress)
         typer.echo(f"Added {added} tickets.")
 
 
 @app.command()
 def search(repo: str, query: list[str], limit: int = 10) -> None:
     """Full-text search over fetched tickets and pull requests."""
-    with Store(Repo.named(repo).db_path) as store:
+    target = _repo(repo)
+    with Store(target.db_path) as store:
         hits = store.search_artefacts(" ".join(query), limit)
         if not hits:
-            typer.echo("No matches. Have tickets been fetched for this repo?")
-            raise typer.Exit(1)
+            raise _fail("No matches. Have tickets or pull requests been fetched for this repo?")
         for hit in hits:
             typer.echo(f"{hit['id']}  [{hit['state']}]  {hit['title']}")
             typer.echo(f"    {hit['snippet']}")
@@ -114,22 +184,19 @@ def explain(
     from provenance.synth.backend import GeminiBackend, MissingKeyError
     from provenance.synth.explain import MAX_BLOCK_LINES, explain_lines
 
-    target = Repo.named(repo)
+    target = _repo(repo)
     last = max(line, end or line)
     if last - line + 1 > MAX_BLOCK_LINES:
-        typer.echo(f"A block can cover at most {MAX_BLOCK_LINES} lines.")
-        raise typer.Exit(1)
+        raise _fail(f"A block can cover at most {MAX_BLOCK_LINES} lines.")
     explainer = Explainer(target)
     whys = [explainer.why_line(path, number, rev) for number in range(line, last + 1)]
     traced = [why for why in whys if why["status"] == "traced"]
     if not traced:
-        typer.echo(f"Could not trace {path}:{line} ({whys[0].get('reason')}).")
-        raise typer.Exit(1)
+        raise _fail(f"Could not trace {path}:{line} ({whys[0].get('reason')}).")
     try:
         backend = GeminiBackend()
     except MissingKeyError as error:
-        typer.echo(str(error))
-        raise typer.Exit(1) from None
+        raise _fail(str(error)) from None
     with Store(target.db_path) as store:
         result = explain_lines(store, traced, backend, fresh=fresh)
     span = f"{line}" if last == line else f"{line}-{last}"
@@ -147,48 +214,66 @@ def explain(
                 typer.echo(f"  [{cid}] {item['kind']} {item['ref']}: {item['title']}  {where}")
     else:
         typer.echo(f"Abstained: {result.get('reason', 'not enough evidence')}")
-        typer.echo("The trace itself still stands. Run `provenance why` to see it.")
+        typer.echo(f"The trace itself still stands. Run `{_prog()} why` to see it.")
 
 
 @app.command()
-def mcp(repo: str) -> None:
-    """Run the MCP server for a repo, over stdio."""
+def mcp(repo: RepoArg = ".") -> None:
+    """Run the MCP server for a repo, over stdio. Register it with your agent, for example:
+    claude mcp add whyblame -- whyblame mcp /path/to/repo"""
     from provenance.surfaces.mcp_server import build_server  # slow import, needed only here
 
-    build_server(Repo.named(repo)).run()
+    # stdout carries the protocol, so every message here goes to stderr.
+    build_server(_repo(repo)).run()
 
 
 @app.command()
-def ui(port: int = 8765, open_browser: bool = True) -> None:
+def ui(
+    repos: Annotated[
+        list[str] | None, typer.Argument(help="Repos to show (default: every corpus repo).")
+    ] = None,
+    port: int = 8765,
+    open_browser: bool = True,
+) -> None:
     """Start the local web UI at http://127.0.0.1:<port>."""
     import threading
     import webbrowser
 
     import uvicorn
 
-    from provenance.surfaces.web import available_repos, build_app
+    from provenance.surfaces.web import RepoView, available_repos, build_app, pinned_revs
 
-    repos = available_repos()
-    if not repos:
-        typer.echo("No prepared repos found. Run clone, ingest and classify first.")
-        raise typer.Exit(1)
+    if repos:
+        revs = pinned_revs()
+        views = {}
+        for arg in repos:
+            target = _repo(arg)
+            views[target.name] = RepoView(target, revs.get(target.name, "HEAD"))
+    else:
+        views = available_repos()
+    if not views:
+        raise _fail(f"No indexed repos found. Run:  {_prog()} index <path>  first.")
     url = f"http://127.0.0.1:{port}"
-    typer.echo(f"Provenance UI at {url} for {', '.join(repos)}. Press Ctrl+C to stop.")
+    typer.echo(f"UI at {url} for {', '.join(views)}. Press Ctrl+C to stop.")
     if open_browser:
         threading.Timer(1.0, webbrowser.open, [url]).start()
-    uvicorn.run(build_app(repos), host="127.0.0.1", port=port, log_level="warning")
+    uvicorn.run(build_app(views), host="127.0.0.1", port=port, log_level="warning")
 
 
 @app.command()
 def why(repo: str, path: str, line: int, rev: str = "HEAD") -> None:
     """Trace a line to the change that really introduced it."""
-    target = Repo.named(repo)
+    from provenance.trace.chain import Tracer
+
+    target = _repo(repo)
     with Store(target.db_path) as store:
         tracer = Tracer(target, store)
-        chain = tracer.trace(path, line, rev)
+        try:
+            chain = tracer.trace(path, line, rev)
+        except GitError as error:
+            raise _fail(f"git couldn't read {path} at {rev}: {error}") from None
         if chain.origin is None:
-            typer.echo(f"Could not trace {path}:{line} ({chain.stop_reason}).")
-            raise typer.Exit(1)
+            raise _fail(f"Could not trace {path}:{line} ({chain.stop_reason}).")
         typer.echo(f"{path}:{line}  {tracer.line_text(path, line, rev).strip()}\n")
         for hop in chain.hops:
             when = store.commit_time(hop.commit)
