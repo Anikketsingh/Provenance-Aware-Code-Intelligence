@@ -1,6 +1,6 @@
 # Completion Plan
 
-**Level:** project. **Agreed:** 22 Nov 2026. **Dates superseded the same day:** everything is now due by 27 Nov; see [09-sprint-to-27-nov.md](09-sprint-to-27-nov.md). The design of each phase below still holds.
+**Level:** project. **Agreed:** 22 Nov 2026. **Dates superseded the same day:** everything is now due by 27 Nov; see [09-execution-plan.md](09-execution-plan.md). The design of each phase below still holds.
 
 ## Context
 
