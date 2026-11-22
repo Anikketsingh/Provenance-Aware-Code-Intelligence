@@ -14,7 +14,7 @@ from pathlib import Path
 from provenance.config import Repo
 from provenance.gitio import git
 from provenance.protect.guards import GuardChange, compare_guards, find_guards
-from provenance.protect.score import DEFAULT_THRESHOLD, score_guard
+from provenance.protect.score import DEFAULT_THRESHOLD, score_guard, with_context
 from provenance.store.db import Store
 from provenance.trace.chain import Tracer
 from provenance.trace.tokens import language_for
@@ -73,6 +73,9 @@ def check_change(
         before = {g.fingerprint for g in base_guards}
         added_anywhere |= {g.fingerprint for g in head_guards if g.fingerprint not in before}
 
+    removed_total = sum(
+        len(_outermost(compare_guards(b, h, added_anywhere))) for b, h in versions.values()
+    )
     findings = []
     with Store(repo.db_path) as store:
         tracer = Tracer(repo, store)
@@ -83,6 +86,7 @@ def check_change(
             line_map = _line_map(repo, base, head, old_path, new_path)
             for change in changes:
                 history = score_guard(tracer, store, old_path, change.guard.line, base)
+                score, context = with_context(history.score, removed_total)
                 where = change.after.line if change.after else line_map(change.guard.line)
                 findings.append(
                     Finding(
@@ -92,9 +96,9 @@ def check_change(
                         kind=change.guard.kind,
                         code=change.guard.text,
                         reason=change.reason,
-                        score=history.score,
-                        flagged=history.score >= threshold,
-                        signals=history.signals,
+                        score=round(score, 2),
+                        flagged=score >= threshold,
+                        signals=[*history.signals, context],
                         origin=history.origin,
                         origin_subject_untrusted=history.origin_subject,
                         first_seen=history.first_seen,

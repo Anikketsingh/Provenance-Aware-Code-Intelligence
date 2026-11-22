@@ -32,9 +32,29 @@ WEIGHTS = {
     "reverted": 0.15,
     "old": 0.05,
 }
+#: Change context, chosen on guard events before 2020 (eval/protect_bench.py --split tune):
+#: a focused change that removes one guard was restored after a bug about 3x as often as a
+#: refactor removing many, so the history score is adjusted by how many guards the change
+#: removes.
+FOCUSED_BONUS = 0.10  # this change removes only this guard
+SWEEPING_PENALTY = 0.20  # this change removes more than SWEEPING_AT guards
+SWEEPING_AT = 5
+
+
+def with_context(history_score: float, guards_removed: int) -> tuple[float, str]:
+    """The final score for a removal, given how many guards the whole change removes."""
+    if guards_removed <= 1:
+        return min(1.0, history_score + FOCUSED_BONUS), "the only guard this change removes"
+    if guards_removed > SWEEPING_AT:
+        return max(0.0, history_score - SWEEPING_PENALTY), (
+            f"one of {guards_removed} guards this change removes (a sweeping change)"
+        )
+    return history_score, f"one of {guards_removed} guards this change removes"
+
+
 #: Findings at or above this score are reported. Chosen on guard events before 2020 only
 #: (eval/protect_tune.py), then frozen; see eval/results/protect_threshold.json.
-DEFAULT_THRESHOLD = 0.5
+DEFAULT_THRESHOLD = 0.85
 
 _BUG = re.compile(
     r"\b(fix(e[sd])?|bug|crash\w*|regression|race|deadlock|leak\w*|overflow|underflow|"

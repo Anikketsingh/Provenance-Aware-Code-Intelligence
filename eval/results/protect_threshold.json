@@ -1,0 +1,2883 @@
+{
+  "split": "tune",
+  "window_days": 90,
+  "labelled_removals": {
+    "positive": 49,
+    "negative": 6333
+  },
+  "base_rate": 0.007677843936070197,
+  "sampled": {
+    "positive": 49,
+    "negative": 250
+  },
+  "average_precision": 0.017869659609669578,
+  "curve": {
+    "0.05": {
+      "precision": 0.009948410386140444,
+      "recall": 0.8571428571428571,
+      "f1": 0.019668538299795355,
+      "f0.5": 0.012399534249875416,
+      "fpr": 0.66
+    },
+    "0.1": {
+      "precision": 0.010556496256666428,
+      "recall": 0.8163265306122449,
+      "f1": 0.020843451091884187,
+      "f0.5": 0.01315309731766256,
+      "fpr": 0.592
+    },
+    "0.15": {
+      "precision": 0.011074773548567868,
+      "recall": 0.8163265306122449,
+      "f1": 0.02185307521937756,
+      "f0.5": 0.013796673456469568,
+      "fpr": 0.564
+    },
+    "0.2": {
+      "precision": 0.009984355940577677,
+      "recall": 0.7142857142857143,
+      "f1": 0.019693435109005973,
+      "f0.5": 0.01243698358090748,
+      "fpr": 0.548
+    },
+    "0.25": {
+      "precision": 0.010130773817449245,
+      "recall": 0.7142857142857143,
+      "f1": 0.019978195226923758,
+      "f0.5": 0.012618724167668951,
+      "fpr": 0.54
+    },
+    "0.3": {
+      "precision": 0.010436881912943284,
+      "recall": 0.7142857142857143,
+      "f1": 0.02057315638067628,
+      "f0.5": 0.01299861962087409,
+      "fpr": 0.524
+    },
+    "0.35": {
+      "precision": 0.01059697931590746,
+      "recall": 0.7142857142857143,
+      "f1": 0.020884126512458277,
+      "f0.5": 0.013197276202852545,
+      "fpr": 0.516
+    },
+    "0.4": {
+      "precision": 0.011477261250011478,
+      "recall": 0.7142857142857143,
+      "f1": 0.022591518240391826,
+      "f0.5": 0.014289176349012563,
+      "fpr": 0.476
+    },
+    "0.45": {
+      "precision": 0.011770593157182483,
+      "recall": 0.7142857142857143,
+      "f1": 0.02315954411429963,
+      "f0.5": 0.014652875882270591,
+      "fpr": 0.464
+    },
+    "0.5": {
+      "precision": 0.012489610914557437,
+      "recall": 0.673469387755102,
+      "f1": 0.024524412194429537,
+      "f0.5": 0.015539965778169906,
+      "fpr": 0.412
+    },
+    "0.55": {
+      "precision": 0.012610513958692542,
+      "recall": 0.673469387755102,
+      "f1": 0.02475745199304991,
+      "f0.5": 0.015689696224659717,
+      "fpr": 0.408
+    },
+    "0.6": {
+      "precision": 0.01741514864620967,
+      "recall": 0.4489795918367347,
+      "f1": 0.03352973630386476,
+      "f0.5": 0.0215598682260854,
+      "fpr": 0.196
+    },
+    "0.65": {
+      "precision": 0.018933852006127683,
+      "recall": 0.4489795918367347,
+      "f1": 0.036335408855930104,
+      "f0.5": 0.023420400446265085,
+      "fpr": 0.18
+    },
+    "0.7": {
+      "precision": 0.01762723337046804,
+      "recall": 0.40816326530612246,
+      "f1": 0.03379497265986712,
+      "f0.5": 0.021798688242136342,
+      "fpr": 0.176
+    },
+    "0.75": {
+      "precision": 0.015544846883258199,
+      "recall": 0.2857142857142857,
+      "f1": 0.029485478401887068,
+      "f0.5": 0.019170309025381485,
+      "fpr": 0.14
+    },
+    "0.8": {
+      "precision": 0.03797660641045116,
+      "recall": 0.14285714285714285,
+      "f1": 0.060002400096003834,
+      "f0.5": 0.04451249910975002,
+      "fpr": 0.028
+    },
+    "0.85": {
+      "precision": 0.03797660641045116,
+      "recall": 0.14285714285714285,
+      "f1": 0.060002400096003834,
+      "f0.5": 0.04451249910975002,
+      "fpr": 0.028
+    },
+    "0.9": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "f0.5": 0.0,
+      "fpr": 0.012
+    },
+    "0.95": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "f0.5": 0.0,
+      "fpr": 0.012
+    }
+  },
+  "baselines": {
+    "flag_every_removal": {
+      "precision": 0.007677843936070197,
+      "recall": 1.0,
+      "f1": 0.015238687606904057,
+      "f0.5": 0.00957891855964343,
+      "fpr": 1.0
+    },
+    "keyword_rule": {
+      "precision": 0.003867843522522453,
+      "recall": 0.12244897959183673,
+      "f1": 0.007498818936017578,
+      "f0.5": 0.0047969238286871396,
+      "fpr": 0.244
+    }
+  },
+  "by_kind": {
+    "raise": 54,
+    "assert": 12,
+    "except": 54,
+    "early-exit": 168,
+    "limit": 6,
+    "lock": 4,
+    "throw": 1
+  },
+  "other_windows": {
+    "30": {
+      "positive": 41,
+      "negative": 6333
+    },
+    "90": {
+      "positive": 49,
+      "negative": 6333
+    },
+    "180": {
+      "positive": 80,
+      "negative": 6333
+    }
+  },
+  "scores": [
+    {
+      "repo": "django",
+      "sha": "2babab0bb3",
+      "path": "django/core/management/commands/makemessages.py",
+      "line": 243,
+      "kind": "raise",
+      "label": 1,
+      "score": 0.7
+    },
+    {
+      "repo": "django",
+      "sha": "269e921756",
+      "path": "django/core/handlers/wsgi.py",
+      "line": 154,
+      "kind": "raise",
+      "label": 1,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "6a287ed946",
+      "path": "django/utils/functional.py",
+      "line": 166,
+      "kind": "assert",
+      "label": 1,
+      "score": 0.85
+    },
+    {
+      "repo": "django",
+      "sha": "04c77db2c3",
+      "path": "django/core/management/__init__.py",
+      "line": 180,
+      "kind": "except",
+      "label": 1,
+      "score": 0
+    },
+    {
+      "repo": "redis",
+      "sha": "e8f5d21940",
+      "path": "src/util.c",
+      "line": 353,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.15000000000000002
+    },
+    {
+      "repo": "django",
+      "sha": "13d613f800",
+      "path": "django/db/migrations/autodetector.py",
+      "line": 201,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.7
+    },
+    {
+      "repo": "django",
+      "sha": "44b9076bbe",
+      "path": "django/template/loader.py",
+      "line": 56,
+      "kind": "except",
+      "label": 1,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "83e7555ffe",
+      "path": "django/core/management/sql.py",
+      "line": 20,
+      "kind": "raise",
+      "label": 1,
+      "score": 0.15
+    },
+    {
+      "repo": "django",
+      "sha": "34a3bd5225",
+      "path": "django/dispatch/dispatcher.py",
+      "line": 313,
+      "kind": "except",
+      "label": 1,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "77b73e79a4",
+      "path": "django/db/backends/oracle/operations.py",
+      "line": 118,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.7999999999999999
+    },
+    {
+      "repo": "django",
+      "sha": "5008a4db44",
+      "path": "django/db/models/sql/query.py",
+      "line": 1135,
+      "kind": "assert",
+      "label": 1,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "c97efb6799",
+      "path": "django/core/handlers/modpython.py",
+      "line": 178,
+      "kind": "except",
+      "label": 1,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "eca5aacec8",
+      "path": "django/utils/functional.py",
+      "line": 170,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.7
+    },
+    {
+      "repo": "django",
+      "sha": "c97efb6799",
+      "path": "django/core/handlers/wsgi.py",
+      "line": 163,
+      "kind": "except",
+      "label": 1,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "6fe26bd3ee",
+      "path": "django/core/files/locks.py",
+      "line": 30,
+      "kind": "except",
+      "label": 1,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "04c77db2c3",
+      "path": "django/core/management/__init__.py",
+      "line": 18,
+      "kind": "except",
+      "label": 1,
+      "score": 0
+    },
+    {
+      "repo": "django",
+      "sha": "45fa520187",
+      "path": "django/db/migrations/loader.py",
+      "line": 204,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.7
+    },
+    {
+      "repo": "django",
+      "sha": "047d161164",
+      "path": "django/template/defaultfilters.py",
+      "line": 814,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.15000000000000002
+    },
+    {
+      "repo": "django",
+      "sha": "bccb8897e6",
+      "path": "django/template/defaulttags.py",
+      "line": 237,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "bccb8897e6",
+      "path": "django/template/loader_tags.py",
+      "line": 95,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "0d397e5a5b",
+      "path": "django/db/migrations/state.py",
+      "line": 61,
+      "kind": "raise",
+      "label": 1,
+      "score": 0.85
+    },
+    {
+      "repo": "django",
+      "sha": "0b908b92a2",
+      "path": "django/contrib/admin/options.py",
+      "line": 826,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.05
+    },
+    {
+      "repo": "django",
+      "sha": "12d3799dd2",
+      "path": "django/template/__init__.py",
+      "line": 974,
+      "kind": "except",
+      "label": 1,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "cf5b67d3a0",
+      "path": "django/apps/registry.py",
+      "line": 177,
+      "kind": "except",
+      "label": 1,
+      "score": 0.05
+    },
+    {
+      "repo": "django",
+      "sha": "e8171daf0c",
+      "path": "django/db/models/options.py",
+      "line": 536,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.7999999999999999
+    },
+    {
+      "repo": "django",
+      "sha": "bccb8897e6",
+      "path": "django/template/defaulttags.py",
+      "line": 222,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "86243d2e57",
+      "path": "django/db/models/query.py",
+      "line": 317,
+      "kind": "except",
+      "label": 1,
+      "score": 0.7999999999999999
+    },
+    {
+      "repo": "django",
+      "sha": "13d613f800",
+      "path": "django/db/migrations/autodetector.py",
+      "line": 211,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.7
+    },
+    {
+      "repo": "django",
+      "sha": "ff68e85b8e",
+      "path": "django/utils/translation/trans_real.py",
+      "line": 15,
+      "kind": "except",
+      "label": 1,
+      "score": 0.7
+    },
+    {
+      "repo": "django",
+      "sha": "a4737bf6ae",
+      "path": "django/db/migrations/loader.py",
+      "line": 65,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.65
+    },
+    {
+      "repo": "django",
+      "sha": "bccb8897e6",
+      "path": "django/template/defaulttags.py",
+      "line": 252,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.49999999999999994
+    },
+    {
+      "repo": "django",
+      "sha": "bccb8897e6",
+      "path": "django/template/defaulttags.py",
+      "line": 194,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "e4342b7d28",
+      "path": "django/core/management/__init__.py",
+      "line": 23,
+      "kind": "except",
+      "label": 1,
+      "score": 0.49999999999999994
+    },
+    {
+      "repo": "django",
+      "sha": "13d613f800",
+      "path": "django/db/migrations/autodetector.py",
+      "line": 209,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "13d613f800",
+      "path": "django/db/migrations/autodetector.py",
+      "line": 214,
+      "kind": "raise",
+      "label": 1,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "6fe26bd3ee",
+      "path": "django/core/files/locks.py",
+      "line": 39,
+      "kind": "except",
+      "label": 1,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "ba749f8f87",
+      "path": "django/template/defaulttags.py",
+      "line": 208,
+      "kind": "except",
+      "label": 1,
+      "score": 0.85
+    },
+    {
+      "repo": "django",
+      "sha": "13d613f800",
+      "path": "django/db/migrations/autodetector.py",
+      "line": 207,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.55
+    },
+    {
+      "repo": "redis",
+      "sha": "bb5b8b3a6f",
+      "path": "src/util.c",
+      "line": 371,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "18d89cc1f7",
+      "path": "django/db/models/sql/query.py",
+      "line": 1487,
+      "kind": "assert",
+      "label": 1,
+      "score": 0.65
+    },
+    {
+      "repo": "redis",
+      "sha": "d2ee16abec",
+      "path": "redis.c",
+      "line": 5156,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.15000000000000002
+    },
+    {
+      "repo": "django",
+      "sha": "83e7555ffe",
+      "path": "django/core/management/sql.py",
+      "line": 19,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.15
+    },
+    {
+      "repo": "django",
+      "sha": "eca5aacec8",
+      "path": "django/utils/functional.py",
+      "line": 175,
+      "kind": "assert",
+      "label": 1,
+      "score": 0.85
+    },
+    {
+      "repo": "django",
+      "sha": "bccb8897e6",
+      "path": "django/template/defaulttags.py",
+      "line": 278,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "0d397e5a5b",
+      "path": "django/db/migrations/state.py",
+      "line": 55,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.85
+    },
+    {
+      "repo": "django",
+      "sha": "a5b062576b",
+      "path": "django/shortcuts/__init__.py",
+      "line": 79,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.85
+    },
+    {
+      "repo": "django",
+      "sha": "bccb8897e6",
+      "path": "django/template/defaulttags.py",
+      "line": 228,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "4befb3015c",
+      "path": "django/contrib/staticfiles/storage.py",
+      "line": 40,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0.85
+    },
+    {
+      "repo": "django",
+      "sha": "2babab0bb3",
+      "path": "django/core/management/commands/makemessages.py",
+      "line": 33,
+      "kind": "early-exit",
+      "label": 1,
+      "score": 0
+    },
+    {
+      "repo": "django",
+      "sha": "8f8c54f70b",
+      "path": "django/http/request.py",
+      "line": 496,
+      "kind": "except",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "953badbea5",
+      "path": "django/utils/translation/trans_real.py",
+      "line": 250,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.6
+    },
+    {
+      "repo": "django",
+      "sha": "d6cc37d601",
+      "path": "django/contrib/admindocs/views.py",
+      "line": 200,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.49999999999999994
+    },
+    {
+      "repo": "django",
+      "sha": "41f0d3d3bc",
+      "path": "django/utils/daemonize.py",
+      "line": 16,
+      "kind": "except",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "27db9378cf",
+      "path": "django/db/transaction.py",
+      "line": 349,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.7
+    },
+    {
+      "repo": "django",
+      "sha": "9b8c712ca7",
+      "path": "django/contrib/gis/db/models/sql/query.py",
+      "line": 298,
+      "kind": "raise",
+      "label": 0,
+      "score": 0
+    },
+    {
+      "repo": "redis",
+      "sha": "f85cd526c1",
+      "path": "src/rdb.c",
+      "line": 985,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.3
+    },
+    {
+      "repo": "django",
+      "sha": "255bf69e09",
+      "path": "django/contrib/admin/validation.py",
+      "line": 190,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "5008a4db44",
+      "path": "django/db/models/sql/where.py",
+      "line": 226,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.39999999999999997
+    },
+    {
+      "repo": "django",
+      "sha": "1b035c35d9",
+      "path": "django/views/defaults.py",
+      "line": 71,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "redis",
+      "sha": "2e4b0e7727",
+      "path": "src/cluster.c",
+      "line": 1432,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.04999999999999999
+    },
+    {
+      "repo": "redis",
+      "sha": "a510cb0c03",
+      "path": "src/networking.c",
+      "line": 621,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "5a51b44936",
+      "path": "django/contrib/gis/maps/google/zoom.py",
+      "line": 148,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "1c8b637ed9",
+      "path": "django/utils/dictconfig.py",
+      "line": 404,
+      "kind": "except",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "27d16a3ca4",
+      "path": "django/core/handlers/base.py",
+      "line": 130,
+      "kind": "except",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "1b035c35d9",
+      "path": "django/views/defaults.py",
+      "line": 72,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "34a3bd5225",
+      "path": "django/dispatch/robustapply.py",
+      "line": 35,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "6b659270d6",
+      "path": "django/contrib/gis/db/models/fields.py",
+      "line": 161,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.7
+    },
+    {
+      "repo": "django",
+      "sha": "c681f4070c",
+      "path": "django/db/backends/mysql_old/introspection.py",
+      "line": 44,
+      "kind": "except",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "16411b8400",
+      "path": "django/core/urlresolvers.py",
+      "line": 616,
+      "kind": "except",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "redis",
+      "sha": "e97fadb045",
+      "path": "src/redis-check-rdb.c",
+      "line": 595,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "b845951fd4",
+      "path": "django/db/backends/base/operations.py",
+      "line": 272,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.7
+    },
+    {
+      "repo": "django",
+      "sha": "eef95ea96f",
+      "path": "django/middleware/csrf.py",
+      "line": 200,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 1.0
+    },
+    {
+      "repo": "django",
+      "sha": "632c4ffd9c",
+      "path": "django/template/loaders/filesystem.py",
+      "line": 30,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "redis",
+      "sha": "c560ade831",
+      "path": "src/lolwut.c",
+      "line": 93,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "4ad1eb1c14",
+      "path": "django/contrib/admin/validation.py",
+      "line": 209,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "a1f948b468",
+      "path": "django/views/static.py",
+      "line": 53,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "5d863f1fbd",
+      "path": "django/core/template/__init__.py",
+      "line": 478,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "a39e6c91b1",
+      "path": "django/views/core/flatfiles.py",
+      "line": 24,
+      "kind": "raise",
+      "label": 0,
+      "score": 0
+    },
+    {
+      "repo": "redis",
+      "sha": "3be00d7ed6",
+      "path": "src/dscache.c",
+      "line": 404,
+      "kind": "assert",
+      "label": 0,
+      "score": 0.2
+    },
+    {
+      "repo": "django",
+      "sha": "4b1529e2cb",
+      "path": "django/db/migrations/writer.py",
+      "line": 458,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "d818e0c9b2",
+      "path": "django/core/management/validation.py",
+      "line": 39,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "41a1a89e4e",
+      "path": "django/contrib/localflavor/de/forms.py",
+      "line": 19,
+      "kind": "limit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "e12b3199d0",
+      "path": "django/contrib/admin/util.py",
+      "line": 153,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.35
+    },
+    {
+      "repo": "django",
+      "sha": "5d1d054e15",
+      "path": "django/template/defaultfilters.py",
+      "line": 730,
+      "kind": "except",
+      "label": 0,
+      "score": 0.15000000000000002
+    },
+    {
+      "repo": "redis",
+      "sha": "1e7153831d",
+      "path": "src/replication.c",
+      "line": 2134,
+      "kind": "assert",
+      "label": 0,
+      "score": 0.1
+    },
+    {
+      "repo": "django",
+      "sha": "c5073320a7",
+      "path": "django/core/cache.py",
+      "line": 412,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "redis",
+      "sha": "b1f181a736",
+      "path": "src/t_zset.c",
+      "line": 1324,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.45
+    },
+    {
+      "repo": "redis",
+      "sha": "7536991726",
+      "path": "src/bio.c",
+      "line": 238,
+      "kind": "lock",
+      "label": 0,
+      "score": 0.45
+    },
+    {
+      "repo": "redis",
+      "sha": "5284d67e37",
+      "path": "src/redis-benchmark.c",
+      "line": 250,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.1
+    },
+    {
+      "repo": "django",
+      "sha": "9face54bb7",
+      "path": "django/forms/models.py",
+      "line": 623,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.7999999999999999
+    },
+    {
+      "repo": "redis",
+      "sha": "8588bfa370",
+      "path": "src/t_zset.c",
+      "line": 861,
+      "kind": "assert",
+      "label": 0,
+      "score": 0
+    },
+    {
+      "repo": "redis",
+      "sha": "9feee428f2",
+      "path": "src/dict.c",
+      "line": 802,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.35000000000000003
+    },
+    {
+      "repo": "django",
+      "sha": "471596fc1a",
+      "path": "django/forms/fields.py",
+      "line": 196,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "c5a77721e2",
+      "path": "django/db/models/fields/related.py",
+      "line": 1290,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "redis",
+      "sha": "3be00d7ed6",
+      "path": "src/dscache.c",
+      "line": 646,
+      "kind": "assert",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "redis",
+      "sha": "d68f28a367",
+      "path": "src/config.c",
+      "line": 955,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "redis",
+      "sha": "b6de51206e",
+      "path": "src/redis-cli.c",
+      "line": 6485,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "34a3bd5225",
+      "path": "django/dispatch/dispatcher.py",
+      "line": 488,
+      "kind": "except",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "c06492dd87",
+      "path": "django/db/backends/postgresql/utils.py",
+      "line": 5,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "990ce6386c",
+      "path": "django/template/defaultfilters.py",
+      "line": 179,
+      "kind": "except",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "55f12f8709",
+      "path": "django/template/debug.py",
+      "line": 95,
+      "kind": "except",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "f6075fb333",
+      "path": "django/db/models/sql/compiler.py",
+      "line": 301,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.85
+    },
+    {
+      "repo": "django",
+      "sha": "40cb11a554",
+      "path": "django/views/defaults.py",
+      "line": 38,
+      "kind": "except",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "052271168b",
+      "path": "django/contrib/databrowse/datastructures.py",
+      "line": 72,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "d04f72fb31",
+      "path": "django/dispatch/saferef.py",
+      "line": 161,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.05
+    },
+    {
+      "repo": "django",
+      "sha": "b0c56b895f",
+      "path": "django/utils/http.py",
+      "line": 265,
+      "kind": "except",
+      "label": 0,
+      "score": 0.95
+    },
+    {
+      "repo": "django",
+      "sha": "2bd1bbc424",
+      "path": "django/contrib/gis/db/backends/postgis/operations.py",
+      "line": 512,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "redis",
+      "sha": "87538cb7fe",
+      "path": "src/config.c",
+      "line": 692,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.1
+    },
+    {
+      "repo": "django",
+      "sha": "e519aab43a",
+      "path": "docs/_ext/djangodocs.py",
+      "line": 328,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "redis",
+      "sha": "760e776526",
+      "path": "src/t_string.c",
+      "line": 584,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "redis",
+      "sha": "27e5f385c1",
+      "path": "src/rdb.c",
+      "line": 145,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "cd4282816d",
+      "path": "django/template/base.py",
+      "line": 1251,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "b78226cd3d",
+      "path": "django/contrib/gis/geos/prepared.py",
+      "line": 55,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "34a3bd5225",
+      "path": "django/dispatch/dispatcher.py",
+      "line": 150,
+      "kind": "except",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "redis",
+      "sha": "12d293ca6e",
+      "path": "src/db.c",
+      "line": 537,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0
+    },
+    {
+      "repo": "django",
+      "sha": "1e37cb37ce",
+      "path": "django/contrib/admin/validation.py",
+      "line": 388,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.05
+    },
+    {
+      "repo": "django",
+      "sha": "5cff2cb4c0",
+      "path": "django/db/backends/mysql/validation.py",
+      "line": 52,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "eb351ac9cb",
+      "path": "django/template/defaulttags.py",
+      "line": 1277,
+      "kind": "except",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "redis",
+      "sha": "320fa02b9b",
+      "path": "deps/hiredis/sds.c",
+      "line": 402,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.05
+    },
+    {
+      "repo": "django",
+      "sha": "ebd2598596",
+      "path": "django/contrib/markup/templatetags/markup.py",
+      "line": 27,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "331546f6ee",
+      "path": "django/db/backends/schema.py",
+      "line": 83,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0
+    },
+    {
+      "repo": "django",
+      "sha": "14a3b60981",
+      "path": "django/contrib/formtools/wizard/views.py",
+      "line": 576,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "redis",
+      "sha": "36a3b75355",
+      "path": "src/redis.c",
+      "line": 3650,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0
+    },
+    {
+      "repo": "django",
+      "sha": "10e3faf191",
+      "path": "django/contrib/contenttypes/generic.py",
+      "line": 194,
+      "kind": "except",
+      "label": 0,
+      "score": 0.39999999999999997
+    },
+    {
+      "repo": "redis",
+      "sha": "d5d55fc319",
+      "path": "redis.c",
+      "line": 7678,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.5
+    },
+    {
+      "repo": "django",
+      "sha": "8d7a48027e",
+      "path": "django/db/backends/schema.py",
+      "line": 511,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.05
+    },
+    {
+      "repo": "django",
+      "sha": "4e9f800742",
+      "path": "django/core/cache/__init__.py",
+      "line": 51,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.05
+    },
+    {
+      "repo": "redis",
+      "sha": "5fd5799cf9",
+      "path": "src/redis-benchmark.c",
+      "line": 356,
+      "kind": "lock",
+      "label": 0,
+      "score": 0
+    },
+    {
+      "repo": "django",
+      "sha": "9a3dfa2a52",
+      "path": "django/template/defaultfilters.py",
+      "line": 663,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "redis",
+      "sha": "f1c32f0dcb",
+      "path": "src/rdb.c",
+      "line": 1443,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.09999999999999998
+    },
+    {
+      "repo": "django",
+      "sha": "8dff194e9b",
+      "path": "django/contrib/auth/forms.py",
+      "line": 134,
+      "kind": "limit",
+      "label": 0,
+      "score": 0.6499999999999999
+    },
+    {
+      "repo": "django",
+      "sha": "1858e47672",
+      "path": "django/views/generic/date_based.py",
+      "line": 132,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "ee4043f735",
+      "path": "django/conf/urls/__init__.py",
+      "line": 42,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "13864703bc",
+      "path": "django/views/decorators/csrf.py",
+      "line": 6,
+      "kind": "except",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "1858e47672",
+      "path": "django/views/generic/date_based.py",
+      "line": 38,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "3ede006fc9",
+      "path": "django/core/template/loader.py",
+      "line": 157,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.49999999999999994
+    },
+    {
+      "repo": "django",
+      "sha": "8b01909841",
+      "path": "django/utils/py3.py",
+      "line": 97,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.49999999999999994
+    },
+    {
+      "repo": "django",
+      "sha": "f4860448dd",
+      "path": "django/contrib/localflavor/uk/forms.py",
+      "line": 36,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "a872194802",
+      "path": "django/contrib/auth/management/__init__.py",
+      "line": 87,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "redis",
+      "sha": "7271198cf0",
+      "path": "src/syncio.c",
+      "line": 161,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "d4ea02b992",
+      "path": "django/contrib/formtools/wizard/legacy.py",
+      "line": 51,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "bcfaa73514",
+      "path": "django/contrib/auth/models.py",
+      "line": 34,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.85
+    },
+    {
+      "repo": "django",
+      "sha": "9942adac17",
+      "path": "django/core/paginator.py",
+      "line": 105,
+      "kind": "except",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "78c155cf2e",
+      "path": "django/contrib/gis/geos/libgeos.py",
+      "line": 200,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.05
+    },
+    {
+      "repo": "django",
+      "sha": "44c5b239e0",
+      "path": "django/utils/feedgenerator.py",
+      "line": 47,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.15000000000000002
+    },
+    {
+      "repo": "django",
+      "sha": "cc64fb5c4b",
+      "path": "django/contrib/admin/sites.py",
+      "line": 314,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "5a51b44936",
+      "path": "django/contrib/gis/maps/google/zoom.py",
+      "line": 131,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "5d263dee30",
+      "path": "django/utils/module_loading.py",
+      "line": 21,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "2c2f5aee4d",
+      "path": "django/template/defaulttags.py",
+      "line": 266,
+      "kind": "except",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "d796c94b03",
+      "path": "django/db/backends/oracle/base.py",
+      "line": 724,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "fb48eb0581",
+      "path": "django/db/models/base.py",
+      "line": 1533,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.49999999999999994
+    },
+    {
+      "repo": "redis",
+      "sha": "b66e5add82",
+      "path": "deps/hiredis/net.c",
+      "line": 240,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "redis",
+      "sha": "10993ca0d5",
+      "path": "src/module.c",
+      "line": 1163,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.4
+    },
+    {
+      "repo": "django",
+      "sha": "7230a995ce",
+      "path": "django/contrib/csrf/middleware.py",
+      "line": 202,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.2
+    },
+    {
+      "repo": "django",
+      "sha": "b3641512c8",
+      "path": "django/template/loader.py",
+      "line": 56,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0
+    },
+    {
+      "repo": "django",
+      "sha": "782d85b6df",
+      "path": "django/db/backends/sqlite3/introspection.py",
+      "line": 225,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.4
+    },
+    {
+      "repo": "redis",
+      "sha": "9bb18e5438",
+      "path": "src/t_stream.c",
+      "line": 868,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0
+    },
+    {
+      "repo": "redis",
+      "sha": "0b93139048",
+      "path": "src/geo.c",
+      "line": 162,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.04999999999999999
+    },
+    {
+      "repo": "django",
+      "sha": "be4acff319",
+      "path": "django/contrib/localflavor/si/forms.py",
+      "line": 108,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.49999999999999994
+    },
+    {
+      "repo": "django",
+      "sha": "ee4043f735",
+      "path": "django/conf/urls/__init__.py",
+      "line": 59,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "414ad25b09",
+      "path": "django/utils/timezone.py",
+      "line": 18,
+      "kind": "except",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "1c8b637ed9",
+      "path": "django/utils/dictconfig.py",
+      "line": 292,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "7d62fb5957",
+      "path": "django/contrib/admin/static/admin/js/jquery.min.js",
+      "line": 5,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "bc4111ba68",
+      "path": "django/templatetags/i18n.py",
+      "line": 427,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "7d62fb5957",
+      "path": "django/contrib/admin/static/admin/js/jquery.min.js",
+      "line": 4,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "3ede006fc9",
+      "path": "django/core/template/__init__.py",
+      "line": 544,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "41a1a89e4e",
+      "path": "django/contrib/localflavor/pl/forms.py",
+      "line": 174,
+      "kind": "limit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "846624ed08",
+      "path": "django/db/models/aggregates.py",
+      "line": 166,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "redis",
+      "sha": "d68f28a367",
+      "path": "src/config.c",
+      "line": 841,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "fc47f8c65a",
+      "path": "django/db/models/fields/related.py",
+      "line": 1070,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.05
+    },
+    {
+      "repo": "redis",
+      "sha": "cd8788f26d",
+      "path": "src/redis.c",
+      "line": 1048,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0
+    },
+    {
+      "repo": "django",
+      "sha": "0324151bec",
+      "path": "django/contrib/sessions/models.py",
+      "line": 66,
+      "kind": "except",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "5d8da093a9",
+      "path": "django/template/loader_tags.py",
+      "line": 119,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "5139832398",
+      "path": "django/db/backends/base/operations.py",
+      "line": 201,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.44999999999999996
+    },
+    {
+      "repo": "redis",
+      "sha": "16d778780e",
+      "path": "src/rdb.c",
+      "line": 471,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.25
+    },
+    {
+      "repo": "django",
+      "sha": "41a1a89e4e",
+      "path": "django/contrib/localflavor/fr/forms.py",
+      "line": 21,
+      "kind": "limit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "7145c8a62a",
+      "path": "django/db/models/sql/where.py",
+      "line": 125,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.05
+    },
+    {
+      "repo": "redis",
+      "sha": "e97fadb045",
+      "path": "src/redis-check-rdb.c",
+      "line": 475,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.39999999999999997
+    },
+    {
+      "repo": "django",
+      "sha": "c30a050e41",
+      "path": "django/db/backends/ado_mssql/introspection.py",
+      "line": 11,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "aab3a418ac",
+      "path": "django/contrib/admin/views/decorators.py",
+      "line": 81,
+      "kind": "except",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "a0d166306f",
+      "path": "django/contrib/gis/db/models/query.py",
+      "line": 375,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "redis",
+      "sha": "7271198cf0",
+      "path": "src/syncio.c",
+      "line": 159,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "41384812ef",
+      "path": "django/utils/six.py",
+      "line": 682,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "redis",
+      "sha": "429aff4ef4",
+      "path": "deps/linenoise/linenoise.c",
+      "line": 313,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "a9bdce7e55",
+      "path": "django/contrib/gis/db/backends/postgis/operations.py",
+      "line": 534,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "1858e47672",
+      "path": "django/views/generic/date_based.py",
+      "line": 131,
+      "kind": "except",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "redis",
+      "sha": "7536991726",
+      "path": "src/bio.c",
+      "line": 225,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.05
+    },
+    {
+      "repo": "django",
+      "sha": "41f0d3d3bc",
+      "path": "django/core/servers/fastcgi.py",
+      "line": 140,
+      "kind": "except",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "4ac5def4a2",
+      "path": "django/conf/__init__.py",
+      "line": 40,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.05
+    },
+    {
+      "repo": "django",
+      "sha": "f34cfec0fa",
+      "path": "django/core/exceptions.py",
+      "line": 106,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "616b30227d",
+      "path": "django/db/models/query.py",
+      "line": 1303,
+      "kind": "except",
+      "label": 0,
+      "score": 0.25
+    },
+    {
+      "repo": "django",
+      "sha": "7c5b244826",
+      "path": "django/template/context.py",
+      "line": 157,
+      "kind": "except",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "8d7a48027e",
+      "path": "django/db/backends/schema.py",
+      "line": 510,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.05
+    },
+    {
+      "repo": "redis",
+      "sha": "f78fd11b71",
+      "path": "redis.c",
+      "line": 1436,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "5f2d9cdbb1",
+      "path": "django/http/__init__.py",
+      "line": 675,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.7
+    },
+    {
+      "repo": "django",
+      "sha": "2c2f5aee4d",
+      "path": "django/template/defaulttags.py",
+      "line": 843,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "redis",
+      "sha": "d68f28a367",
+      "path": "src/config.c",
+      "line": 747,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "4ad1eb1c14",
+      "path": "django/contrib/admin/validation.py",
+      "line": 203,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "redis",
+      "sha": "55cf8433e3",
+      "path": "redis.c",
+      "line": 2361,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.1
+    },
+    {
+      "repo": "django",
+      "sha": "7d3b3897c1",
+      "path": "django/db/migrations/serializer.py",
+      "line": 317,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "358850781f",
+      "path": "django/templatetags/i18n.py",
+      "line": 380,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.39999999999999997
+    },
+    {
+      "repo": "django",
+      "sha": "3b8e46cbc7",
+      "path": "django/db/migrations/autodetector.py",
+      "line": 438,
+      "kind": "except",
+      "label": 0,
+      "score": 0
+    },
+    {
+      "repo": "django",
+      "sha": "714277cb4c",
+      "path": "django/forms/fields.py",
+      "line": 1276,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.7
+    },
+    {
+      "repo": "django",
+      "sha": "6a2af01452",
+      "path": "django/contrib/contenttypes/management.py",
+      "line": 155,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.7
+    },
+    {
+      "repo": "redis",
+      "sha": "9d4ded7ec6",
+      "path": "src/cluster.c",
+      "line": 1910,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.1
+    },
+    {
+      "repo": "django",
+      "sha": "d7b49f5b0d",
+      "path": "django/contrib/admin/static/admin/js/getElementsBySelector.js",
+      "line": 41,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "a63a83e5d8",
+      "path": "django/core/urlresolvers.py",
+      "line": 203,
+      "kind": "except",
+      "label": 0,
+      "score": 0.49999999999999994
+    },
+    {
+      "repo": "django",
+      "sha": "2f9861d823",
+      "path": "django/db/models/fields/__init__.py",
+      "line": 2377,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "a755e0657e",
+      "path": "django/db/models/query_utils.py",
+      "line": 110,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "41384812ef",
+      "path": "django/utils/six.py",
+      "line": 183,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "9a3dfa2a52",
+      "path": "django/template/defaultfilters.py",
+      "line": 666,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "70a0de37d1",
+      "path": "django/contrib/auth/management/commands/createsuperuser.py",
+      "line": 28,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.05
+    },
+    {
+      "repo": "django",
+      "sha": "7d1b69dbe7",
+      "path": "django/utils/deprecation.py",
+      "line": 130,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.49999999999999994
+    },
+    {
+      "repo": "django",
+      "sha": "8f4d394c74",
+      "path": "django/core/servers/basehttp.py",
+      "line": 80,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "61a16e0270",
+      "path": "django/contrib/contenttypes/models.py",
+      "line": 66,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "6a6428a36f",
+      "path": "django/contrib/staticfiles/views.py",
+      "line": 10,
+      "kind": "except",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "6f76b9f58d",
+      "path": "django/contrib/admin/views/decorators.py",
+      "line": 95,
+      "kind": "except",
+      "label": 0,
+      "score": 0.05
+    },
+    {
+      "repo": "django",
+      "sha": "052271168b",
+      "path": "django/contrib/databrowse/tests.py",
+      "line": 25,
+      "kind": "limit",
+      "label": 0,
+      "score": 0.35000000000000003
+    },
+    {
+      "repo": "django",
+      "sha": "816eae3508",
+      "path": "django/db/models/sql/compiler.py",
+      "line": 841,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.6
+    },
+    {
+      "repo": "django",
+      "sha": "914c72be2a",
+      "path": "django/db/models/fields/files.py",
+      "line": 305,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.7999999999999999
+    },
+    {
+      "repo": "django",
+      "sha": "d38a3169a4",
+      "path": "django/core/cache/backends/locmem.py",
+      "line": 95,
+      "kind": "except",
+      "label": 0,
+      "score": 0.6499999999999999
+    },
+    {
+      "repo": "django",
+      "sha": "14a3b60981",
+      "path": "django/contrib/formtools/wizard/storage/__init__.py",
+      "line": 16,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "95d7cb27d0",
+      "path": "django/core/mail.py",
+      "line": 66,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.05
+    },
+    {
+      "repo": "redis",
+      "sha": "11cb153783",
+      "path": "client-libraries/python/redis.py",
+      "line": 877,
+      "kind": "except",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "redis",
+      "sha": "a7c5be18a8",
+      "path": "src/t_zset.c",
+      "line": 1799,
+      "kind": "assert",
+      "label": 0,
+      "score": 0
+    },
+    {
+      "repo": "redis",
+      "sha": "d68f28a367",
+      "path": "src/config.c",
+      "line": 835,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "0ec4dc91e0",
+      "path": "django/contrib/staticfiles/finders.py",
+      "line": 56,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "5d863f1fbd",
+      "path": "django/core/template/__init__.py",
+      "line": 444,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "redis",
+      "sha": "c41f94d2a3",
+      "path": "src/tracking.c",
+      "line": 167,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.1
+    },
+    {
+      "repo": "redis",
+      "sha": "b087dd1db6",
+      "path": "deps/hiredis/async.c",
+      "line": 158,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "redis",
+      "sha": "fab43727b4",
+      "path": "redis.c",
+      "line": 4163,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.1
+    },
+    {
+      "repo": "django",
+      "sha": "05e29716b4",
+      "path": "django/contrib/gis/utils/geoip.py",
+      "line": 192,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "c970018f41",
+      "path": "django/core/checks/compatibility/django_1_7_0.py",
+      "line": 22,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.95
+    },
+    {
+      "repo": "django",
+      "sha": "1bc249c2a6",
+      "path": "django/db/models/query.py",
+      "line": 1121,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "d818e0c9b2",
+      "path": "django/core/management/validation.py",
+      "line": 126,
+      "kind": "except",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "81477c91f6",
+      "path": "django/utils/six.py",
+      "line": 123,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.49999999999999994
+    },
+    {
+      "repo": "django",
+      "sha": "013bcf57d5",
+      "path": "django/db/migrations/operations/fields.py",
+      "line": 61,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.7
+    },
+    {
+      "repo": "django",
+      "sha": "51cfd7a50b",
+      "path": "django/contrib/admin/media/js/dateparse.js",
+      "line": 194,
+      "kind": "throw",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "655f524915",
+      "path": "django/contrib/admindocs/views.py",
+      "line": 343,
+      "kind": "except",
+      "label": 0,
+      "score": 0.49999999999999994
+    },
+    {
+      "repo": "django",
+      "sha": "f71f854628",
+      "path": "django/core/template_loader.py",
+      "line": 130,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "4d46106f8c",
+      "path": "django/contrib/gis/measure.py",
+      "line": 296,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "c0caac87f9",
+      "path": "django/contrib/sessions/backends/base.py",
+      "line": 122,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.85
+    },
+    {
+      "repo": "redis",
+      "sha": "6208b3a776",
+      "path": "redis.c",
+      "line": 3605,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "5d8da093a9",
+      "path": "django/template/loaders/cached.py",
+      "line": 154,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.25
+    },
+    {
+      "repo": "django",
+      "sha": "1b0365ad34",
+      "path": "django/utils/tzinfo.py",
+      "line": 79,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "9c619ac48b",
+      "path": "django/db/backends/oracle/creation.py",
+      "line": 213,
+      "kind": "except",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "5d863f1fbd",
+      "path": "django/core/template/__init__.py",
+      "line": 437,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "redis",
+      "sha": "3be00d7ed6",
+      "path": "src/dscache.c",
+      "line": 470,
+      "kind": "assert",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "769355c765",
+      "path": "django/db/models/fields/related_descriptors.py",
+      "line": 1009,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "632c4ffd9c",
+      "path": "django/core/cache/backends/filebased.py",
+      "line": 103,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "14a3b60981",
+      "path": "django/contrib/formtools/wizard/storage/__init__.py",
+      "line": 15,
+      "kind": "except",
+      "label": 0,
+      "score": 0.49999999999999994
+    },
+    {
+      "repo": "django",
+      "sha": "5d863f1fbd",
+      "path": "django/core/template/__init__.py",
+      "line": 454,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.35000000000000003
+    },
+    {
+      "repo": "django",
+      "sha": "ffdd6595ea",
+      "path": "django/contrib/gis/geos/geometry.py",
+      "line": 407,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.3
+    },
+    {
+      "repo": "redis",
+      "sha": "a69a0c9c3b",
+      "path": "redis.c",
+      "line": 7081,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0
+    },
+    {
+      "repo": "django",
+      "sha": "944de9e9e6",
+      "path": "django/utils/feedgenerator.py",
+      "line": 93,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "47016adbf5",
+      "path": "django/contrib/admin/checks.py",
+      "line": 826,
+      "kind": "except",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "redis",
+      "sha": "803d765d49",
+      "path": "src/config.c",
+      "line": 446,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "c716fe8782",
+      "path": "django/utils/module_loading.py",
+      "line": 125,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "redis",
+      "sha": "e97fadb045",
+      "path": "src/redis-check-rdb.c",
+      "line": 425,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "052271168b",
+      "path": "django/contrib/databrowse/sites.py",
+      "line": 132,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "fb48eb0581",
+      "path": "django/db/models/options.py",
+      "line": 544,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.39999999999999997
+    },
+    {
+      "repo": "redis",
+      "sha": "e97fadb045",
+      "path": "src/redis-check-rdb.c",
+      "line": 289,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "db2f9bfae1",
+      "path": "django/core/handlers/wsgi.py",
+      "line": 180,
+      "kind": "except",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "1d424817cb",
+      "path": "ez_setup.py",
+      "line": 85,
+      "kind": "except",
+      "label": 0,
+      "score": 0.7
+    },
+    {
+      "repo": "django",
+      "sha": "3cc5f01d9b",
+      "path": "django/utils/lru_cache.py",
+      "line": 125,
+      "kind": "lock",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "10e3faf191",
+      "path": "django/contrib/contenttypes/generic.py",
+      "line": 649,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "7d3b3897c1",
+      "path": "django/db/migrations/serializer.py",
+      "line": 303,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "a0d166306f",
+      "path": "django/contrib/gis/db/models/query.py",
+      "line": 391,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "redis",
+      "sha": "dfbd9c5aeb",
+      "path": "src/sentinel.c",
+      "line": 1602,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.25
+    },
+    {
+      "repo": "django",
+      "sha": "8f4d394c74",
+      "path": "django/core/servers/basehttp.py",
+      "line": 367,
+      "kind": "assert",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "7aeb7390fc",
+      "path": "django/db/models/fields/related.py",
+      "line": 750,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "3da4c0ab92",
+      "path": "django/http/__init__.py",
+      "line": 276,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.15000000000000002
+    },
+    {
+      "repo": "django",
+      "sha": "a38ae914d8",
+      "path": "django/core/mail/message.py",
+      "line": 274,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.49999999999999994
+    },
+    {
+      "repo": "django",
+      "sha": "29ea9714ee",
+      "path": "django/db/backends/postgresql/version.py",
+      "line": 39,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "redis",
+      "sha": "6f926c3e83",
+      "path": "src/t_zset.c",
+      "line": 2991,
+      "kind": "assert",
+      "label": 0,
+      "score": 0
+    },
+    {
+      "repo": "django",
+      "sha": "c5073320a7",
+      "path": "django/core/cache.py",
+      "line": 482,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "38a2444277",
+      "path": "django/core/servers/basehttp.py",
+      "line": 177,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.7
+    },
+    {
+      "repo": "django",
+      "sha": "f59fd15c49",
+      "path": "django/db/models/sql/expressions.py",
+      "line": 104,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "33793f7c3e",
+      "path": "django/forms/fields.py",
+      "line": 626,
+      "kind": "except",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "f7a363ee1d",
+      "path": "django/contrib/gis/db/backends/base/models.py",
+      "line": 62,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "django",
+      "sha": "65be56816f",
+      "path": "django/contrib/admin/options.py",
+      "line": 494,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0
+    },
+    {
+      "repo": "redis",
+      "sha": "dd51fc5a4a",
+      "path": "src/config.c",
+      "line": 435,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "redis",
+      "sha": "26117e84f0",
+      "path": "src/rdb.c",
+      "line": 318,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0
+    },
+    {
+      "repo": "django",
+      "sha": "75ed590032",
+      "path": "django/forms/fields.py",
+      "line": 406,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "f71f854628",
+      "path": "django/core/template_loader.py",
+      "line": 150,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "repo": "redis",
+      "sha": "0b93139048",
+      "path": "src/zset.c",
+      "line": 149,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.04999999999999999
+    },
+    {
+      "repo": "django",
+      "sha": "9cdf1f6d54",
+      "path": "django/contrib/comments/__init__.py",
+      "line": 27,
+      "kind": "raise",
+      "label": 0,
+      "score": 0.05
+    },
+    {
+      "repo": "django",
+      "sha": "15b1675af9",
+      "path": "django/db/models/sql/query.py",
+      "line": 737,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.65
+    },
+    {
+      "repo": "django",
+      "sha": "860c2c8bc5",
+      "path": "django/db/models/loading.py",
+      "line": 106,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.39999999999999997
+    },
+    {
+      "repo": "django",
+      "sha": "0c7633178f",
+      "path": "django/db/models/sql/compiler.py",
+      "line": 1093,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "django",
+      "sha": "a35ca605d6",
+      "path": "django/contrib/localflavor/uk/forms.py",
+      "line": 21,
+      "kind": "limit",
+      "label": 0,
+      "score": 0.7999999999999999
+    },
+    {
+      "repo": "django",
+      "sha": "fc2dee6908",
+      "path": "django/db/backends/oracle/base.py",
+      "line": 521,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.75
+    },
+    {
+      "repo": "django",
+      "sha": "52cad43bc3",
+      "path": "django/dispatch/saferef.py",
+      "line": 124,
+      "kind": "except",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "redis",
+      "sha": "67c6f0f630",
+      "path": "src/config.c",
+      "line": 52,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.15000000000000002
+    },
+    {
+      "repo": "django",
+      "sha": "75ed590032",
+      "path": "django/forms/fields.py",
+      "line": 400,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.55
+    },
+    {
+      "repo": "redis",
+      "sha": "6f4f36c0fb",
+      "path": "src/networking.c",
+      "line": 2522,
+      "kind": "lock",
+      "label": 0,
+      "score": 0.04999999999999999
+    },
+    {
+      "repo": "redis",
+      "sha": "7af4eeb745",
+      "path": "src/lazyfree.c",
+      "line": 112,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.09999999999999998
+    },
+    {
+      "repo": "django",
+      "sha": "21e21c7bc2",
+      "path": "django/db/migrations/autodetector.py",
+      "line": 201,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.85
+    },
+    {
+      "repo": "django",
+      "sha": "8377abd59e",
+      "path": "django/template/loaders/eggs.py",
+      "line": 32,
+      "kind": "early-exit",
+      "label": 0,
+      "score": 0.75
+    }
+  ],
+  "chosen_threshold": 0.85,
+  "rule": "the threshold with the highest F0.5 (precision-first), ties to the higher"
+}

@@ -26,7 +26,7 @@ from collections import Counter
 from pathlib import Path
 
 from provenance.config import Repo
-from provenance.protect.score import DEFAULT_THRESHOLD, score_guard
+from provenance.protect.score import DEFAULT_THRESHOLD, score_guard, with_context
 from provenance.store.db import Store
 from provenance.trace.chain import Tracer
 
@@ -54,8 +54,8 @@ def load(split: str) -> list[dict]:
     return events
 
 
-def score_events(events: list[dict]) -> list[float]:
-    """The history score each removal would have got at the time it was made."""
+def score_events(events: list[dict], removed_in_commit: dict[str, int]) -> list[float]:
+    """The score each removal would have got at the time it was made (history + context)."""
     scores = []
     stores = {name: Store(Repo.named(name).db_path) for name in {e["repo"] for e in events}}
     tracers = {name: Tracer(Repo.named(name), store) for name, store in stores.items()}
@@ -75,7 +75,7 @@ def score_events(events: list[dict]) -> list[float]:
             parents[0],
             now=event["time"],
         )
-        scores.append(history.score)
+        scores.append(with_context(history.score, removed_in_commit[event["sha"]])[0])
     for store in stores.values():
         store.close()
     return scores
@@ -131,7 +131,8 @@ def main() -> None:
     rng = random.Random(SEED)
     sample = rng.sample(pos, min(CAP, n_pos)) + rng.sample(neg, min(CAP, n_neg))
     labels = [e["label"][WINDOW] for e in sample]
-    scores = score_events(sample)
+    removed_in_commit = Counter(e["sha"] for e in events)
+    scores = score_events(sample, removed_in_commit)
 
     curve = {}
     for threshold in THRESHOLDS:
