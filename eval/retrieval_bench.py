@@ -18,12 +18,15 @@ Methods:
 - `message`: keywords from the message (level A only). This is the plain keyword baseline.
 - `path`: keywords from the touched file paths (level B baseline).
 - `code`: keywords from the added lines of code.
-- `ours`: code plus message at level A, or code plus path at level B. This is what
+- `ours`: message then code at level A, or code plus path at level B. This is what
   find_discussions does when no link exists.
 
 Metrics: Recall@1, @5 and @10, and MRR, with 95% bootstrap intervals.
 
-Usage: uv run python eval/retrieval_bench.py [--items 1000] [--dry-run]
+Usage: uv run python eval/retrieval_bench.py [--items 1000] [--dev]
+
+`--dev` runs the 50 development items, the only ones the query design was ever tuned on.
+The final run samples from the rest.
 """
 
 import argparse
@@ -40,6 +43,10 @@ from provenance.trace.tokens import language_for
 
 RESULTS = Path(__file__).parent / "results"
 SEED = 29
+#: Items the query design was shaped on: the first 50 looked at (seed 29) and the 50 the
+#: message-first order was then checked on (seed 30). The final run never includes them.
+DEV_SEEDS = (29, 30)
+DEV_ITEMS = 50
 DEPTH = 10
 MAX_ADDED_LINES = 60
 BOOTSTRAPS = 2000
@@ -112,14 +119,20 @@ def metrics(ranks: list[int | None]) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--items", type=int, default=1000)
-    parser.add_argument("--dry-run", action="store_true", help="50 items, no result file")
+    parser.add_argument(
+        "--dev", action="store_true", help="run on the 50 development items only, no result file"
+    )
     args = parser.parse_args()
-    size = 50 if args.dry_run else args.items
 
     repo = Repo.named("django")
     with Store(repo.db_path) as store:
         pool = candidates(store)
-        items = random.Random(SEED).sample(pool, min(size, len(pool)))
+        dev = [item for seed in DEV_SEEDS for item in random.Random(seed).sample(pool, DEV_ITEMS)]
+        if args.dev:
+            items = random.Random(DEV_SEEDS[-1]).sample(pool, DEV_ITEMS)
+        else:
+            test_pool = [item for item in pool if item not in dev]
+            items = random.Random(SEED).sample(test_pool, min(args.items, len(test_pool)))
         runs = {
             "A": {"message": [], "code": [], "ours": []},
             "B": {"path": [], "code": [], "ours": []},
@@ -139,7 +152,7 @@ def main() -> None:
                 "A": {
                     "message": query_terms(message),
                     "code": query_terms(code),
-                    "ours": query_terms(code, message, limit=32),
+                    "ours": query_terms(message, code, limit=32),
                 },
                 "B": {
                     "path": query_terms(path_text),
@@ -156,6 +169,7 @@ def main() -> None:
         "items": len(items),
         "pool": len(pool),
         "seed": SEED,
+        "dev_items_excluded": len(set(dev)),
         "depth": DEPTH,
         "target_created_before_commit": reachable / len(items),
         "note": (
@@ -183,7 +197,7 @@ def main() -> None:
                 f"R@10 {m['recall@10']:.1%}  MRR {m['mrr']:.3f}"
             )
     print(f"Ticket passes the time rule for {report['target_created_before_commit']:.1%} of items")
-    if not args.dry_run:
+    if not args.dev:
         (RESULTS / "retrieval_bench.json").write_text(json.dumps(report, indent=2) + "\n")
         print("Saved to eval/results/retrieval_bench.json")
 

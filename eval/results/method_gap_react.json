@@ -1,0 +1,26 @@
+{
+  "seed": 13,
+  "files": 40,
+  "repos": {
+    "react": {
+      "rev": "33e52451f2ab39e0a4d186256b2b4d55277e6041",
+      "lines": 4248,
+      "share_B0_vs_B2": 0.3064971751412429,
+      "share_B2_vs_OursA": 0.11181732580037665,
+      "share_B3_vs_OursA": 0.11181732580037665,
+      "trace": {
+        "lines": 150,
+        "errors": [],
+        "stop_reasons": {
+          "first_appearance": 149,
+          "root": 1
+        },
+        "mean_hops": 1.4066666666666667,
+        "share_edited_after_first_seen": 0.18,
+        "seconds_median": 0.029692854499444366,
+        "seconds_p90": 1.8886503500019898,
+        "seconds_max": 18.426453374995617
+      }
+    }
+  }
+}

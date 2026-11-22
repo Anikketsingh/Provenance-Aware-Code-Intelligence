@@ -1,0 +1,11 @@
+{
+  "anchors": 376,
+  "estimated": 16802,
+  "leave_one_out_error_days": {
+    "median": 1.44,
+    "p90": 4.18,
+    "p99": 7.42,
+    "max": 8.28
+  },
+  "note": "Each anchor's date re-estimated from the other anchors, with anchors about 100 ticket numbers apart. Real estimates sit between anchors that are as close or closer, so this error is an upper bound."
+}

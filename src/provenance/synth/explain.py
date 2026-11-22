@@ -115,7 +115,7 @@ def _add_searched(store: Store, whys: list[dict], add) -> None:
     if origin is None:
         return
     code = " ".join(w.get("code", "") for w in whys)
-    terms = query_terms(code, store.subject(origin), store.body(origin))
+    terms = query_terms(store.subject(origin), store.body(origin), code)  # message first
     for hit in search_discussions(store, terms, store.commit_time(origin), MAX_SEARCHED):
         artefact = store.artefact(hit["target"])
         if artefact is None:

@@ -109,7 +109,9 @@ def find_discussions(store: Store, why: dict, limit: int = 5) -> dict:
     searched: list[dict] = []
     origin = why.get("last_logic_change", {}).get("commit")
     if not linked and origin:
-        terms = query_terms(why.get("code", ""), store.subject(origin), store.body(origin))
+        # The message leads: on the RQ2 development items, message-first queries beat
+        # code-first ones (eval/retrieval_bench.py --dev).
+        terms = query_terms(store.subject(origin), store.body(origin), why.get("code", ""))
         searched = search_discussions(
             store, terms, before=store.commit_time(origin), limit=limit, exclude=tuple(seen)
         )
