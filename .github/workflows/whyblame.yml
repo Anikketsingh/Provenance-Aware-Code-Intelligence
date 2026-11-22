@@ -1,0 +1,18 @@
+# This repo checks its own pull requests with its own action. It's also a usage example: in
+# another repo, replace `uses: ./` with `uses: Anikketsingh/Provenance-Aware-Code-Intelligence@v1`.
+name: whyblame
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  protective-code:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # tracing needs the full history
+      - uses: ./

@@ -131,9 +131,16 @@ async def test_explain_line_is_offered_only_with_a_backend(worktree):
         "why_line",
         "why_range",
         "find_discussions",
+        "check_change",
     }
     tools = await _tools(build_server(repo, backend=FakeBackend()))
-    assert set(tools) == {"why_line", "why_range", "find_discussions", "explain_line"}
+    assert set(tools) == {
+        "why_line",
+        "why_range",
+        "find_discussions",
+        "check_change",
+        "explain_line",
+    }
     assert tools["explain_line"].annotations.read_only_hint
     assert "BEFORE" in tools["explain_line"].description
 

@@ -120,6 +120,43 @@ def crawl_github(
 
 
 @app.command()
+def check(
+    repo: RepoArg = ".",
+    base: Annotated[str, typer.Option(help="The revision the change starts from.")] = "HEAD",
+    head: Annotated[
+        str, typer.Option(help="The changed revision, or WORKTREE for uncommitted files.")
+    ] = "WORKTREE",
+    fmt: Annotated[str, typer.Option("--format", help="text, json or github.")] = "text",
+    threshold: Annotated[
+        float | None, typer.Option(help="Report findings scoring at least this (0-1).")
+    ] = None,
+    show_all: Annotated[bool, typer.Option("--all", help="Also show low scores.")] = False,
+    fail_on_findings: Annotated[
+        bool, typer.Option(help="Exit with status 1 when something is reported.")
+    ] = False,
+) -> None:
+    """Warn when a change removes or weakens protective code that history says matters."""
+    from provenance.gitio import GitError
+    from provenance.protect.check import check_change, render
+    from provenance.protect.score import DEFAULT_THRESHOLD
+
+    if fmt not in ("text", "json", "github"):
+        raise _fail("--format must be text, json or github.")
+    target = _repo(repo)
+    try:
+        findings = check_change(
+            target, base, head, DEFAULT_THRESHOLD if threshold is None else threshold
+        )
+    except (GitError, ValueError, OSError) as error:
+        raise _fail(f"Couldn't compare {base} with {head}: {error}") from None
+    output = render(findings, fmt, show_all=show_all)
+    if output:
+        typer.echo(output)
+    if fail_on_findings and any(f.flagged for f in findings):
+        raise typer.Exit(1)
+
+
+@app.command()
 def clone(repo: str) -> None:
     """Bare-clone a research corpus repo into data/."""
     from provenance.config import REPO_URLS

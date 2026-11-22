@@ -1,0 +1,62 @@
+name: whyblame protective-code check
+description: >-
+  Warns on a pull request when it removes or weakens protective code (raise, assert, early
+  return checks, except/catch, locks, timeouts) whose history says it matters, and cites why.
+author: Aniket Singh Kushwaha
+branding:
+  icon: shield
+  color: blue
+
+inputs:
+  threshold:
+    description: Report guards whose history score is at least this (0 to 1).
+    required: false
+    default: ""
+  base:
+    description: The revision the change starts from. Defaults to the pull request's base.
+    required: false
+    default: ""
+  python-version:
+    description: Python used to run whyblame.
+    required: false
+    default: "3.12"
+
+runs:
+  using: composite
+  steps:
+    - name: Set up uv
+      uses: astral-sh/setup-uv@v6
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    # The index lives in .git/provenance. Restoring it makes indexing incremental, so only
+    # commits new since the last run are processed.
+    - name: Restore the history index
+      uses: actions/cache@v4
+      with:
+        path: .git/provenance
+        key: whyblame-${{ runner.os }}-${{ github.sha }}
+        restore-keys: whyblame-${{ runner.os }}-
+
+    - name: Index history
+      shell: bash
+      env:
+        ACTION_PATH: ${{ github.action_path }}
+      run: uvx --from "$ACTION_PATH" whyblame index .
+
+    # Inputs reach the script only as environment variables, never spliced into it, so a
+    # crafted value can't inject shell code. The pull request's code is read as text, never run.
+    - name: Check the change
+      shell: bash
+      env:
+        ACTION_PATH: ${{ github.action_path }}
+        BASE: ${{ inputs.base || github.event.pull_request.base.sha }}
+        THRESHOLD: ${{ inputs.threshold }}
+      run: |
+        if [ -z "$BASE" ]; then
+          echo "::notice::No base revision (not a pull_request event?); nothing to check."
+          exit 0
+        fi
+        args=(check . --base "$BASE" --head HEAD --format github)
+        if [ -n "$THRESHOLD" ]; then args+=(--threshold "$THRESHOLD"); fi
+        uvx --from "$ACTION_PATH" whyblame "${args[@]}"

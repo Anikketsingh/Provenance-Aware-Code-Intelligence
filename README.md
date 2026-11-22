@@ -30,6 +30,7 @@ Any MCP client works: Cursor, VS Code, Gemini CLI and others. The server runs on
 |---|---|
 | `why_line(file, line)` | The commit that set this line's behaviour, the reformats it skipped to get there, and the linked tickets and pull requests |
 | `why_range(file, start, end)` | The same for a block, grouped by the commit that introduced each part |
+| `check_change(base?, head?)` | Before committing: which guards your edits removed or weakened, and why they were there |
 | `find_discussions(file, line)` | The tickets and pull requests behind the line. When none is linked, it searches for earlier ones, labelled "possibly unrelated". |
 | `explain_line(file, line, end_line?)` | A short explanation that cites that evidence, or "not enough evidence". Offered only when a Gemini key is configured. |
 
@@ -38,6 +39,33 @@ Any MCP client works: Cursor, VS Code, Gemini CLI and others. The server runs on
 - Every tool is read-only.
 - Commit messages and ticket text come back in fields marked untrusted, because anyone can write a commit message, including one that tries to give your agent instructions.
 - Nothing is ever called "safe": finding no history only means none was found.
+
+## Protect pull requests
+
+`whyblame check` lists the protective code a change removes or weakens: `raise`, `assert`, early-return checks, `except` and `catch` clauses, locks, timeouts. For each, it says which commit and ticket put the code there, and how strongly history backs it. Reformatting and moving code never trigger it.
+
+```bash
+whyblame check .                         # your uncommitted edits against HEAD
+whyblame check . --base main --head HEAD # a branch
+```
+
+The same check runs on every pull request as a GitHub Action. It warns on the changed line and never blocks:
+
+```yaml
+on: pull_request
+permissions:
+  contents: read
+jobs:
+  whyblame:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: Anikketsingh/Provenance-Aware-Code-Intelligence@v1
+```
+
+Agents get the same check through the `check_change` MCP tool: call it after editing and before committing.
 
 ## How it works
 
