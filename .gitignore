@@ -19,3 +19,6 @@ dist/
 
 # Claude Code personal settings
 .claude/settings.local.json
+
+# Regenerable mining output (eval/mine_guards.py); summaries are committed instead
+eval/data/*.jsonl

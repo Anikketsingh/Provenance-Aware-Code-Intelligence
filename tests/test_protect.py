@@ -220,3 +220,11 @@ async def test_check_change_over_mcp(bank):
     assert data["status"] == "flagged"
     assert data["flagged"][0]["code"].startswith("if amount > account.balance")
     assert json.loads(bad.content[0].text)["status"] == "check_failed"
+
+
+def test_security_words_ignore_co_author_trailers():
+    from provenance.protect.score import _SECURITY
+
+    assert _SECURITY.search("Co-authored-by: Someone <a@b.c>") is None
+    assert _SECURITY.search("Fix authentication bypass (CVE-2024-1234)")
+    assert _SECURITY.search("Require authorization for CONFIG SET")

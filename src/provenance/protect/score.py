@@ -42,9 +42,11 @@ _BUG = re.compile(
     r"data loss|infinite loop|timeout|denial)\b",
     re.I,
 )
+#: Not `auth\w*`: it matches the "Co-authored-by:" trailer that most commits carry.
 _SECURITY = re.compile(
     r"\b(CVE-\d|security|vulnerab\w*|exploit\w*|injection|XSS|CSRF|traversal|"
-    r"privilege|auth\w*|password|secret|sanitiz\w*|escap\w*|DoS)\b",
+    r"privilege\w*|authenticat\w*|authori[sz]\w*|unauthori[sz]ed|password|secret|"
+    r"sanitiz\w*|escap\w*|DoS)\b",
     re.I,
 )
 _FIX_SUBJECT = re.compile(r"^\s*(\[[^\]]*\]\s*)?(fix(e[sd])?|hotfix|bugfix)\b|fixed #\d+", re.I)
@@ -55,10 +57,12 @@ _YEAR = 365 * 24 * 3600
 class History:
     score: float
     signals: list[str]
-    origin: str | None
+    origin: str | None  # the last change to the guard's logic
     origin_subject: str = ""
     origin_date: int | None = None
     links: list[dict] = field(default_factory=list)
+    first_seen: str | None = None  # where the guard first appeared, if earlier
+    first_seen_subject: str = ""
 
 
 def score_guard(
@@ -111,6 +115,7 @@ def score_guard(
         "old": when is not None and (now or int(time.time())) - when > _YEAR,
     }
     score = min(1.0, sum(WEIGHTS[name] for name, on in weights.items() if on))
+    first = chain.first_seen if chain.first_seen and chain.first_seen != origin else None
     return History(
         round(score, 2),
         signals,
@@ -118,4 +123,6 @@ def score_guard(
         store.subject(origin),
         when,
         discussions,
+        first,
+        store.subject(first) if first else "",
     )

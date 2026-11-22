@@ -37,6 +37,8 @@ class Finding:
     origin: str | None = None
     origin_subject_untrusted: str = ""
     links: list[dict] = field(default_factory=list)
+    first_seen: str | None = None
+    first_seen_subject_untrusted: str = ""
 
 
 def check_change(
@@ -95,6 +97,8 @@ def check_change(
                         signals=history.signals,
                         origin=history.origin,
                         origin_subject_untrusted=history.origin_subject,
+                        first_seen=history.first_seen,
+                        first_seen_subject_untrusted=history.first_seen_subject,
                         links=[
                             {
                                 k: link.get(k)
@@ -225,7 +229,16 @@ def _git_for(repo: Repo, head: str, *args: str) -> str:
 def _message(finding: Finding) -> str:
     parts = [f"{finding.kind} `{finding.code}` was {finding.change} ({finding.reason})."]
     if finding.origin:
-        parts.append(f'It was added in {finding.origin[:10]} "{finding.origin_subject_untrusted}".')
+        if finding.first_seen:
+            parts.append(
+                f"It first appeared in {finding.first_seen[:10]} "
+                f'"{finding.first_seen_subject_untrusted}", and was last changed in '
+                f'{finding.origin[:10]} "{finding.origin_subject_untrusted}".'
+            )
+        else:
+            parts.append(
+                f'It was added in {finding.origin[:10]} "{finding.origin_subject_untrusted}".'
+            )
     for link in finding.links[:1]:
         title = link.get("title_untrusted") or ""
         where = f" {link['url']}" if link.get("url") else ""
