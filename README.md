@@ -30,6 +30,7 @@ Any MCP client works: Cursor, VS Code, Gemini CLI and others. The server runs on
 |---|---|
 | `why_line(file, line)` | The commit that set this line's behaviour, the reformats it skipped to get there, and the linked tickets and pull requests |
 | `why_range(file, start, end)` | The same for a block, grouped by the commit that introduced each part |
+| `find_discussions(file, line)` | The tickets and pull requests behind the line. When none is linked, it searches for earlier ones, labelled "possibly unrelated". |
 | `explain_line(file, line, end_line?)` | A short explanation that cites that evidence, or "not enough evidence". Offered only when a Gemini key is configured. |
 
 **Safety:**
@@ -49,12 +50,13 @@ On a held-out test set of 60 lines from Django and Redis, this finds the right c
 ## More commands
 
 ```bash
+whyblame index . --github               # also fetch pull requests and issues (needs GITHUB_TOKEN)
 whyblame explain . src/app.py 120 128   # a cited explanation of a block (needs GEMINI_API_KEY)
 whyblame search . retry timeout         # full-text search over fetched tickets and PRs
 whyblame ui .                           # local web UI at http://127.0.0.1:8765
 ```
 
-For `explain`, put `GEMINI_API_KEY=...` in your environment or in a `.env` file. Replies are cached in the repo's index, so asking again is free and works offline.
+With a read-only `GITHUB_TOKEN`, `--github` (or `whyblame crawl-github .`) links every merged pull request to its merge commit, so the trace shows the pull request that explains a change. Crawls resume where they stopped. For `explain`, put `GEMINI_API_KEY=...` in your environment or in a `.env` file. Replies are cached in the repo's index, so asking again is free and works offline.
 
 The index lives inside your repo's git directory (`.git/provenance/`), so nothing appears in your working tree.
 

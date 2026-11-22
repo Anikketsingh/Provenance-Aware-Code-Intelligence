@@ -35,11 +35,16 @@ def commit_links(store: Store, sha: str) -> list[dict]:
     """
     me = f"commit:{sha}"
     found = []
+    seen: set[tuple[str, str]] = set()
     for src, dst, kind, confidence, _evidence in store.edges_of(me):
         outgoing = src == me
-        other = dst if outgoing else src
+        other = _resolve_number(store, dst if outgoing else src)
+        relation = kind if outgoing else _INCOMING.get(kind, f"{kind}_by")
+        if (relation, other) in seen:
+            continue  # a message link and the GitHub crawl can name the same pull request
+        seen.add((relation, other))
         link = {
-            "relation": kind if outgoing else _INCOMING.get(kind, f"{kind}_by"),
+            "relation": relation,
             "target": other,
             "label": label_for(other),
             "url": url_for(other),
@@ -52,3 +57,14 @@ def commit_links(store: Store, sha: str) -> list[dict]:
                 link["excerpt_untrusted"] = artefact["body"][:400]
         found.append(link)
     return sorted(found, key=lambda link: (link["relation"], link["target"]))
+
+
+def _resolve_number(store: Store, node: str) -> str:
+    """`gh:repo/N` from a commit message becomes `pr:` or `issue:` once a crawl says which."""
+    if not node.startswith("gh:"):
+        return node
+    rest = node.removeprefix("gh:")
+    for kind in ("pr", "issue"):
+        if store.has_artefact(f"{kind}:{rest}"):
+            return f"{kind}:{rest}"
+    return node

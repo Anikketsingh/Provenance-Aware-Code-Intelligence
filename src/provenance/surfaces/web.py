@@ -18,6 +18,7 @@ from starlette.routing import Route
 
 from provenance.config import DATA_DIR, PROJECT_ROOT, Repo
 from provenance.gitio import GitError, git, validate_rev
+from provenance.retrieve import find_discussions
 from provenance.store.db import Store
 from provenance.surfaces.mcp_server import Explainer, safe_path
 from provenance.synth.backend import GeminiBackend, MissingKeyError
@@ -164,8 +165,12 @@ class RepoView:
                 commits[blamed.commit] = self._commit(blamed.commit, blamed.orig_path)
             for hop in agent_view.get("chain", []):
                 commits.setdefault(hop["commit"], self._commit(hop["commit"], hop["path"]))
+            searched = []
+            if agent_view.get("status") == "traced":
+                searched = find_discussions(self._store, agent_view)["searched"]
         return {
             "agent_view": agent_view,
+            "searched_untrusted": searched,
             "plain_blame": plain[0].commit if plain else None,
             "strongest_blame": strongest[0].commit if strongest else None,
             "commits": commits,

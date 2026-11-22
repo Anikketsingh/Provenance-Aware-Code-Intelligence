@@ -95,7 +95,39 @@ def gather_evidence(store: Store, whys: list[dict]) -> list[dict]:
                     artefact["url"],
                     None,
                 )
+    if all(item["kind"] == "commit" for item in items):
+        _add_searched(store, whys, add)
     return items
+
+
+#: When nothing is linked, this many search results are offered as weaker evidence.
+MAX_SEARCHED = 3
+
+
+def _add_searched(store: Store, whys: list[dict], add) -> None:
+    """No linked discussion exists, so offer the best earlier matches, clearly labelled."""
+    from provenance.graph.refs import label_for
+    from provenance.retrieve import query_terms, search_discussions
+
+    origin = next(
+        (w["last_logic_change"]["commit"] for w in whys if w.get("last_logic_change")), None
+    )
+    if origin is None:
+        return
+    code = " ".join(w.get("code", "") for w in whys)
+    terms = query_terms(code, store.subject(origin), store.body(origin))
+    for hit in search_discussions(store, terms, store.commit_time(origin), MAX_SEARCHED):
+        artefact = store.artefact(hit["target"])
+        if artefact is None:
+            continue
+        add(
+            f"{artefact['kind']}, found by search, may be unrelated",
+            label_for(hit["target"]),
+            artefact["title"],
+            artefact["body"][:MAX_BODY_CHARS],
+            artefact["url"],
+            None,
+        )
 
 
 def build_prompt(whys: list[dict], evidence: list[dict]) -> str:
@@ -145,6 +177,13 @@ def build_prompt(whys: list[dict], evidence: list[dict]) -> str:
         "Rules: cite only ids that appear above. If the evidence does not say why this code\n"
         "exists, or only describes formatting, you must abstain. Do not guess from the code\n"
         "alone. Mention ticket or PR numbers in the answer when they are the source."
+        + (
+            "\nItems marked 'found by search' were matched by keywords, not recorded links. Cite"
+            "\none only if its text clearly concerns this exact code, and then say it was found"
+            "\nby search and may be unrelated. If unsure, leave it out."
+            if any("found by search" in item["kind"] for item in evidence)
+            else ""
+        )
     )
 
 

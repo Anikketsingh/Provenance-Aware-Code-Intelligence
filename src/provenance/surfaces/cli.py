@@ -54,6 +54,9 @@ def index(
     repo: RepoArg = ".",
     rev: Annotated[str, typer.Option(help="Index history reachable from this revision.")] = "HEAD",
     workers: Annotated[int, typer.Option(help="Parallel workers for classification.")] = 4,
+    github: Annotated[
+        bool, typer.Option(help="Also fetch pull requests and issues (needs GITHUB_TOKEN).")
+    ] = False,
 ) -> None:
     """Prepare a repo: load its history, find non-logic changes and link tickets. Incremental."""
     from provenance.indexing import index_repo
@@ -73,7 +76,47 @@ def index(
         f"{kinds}. {summary.skip_list_commits} commits skipped by tracing, "
         f"{links} links. {summary.seconds:.1f}s."
     )
+    if github:
+        _crawl_github(target, ["pullRequests", "issues"], None)
     typer.echo(f"Next:  {_prog()} why {repo} <file> <line>    or    {_prog()} mcp {repo}")
+
+
+def _crawl_github(target: Repo, kinds: list[str], max_pages: int | None) -> None:
+    from provenance.config import github_remote
+    from provenance.graph.refs import github_slug
+    from provenance.ingest.github import MissingTokenError, crawl
+
+    if not github_slug(target.name) and not github_remote(target.git_dir):
+        raise _fail(f"{target.name} has no GitHub remote, so there is nothing to crawl.")
+    raw_dir = target.db_path.parent / "github-raw"
+    with Store(target.db_path) as store:
+        for kind in kinds:
+
+            def progress(pages: int, total: int, kind: str = kind) -> None:
+                done = min(pages * 50, total) if total else pages * 50
+                typer.echo(f"  {kind}: {done}/{total or '?'}", err=True)
+
+            try:
+                pages = crawl(
+                    target.name, store, raw_dir, kind, max_pages=max_pages, progress=progress
+                )
+            except MissingTokenError as error:
+                raise _fail(f"{error} It's needed to fetch pull requests and issues.") from None
+            typer.echo(f"{kind}: {pages} new pages", err=True)
+        typer.echo(f"Stored artefacts. Links now: {store.edge_counts()}")
+
+
+@app.command("crawl-github")
+def crawl_github(
+    repo: RepoArg = ".",
+    kind: Annotated[str, typer.Option(help="prs, issues, or all.")] = "all",
+    max_pages: Annotated[int | None, typer.Option(help="Stop after this many pages.")] = None,
+) -> None:
+    """Fetch the repo's pull requests and issues from GitHub (needs GITHUB_TOKEN). Resumable."""
+    kinds = {"prs": ["pullRequests"], "issues": ["issues"], "all": ["pullRequests", "issues"]}
+    if kind not in kinds:
+        raise _fail("--kind must be prs, issues or all.")
+    _crawl_github(_repo(repo), kinds[kind], max_pages)
 
 
 @app.command()
@@ -152,6 +195,48 @@ def fetch_tickets_command(
 
         added = fetch_tickets(target.name, store, list(dict.fromkeys(numbers)), progress=progress)
         typer.echo(f"Added {added} tickets.")
+
+
+@app.command("date-tickets")
+def date_tickets(
+    repo: str,
+    every: Annotated[
+        int, typer.Option(help="One exactly-dated anchor per this many tickets.")
+    ] = 100,
+) -> None:
+    """Give stored Trac tickets creation dates: exact for anchors, interpolated between them."""
+    from provenance.graph.refs import TRAC_URLS
+    from provenance.ingest.trac import fetch_anchors, interpolate_created
+
+    target = _repo(repo)
+    if target.name not in TRAC_URLS:
+        raise _fail(f"{target.name} doesn't use Trac.")
+    prefix = f"ticket:{target.name}/"
+    with Store(target.db_path) as store:
+        rows = store._db.execute(
+            "SELECT id FROM artefacts WHERE kind = 'ticket' AND state != 'missing'"
+        ).fetchall()
+        numbers = sorted(int(node.removeprefix(prefix)) for (node,) in rows)
+        if not numbers:
+            raise _fail("No tickets stored. Run fetch-tickets first.")
+        # Anchors are stored tickets (so they exist), one per `every` ticket numbers.
+        wanted = range(numbers[0], numbers[-1] + every, every)
+        anchors_to_fetch = sorted({min(numbers, key=lambda n, w=w: abs(n - w)) for w in wanted})
+        typer.echo(f"Fetching {len(anchors_to_fetch)} anchor tickets, 1 a second.", err=True)
+
+        def progress(done: int, total: int) -> None:
+            if done % 25 == 0 or done == total:
+                typer.echo(f"  {done}/{total} anchors", err=True)
+
+        anchors = fetch_anchors(target.name, anchors_to_fetch, progress=progress)
+        estimates = interpolate_created(anchors, numbers)
+        exact = store.set_created(
+            ((f"{prefix}{n}", t) for n, t in anchors.items()), estimated=False
+        )
+        estimated = store.set_created(
+            ((f"{prefix}{n}", t) for n, t in estimates.items() if n not in anchors), estimated=True
+        )
+        typer.echo(f"{exact} tickets dated exactly, {estimated} estimated from them.")
 
 
 @app.command()

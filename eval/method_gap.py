@@ -3,7 +3,10 @@
 This needs no human labels, so it shows how much each method changes, but not which is right.
 It also runs the full tracer on random lines, to catch crashes and measure speed.
 
-Usage: uv run python eval/method_gap.py
+Usage: uv run python eval/method_gap.py [REPO ...]
+
+With no repos it runs the frozen Project-I pair (django, redis) into method_gap.json. Other
+repos go to method_gap_<names>.json, so the frozen results never change.
 """
 
 import json
@@ -90,11 +93,17 @@ def compare(name: str) -> dict:
 
 
 def main() -> None:
+    import sys
+
+    names = sys.argv[1:] or ["django", "redis"]
+    out = (
+        "method_gap.json" if names == ["django", "redis"] else f"method_gap_{'_'.join(names)}.json"
+    )
     report = {"seed": SEED, "files": FILES, "repos": {}}
-    for name in ("django", "redis"):
+    for name in names:
         print(name, flush=True)
         report["repos"][name] = compare(name)
-    (RESULTS / "method_gap.json").write_text(json.dumps(report, indent=2) + "\n")
+    (RESULTS / out).write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))
 
 

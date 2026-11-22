@@ -57,6 +57,8 @@ CREATE TABLE IF NOT EXISTS edges (
 CREATE INDEX IF NOT EXISTS edges_dst ON edges (dst);
 
 -- Discussion artefacts: tickets, pull requests, issues. Text in them is untrusted.
+-- created_at is Unix time when known. created_estimated = 1 marks a date that was estimated
+-- (Trac's ticket export has no date, so it is interpolated from dated tickets nearby).
 CREATE TABLE IF NOT EXISTS artefacts (
     id TEXT PRIMARY KEY,
     kind TEXT NOT NULL,
@@ -65,7 +67,9 @@ CREATE TABLE IF NOT EXISTS artefacts (
     state TEXT NOT NULL,
     url TEXT NOT NULL,
     raw TEXT NOT NULL,
-    fetched_at INTEGER NOT NULL
+    fetched_at INTEGER NOT NULL,
+    created_at INTEGER,
+    created_estimated INTEGER NOT NULL DEFAULT 0
 );
 
 -- Where each resumable crawl got to.

@@ -102,6 +102,24 @@ class Explainer:
                 "note": _NOT_A_GUARANTEE,
             }
 
+    def discussions(self, file: str, line: int, rev: str) -> dict:
+        from provenance.retrieve import find_discussions
+
+        why = self.why_line(file, line, rev)
+        if why["status"] != "traced":
+            return why
+        with self._lock:
+            found = find_discussions(self._store, why)
+        return {
+            "status": "found" if found["linked"] or found["searched"] else "none_found",
+            "file": file,
+            "line": line,
+            "last_logic_change": why["last_logic_change"],
+            "linked": found["linked"],
+            "searched": found["searched"],
+            "note": found["note"] + " " + _NOT_A_GUARANTEE,
+        }
+
     def explain(self, file: str, start: int, end: int, rev: str, backend) -> dict:
         """A cited explanation of lines start..end, kept apart from the evidence behind it."""
         from provenance.synth.explain import MAX_BLOCK_LINES, explain_lines
@@ -161,6 +179,16 @@ def build_server(repo: Repo, backend=_AUTO) -> MCPServer:
             "validation, to learn why that code exists."
         ),
     )
+
+    @server.tool(annotations=_READ_ONLY)
+    def find_discussions(file: str, line: int, rev: str = "HEAD") -> dict:
+        """List the tickets and pull requests behind a line: recorded links first, otherwise
+        earlier discussions found by search (labelled, and possibly unrelated).
+
+        Call this BEFORE deleting or weakening code when why_line shows no linked discussion,
+        or to read the full reasoning behind a change.
+        """
+        return explainer.discussions(file, line, rev)
 
     if backend is not None:
 

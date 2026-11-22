@@ -19,6 +19,18 @@ class Store:
         self._db.execute("PRAGMA synchronous=NORMAL")
         schema = resources.files("provenance.store").joinpath("schema.sql").read_text()
         self._db.executescript(schema)
+        self._migrate()
+
+    def _migrate(self) -> None:
+        """Add columns that newer versions need to databases made by older ones."""
+        columns = {row[1] for row in self._db.execute("PRAGMA table_info(artefacts)")}
+        if "created_at" not in columns:
+            self._db.execute("ALTER TABLE artefacts ADD COLUMN created_at INTEGER")
+        if "created_estimated" not in columns:
+            self._db.execute(
+                "ALTER TABLE artefacts ADD COLUMN created_estimated INTEGER NOT NULL DEFAULT 0"
+            )
+        self._db.commit()
 
     def close(self) -> None:
         self._db.close()
@@ -200,13 +212,54 @@ class Store:
         )
 
     def add_artefact(
-        self, node: str, kind: str, title: str, body: str, state: str, url: str, raw: str
+        self,
+        node: str,
+        kind: str,
+        title: str,
+        body: str,
+        state: str,
+        url: str,
+        raw: str,
+        created_at: int | None = None,
+        *,
+        commit: bool = True,
     ) -> None:
+        """Insert or update an artefact.
+
+        An upsert, not INSERT OR REPLACE: a replace deletes the old row without firing the
+        delete trigger, which would leave a stale entry in the search index.
+        """
         self._db.execute(
-            "INSERT OR REPLACE INTO artefacts VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%s','now'))",
-            (node, kind, title, body, state, url, raw),
+            """INSERT INTO artefacts
+                 (id, kind, title, body, state, url, raw, fetched_at, created_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?, strftime('%s','now'), ?)
+               ON CONFLICT(id) DO UPDATE SET
+                 kind = excluded.kind, title = excluded.title, body = excluded.body,
+                 state = excluded.state, url = excluded.url, raw = excluded.raw,
+                 fetched_at = excluded.fetched_at,
+                 created_at = coalesce(excluded.created_at, artefacts.created_at),
+                 created_estimated = CASE WHEN excluded.created_at IS NULL
+                                          THEN artefacts.created_estimated ELSE 0 END""",
+            (node, kind, title, body, state, url, raw, created_at),
+        )
+        if commit:
+            self._db.commit()
+
+    def set_created(self, rows: Iterable[tuple[str, int]], *, estimated: bool) -> int:
+        """Store creation times. An estimate never overwrites a known (exact) time."""
+        guard = "AND (created_at IS NULL OR created_estimated = 1)" if estimated else ""
+        cursor = self._db.executemany(
+            f"UPDATE artefacts SET created_at = ?, created_estimated = ? WHERE id = ? {guard}",
+            [(when, int(estimated), node) for node, when in rows],
         )
         self._db.commit()
+        return cursor.rowcount
+
+    def created_at(self, node: str) -> tuple[int | None, bool]:
+        row = self._db.execute(
+            "SELECT created_at, created_estimated FROM artefacts WHERE id = ?", (node,)
+        ).fetchone()
+        return (row[0], bool(row[1])) if row else (None, False)
 
     def artefact(self, node: str) -> dict | None:
         row = self._db.execute(
@@ -232,26 +285,51 @@ class Store:
         self._db.executemany("INSERT OR IGNORE INTO edges VALUES (?, ?, ?, ?, ?, ?, ?)", rows)
         self._db.commit()
 
-    def search_artefacts(self, query: str, limit: int = 20) -> list[dict]:
+    def search_artefacts(
+        self,
+        query: str,
+        limit: int = 20,
+        *,
+        before: int | None = None,
+        any_word: bool = False,
+        exclude: Iterable[str] = (),
+    ) -> list[dict]:
         """Full-text search over fetched tickets and pull requests, best match first.
 
-        The query is plain words. Each word is quoted before it reaches FTS5, so
-        punctuation like `make_password()` can't change the query's meaning.
+        The query is plain words. Each word is quoted before it reaches FTS5, so punctuation
+        like `make_password()` can't change the query's meaning. By default every word must
+        match; `any_word` ranks artefacts that match any of them (BM25 does the weighting).
+        `before` keeps only artefacts created before that Unix time; an artefact with no
+        known date is then left out, because it can't be shown to come first.
         """
         words = [word.replace('"', '""') for word in query.split()]
         if not words:
             return []
         self._sync_search()
+        joiner = " OR " if any_word else " "
+        conditions = ["artefacts_fts MATCH ?", "a.state != 'missing'"]
+        params: list = [joiner.join(f'"{word}"' for word in words)]
+        if before is not None:
+            conditions.append("a.created_at IS NOT NULL AND a.created_at < ?")
+            params.append(before)
+        excluded = list(exclude)
+        if excluded:
+            conditions.append(f"a.id NOT IN ({', '.join('?' * len(excluded))})")
+            params.extend(excluded)
         rows = self._db.execute(
-            """SELECT a.id, a.kind, a.title, a.state, a.url,
-                      snippet(artefacts_fts, 1, '[', ']', ' … ', 24)
+            f"""SELECT a.id, a.kind, a.title, a.state, a.url,
+                      snippet(artefacts_fts, 1, '[', ']', ' … ', 24),
+                      bm25(artefacts_fts), a.created_at, a.created_estimated
                FROM artefacts_fts JOIN artefacts a ON a.rowid = artefacts_fts.rowid
-               WHERE artefacts_fts MATCH ? AND a.state != 'missing'
+               WHERE {" AND ".join(conditions)}
                ORDER BY rank LIMIT ?""",
-            (" ".join(f'"{word}"' for word in words), limit),
+            (*params, limit),
         )
-        keys = ("id", "kind", "title", "state", "url", "snippet")
-        return [dict(zip(keys, row, strict=True)) for row in rows]
+        keys = ("id", "kind", "title", "state", "url", "snippet", "score", "created_at")
+        return [
+            dict(zip(keys, row[:8], strict=True)) | {"created_estimated": bool(row[8])}
+            for row in rows
+        ]
 
     def _sync_search(self) -> None:
         """Backfill the search index for rows stored before the triggers existed.

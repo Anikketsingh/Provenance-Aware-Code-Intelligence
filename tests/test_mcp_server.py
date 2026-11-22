@@ -38,7 +38,7 @@ async def call(server, tool, **arguments):
 async def test_tools_are_listed_and_read_only(server):
     async with Client(server) as client:
         tools = (await client.list_tools()).tools
-    assert {tool.name for tool in tools} == {"why_line", "why_range"}
+    assert {tool.name for tool in tools} == {"why_line", "why_range", "find_discussions"}
     assert all(tool.annotations.read_only_hint for tool in tools)
     assert all("BEFORE" in tool.description for tool in tools)
 

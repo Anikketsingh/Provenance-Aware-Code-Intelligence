@@ -8,6 +8,7 @@ Comments and reviews come in a later pass. This one stores titles, bodies, state
 commit of each pull request and the issues it closes.
 """
 
+import calendar
 import json
 import os
 import time
@@ -15,7 +16,7 @@ import urllib.request
 from collections.abc import Callable
 from pathlib import Path
 
-from dotenv import load_dotenv
+from dotenv import find_dotenv, load_dotenv
 
 from provenance.config import PROJECT_ROOT
 from provenance.graph.refs import github_slug
@@ -27,10 +28,13 @@ MIN_REMAINING = 100
 
 _FIELDS = {
     "pullRequests": """
-        number title body state url createdAt closedAt
+        number title body state url createdAt closedAt mergedAt
         mergeCommit { oid }
+        labels(first: 10) { nodes { name } }
         closingIssuesReferences(first: 20) { nodes { number } }""",
-    "issues": "number title body state url createdAt closedAt",
+    "issues": """
+        number title body state url createdAt closedAt
+        labels(first: 10) { nodes { name } }""",
 }
 
 QUERY = """
@@ -38,6 +42,7 @@ query($owner: String!, $name: String!, $cursor: String) {
   rateLimit { remaining resetAt }
   repository(owner: $owner, name: $name) {
     %s(first: %d, after: $cursor, orderBy: {field: CREATED_AT, direction: ASC}) {
+      totalCount
       pageInfo { hasNextPage endCursor }
       nodes { %s }
     }
@@ -50,6 +55,7 @@ class MissingTokenError(RuntimeError):
 
 
 def github_token() -> str:
+    load_dotenv(find_dotenv(usecwd=True))
     load_dotenv(PROJECT_ROOT / ".env")
     token = os.environ.get("GITHUB_TOKEN")
     if not token:
@@ -78,8 +84,12 @@ def crawl(
     send: Callable[[dict], dict] | None = None,
     max_pages: int | None = None,
     sleep: Callable[[float], None] = time.sleep,
+    progress: Callable[[int, int], None] | None = None,
 ) -> int:
-    """Fetch pages of pull requests or issues, resuming where the last run stopped."""
+    """Fetch pages of pull requests or issues, resuming where the last run stopped.
+
+    `progress(pages_done, total_count)` is called after each page.
+    """
     owner, name = (github_slug(repo) or "").split("/")
     send = send or _post(github_token())
     cache_dir.mkdir(parents=True, exist_ok=True)
@@ -100,6 +110,9 @@ def crawl(
         connection = reply["data"]["repository"][kind]
         for node in connection["nodes"]:
             _store_node(repo, store, kind, node)
+        store.commit()
+        if progress:
+            progress(done_pages + pages, connection.get("totalCount", 0))
         info = connection["pageInfo"]
         cursor = info["endCursor"] if info["hasNextPage"] else None
         store.save_crawl_state(state_key, cursor, done_pages + pages, not info["hasNextPage"])
@@ -112,11 +125,31 @@ def crawl(
     return pages
 
 
+def _iso_to_unix(value: str | None) -> int | None:
+    if not value:
+        return None
+    return int(calendar.timegm(time.strptime(value, "%Y-%m-%dT%H:%M:%SZ")))
+
+
 def _store_node(repo: str, store: Store, kind: str, node: dict) -> None:
     prefix = "pr" if kind == "pullRequests" else "issue"
     me = f"{prefix}:{repo}/{node['number']}"
+    meta = {
+        "labels": [label["name"] for label in (node.get("labels") or {}).get("nodes", [])],
+        "createdAt": node.get("createdAt"),
+        "closedAt": node.get("closedAt"),
+        "mergedAt": node.get("mergedAt"),
+    }
     store.add_artefact(
-        me, prefix, node["title"] or "", node["body"] or "", node["state"], node["url"], ""
+        me,
+        prefix,
+        node["title"] or "",
+        node["body"] or "",
+        node["state"],
+        node["url"],
+        json.dumps(meta),
+        _iso_to_unix(node.get("createdAt")),
+        commit=False,
     )
     edges = []
     if kind == "pullRequests":

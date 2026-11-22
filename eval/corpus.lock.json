@@ -1,4 +1,5 @@
 {
   "django": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
-  "redis": "5b69ba2ce91fea8e9fc70ebac8ce341b37e75533"
+  "redis": "5b69ba2ce91fea8e9fc70ebac8ce341b37e75533",
+  "react": "33e52451f2ab39e0a4d186256b2b4d55277e6041"
 }

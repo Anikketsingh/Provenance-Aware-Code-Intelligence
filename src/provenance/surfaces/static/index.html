@@ -503,7 +503,7 @@ uv run provenance classify django</span></li>
       return;
     }
     if (mine !== requestId) return;
-    story.lastChild.replaceWith(...renderStory(data));
+    story.lastChild.replaceWith(...renderStory(data).filter(Boolean));
   }
 
   function renderStory(data) {
@@ -558,7 +558,23 @@ uv run provenance classify django</span></li>
     }
     for (const text of outside) core.append(el("p", { class: "extra", text }));
     core.append(el("p", { class: "extra", text: "Hatched layers didn't change behaviour. Commit messages are shown as written by their authors." }));
-    return [verdict, explainBlock(), core, agentBlock(agent)];
+    return [verdict, explainBlock(), core, searchedBlock(data.searched_untrusted || []), agentBlock(agent)];
+  }
+
+  function searchedBlock(items) {
+    if (!items.length) return null;
+    const box = el("div", { class: "core" },
+      el("h3", { text: "Possibly related discussions" }),
+      el("p", { class: "extra", text: "No ticket or pull request is linked to the commit that set this line, so these were found by matching words. Each was opened before that commit. They may be unrelated." }));
+    const chips = el("div", { class: "links" });
+    for (const item of items) {
+      const label = `${item.kind === "pr" ? "PR" : item.kind} ${item.target.split("/").pop()}: ${(item.title_untrusted || "").slice(0, 90)}`;
+      chips.append(item.url
+        ? el("a", { href: item.url, target: "_blank", rel: "noopener noreferrer", class: "warn", text: label })
+        : el("span", { class: "warn", text: label }));
+    }
+    box.append(chips);
+    return box;
   }
 
   /* ---------- Gemini explanation ---------- */

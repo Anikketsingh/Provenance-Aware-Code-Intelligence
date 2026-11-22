@@ -29,7 +29,7 @@ GOLD = Path(__file__).parent / "gold"
 SETS = {"dev": (GOLD, 20261108, "L"), "test": (GOLD / "test", 20261110, "T")}
 FILES_PER_REPO = 120
 PLAN = {"django": {"agree": 15, "disagree": 25}, "redis": {"agree": 8, "disagree": 12}}
-ROOTS = {"django": ("django/",), "redis": ("src/",)}
+ROOTS = {"django": ("django/",), "redis": ("src/",), "react": ("packages/",)}
 EXCLUDED = ("django/conf/locale/", "django/contrib/admin/static/", "src/modules/", "src/commands/")
 METHODS = ("B0", "B2", "Ours-A")
 
@@ -42,6 +42,7 @@ def eligible_files(repo: Repo, rev: str, name: str) -> list[str]:
         if path.startswith(ROOTS[name])
         and not path.startswith(EXCLUDED)
         and PurePosixPath(path).name != "__init__.py"
+        and "/__tests__/" not in path
         and language_for(path)
     )
 
