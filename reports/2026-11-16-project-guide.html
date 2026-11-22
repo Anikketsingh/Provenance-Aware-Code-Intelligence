@@ -84,7 +84,7 @@
 
 <p class="kicker">B.Tech Major Project · DTU CSE · Complete Project Guide</p>
 <h1>Provenance: why does this line of code exist?</h1>
-<p class="lede">Everything about the project in one document, written so that someone who has never seen it can understand all of it: the problem, how the system works, what has been built and measured, what we deliver at the final evaluation on <b>28 November 2026</b>, and how it becomes a public release next semester.</p>
+<p class="lede">Everything about the project in one document, written so that someone who has never seen it can understand all of it: the problem, how the system works, what has been built and measured, what we deliver at the final evaluation on <b>27 November 2026</b>, and how it becomes a public release next semester.</p>
 <p class="meta">Prepared 16 November 2026 · Aniket Singh Kushwaha, with Aarish and Aftab · Guide: Prof. Shailender Kumar · Code on the <code>project-i-evaluation</code> branch; every number here comes from a saved file in <code>eval/results/</code>.</p>
 
 <ul class="toc">
@@ -100,7 +100,7 @@
   <li><a href="#s10"><span class="no">10</span>How we measured accuracy</a></li>
   <li><a href="#s11"><span class="no">11</span>The results</a></li>
   <li><a href="#s12"><span class="no">12</span>What we don’t claim</a></li>
-  <li><a href="#s13"><span class="no">13</span>Plan to 28 November</a></li>
+  <li><a href="#s13"><span class="no">13</span>Plan to 27 November</a></li>
   <li><a href="#s14"><span class="no">14</span>Next semester: the public release</a></li>
   <li><a href="#s15"><span class="no">15</span>Glossary</a></li>
 </ul>
@@ -142,14 +142,14 @@ uv run provenance explain django django/contrib/auth/hashers.py 112 115
 #    Confidence: high · citations: [commit 8aa71f4e87] [Ticket #31375]</span>
 
 uv run provenance search django password bytes
-<span class="c"># → full-text search across ~17,000 locally stored Trac tickets</span>
+<span class="c"># → full-text search across 17,178 locally stored Trac tickets</span>
 
 uv run provenance ui        <span class="c"># the web interface, on your own machine</span>
 uv run provenance mcp django  <span class="c"># the server AI agents connect to</span></pre>
 <div class="facts">
   <div class="fact"><b>83.5%</b><span>accuracy on the held-out test set, vs 69.2% for git’s best settings</span></div>
   <div class="fact"><b>48,519</b><span>commits classified across Django and Redis</span></div>
-  <div class="fact"><b>~17,000</b><span>Trac tickets stored and searchable locally</span></div>
+  <div class="fact"><b>17,178</b><span>Trac tickets stored and searchable locally</span></div>
   <div class="fact"><b>216</b><span>automated tests, all passing</span></div>
 </div>
 
@@ -294,27 +294,35 @@ raise TypeError(                             raise TypeError(
 <tr><td>One slow line (19.2 s vs a 10 s target).</td><td>Profile after the evaluations; no demo line hits it.</td></tr>
 </table>
 
-<h2 id="s13"><span class="no">13</span>Plan to the final evaluation, 28 November</h2>
-<p>The beta evaluation is 17 November; the final is <b>28 November</b>, where we deliver the major chunk of the project and carry it forward as our final-year major project.</p>
+<h2 id="s13"><span class="no">13</span>Plan to the final evaluation, 27 November</h2>
+<p>The beta evaluation on 17 November went through with no changes requested, and the code is now on GitHub. The final evaluation is <b>27 November</b>, where we deliver the major chunk of the project and carry it forward as our final-year major project.</p>
 <table>
 <tr><th>When</th><th>Work</th><th>Done when</th></tr>
-<tr><td>17 Nov</td><td><b>Beta evaluation</b>: deck + live demo (UI, cited explanations, ticket search, MCP)</td><td>Panel feedback collected</td></tr>
-<tr><td>18–21 Nov</td><td>Fold in panel feedback · push to a private GitHub repo · record the backup demo video</td><td>Backup exists; code is off the laptop</td></tr>
-<tr><td>21–25 Nov</td><td><b>Write the final report</b> from <code>eval/results/</code> and this guide; figures from the saved runs</td><td>Every number traces to a file</td></tr>
-<tr><td>25–27 Nov</td><td>Final deck polish, two full rehearsals, demo dry-runs on the presentation machine</td><td>Dry run under time</td></tr>
-<tr><td>28 Nov</td><td><b>Final evaluation</b></td><td>—</td></tr>
+<tr><td>17 Nov</td><td><b>Beta evaluation</b>: deck + live demo</td><td>Done, no changes asked</td></tr>
+<tr><td>22–24 Nov</td><td><b>Write the final report</b> from <code>eval/results/</code> and this guide · update the deck and guide · prepare the cache for the demo lines</td><td>Every number traces to a file</td></tr>
+<tr><td>24–26 Nov</td><td>Record the backup demo video · two full rehearsals · freeze and tag <code>v0.1-project-i</code></td><td>Dry run under time; tag pushed</td></tr>
+<tr><td>27 Nov</td><td><b>Final evaluation</b></td><td>—</td></tr>
 </table>
-<p><b>What the panel receives on the 28th:</b> the working system (CLI + UI + MCP over Django and Redis with ~17,000 tickets), the measured results with their statistics and failure taxonomy, cited explanations with abstention, one-command reproducibility, the written report, and this guide.</p>
+<p><b>What the panel receives on the 27th:</b> the working system (CLI + UI + MCP over Django and Redis with 17,178 tickets), the measured results with their statistics and failure taxonomy, cited explanations with abstention, one-command reproducibility, the written report, and this guide.</p>
 
 <h2 id="s14"><span class="no">14</span>Next semester: the public release</h2>
-<p>Semester 8 turns a measured prototype into something people install. In order:</p>
+<p>Semester 8 turns a measured prototype into something people install, product first. Each phase ends with its own release, so the project is usable at every step. The full plan is in <code>plans/08-completion-plan.md</code>.</p>
 <ol>
-<li><b>Package and release</b> <span class="pill plan">Jan</span> — an open-source <b>MCP server anyone can run on any repository</b>: <code>pip install provenance-mcp</code> (or <code>uvx</code>), one command to index a repo, one line to register with an agent. GitHub release with docs; listed in the MCP registries and directories that agents and developers already browse.</li>
-<li><b>Extend the corpus and evidence</b> <span class="pill plan">Jan–Feb</span> — React and PostgreSQL end to end; GitHub PR/issue crawls (needs only a read-only token); Trac comments; embedding-based search beside FTS5 for questions keywords can’t catch.</li>
-<li><b>The CI check</b> <span class="pill plan">Feb–Mar</span> — a GitHub Action that warns when a pull request deletes or weakens <i>protective</i> code (guards, retries, locks, timeouts), citing the ticket that explains the code it’s protecting. This is the product form most teams would adopt first.</li>
-<li><b>Prove it on agents</b> <span class="pill plan">Mar–Apr</span> — the RQ5 study: replay real “simplify this” tasks with and without the tool and measure whether agents make fewer unsafe edits. Grow the gold set toward 500 lines, with human spot-checks of the AI labels.</li>
-<li><b>Publish and promote</b> <span class="pill plan">Apr–May</span> — the paper (benchmark, method, agent study), the public benchmark release, and promotion of the server: launch posts, MCP directory listings, and demos to developer communities. Final report and viva.</li>
+<li><b>Make it a product</b> <span class="pill plan">Dec · v0.2 alpha</span> — run on <i>any</i> local repository, not just the four research repos: <code>provenance index</code> then <code>provenance mcp</code>, both incremental. Add React end to end, fix the one slow line, and set up packaging and CI for the project itself.</li>
+<li><b>Evidence everywhere</b> <span class="pill plan">Jan</span> — GitHub PR and issue crawls for Redis, React and Django (with a read-only token), Trac comments, and search that finds the likely discussion even when a commit links to nothing. A Django-only retrieval benchmark (RQ2).</li>
+<li><b>Protect code in CI</b> <span class="pill plan">Feb · v0.5 beta</span> — the flagship product feature. A GitHub Action finds guards (raise, assert, null and bounds checks, locks, timeouts) that a pull request removes or weakens, traces their history, and warns with the ticket that explains them. It is rule-based and repeatable, and it warns rather than blocks. Measured on real guards that were removed and later restored (RQ4).</li>
+<li><b>Trustworthy answers, then v1.0</b> <span class="pill plan">Mar · v1.0</span> — measure explanation quality and abstention on about 60 “why” questions (RQ3). Then the public release: PyPI, the Action on the Marketplace, listed in the official MCP registry, a docs page and a demo video.</li>
+<li><b>Prove, promote, finish</b> <span class="pill plan">Apr–May</span> — a 20-case agent pilot (RQ5): with and without the tool, did the guard survive and was the task still done? A laptop footprint report (RQ6), launch posts to developer communities, the paper, the final report and the viva.</li>
 </ol>
+<h3>Will it work with any AI model?</h3>
+<p><b>Yes, by design, and we test it before v1.0.</b> MCP is an open standard, so any MCP client can use the server, whatever model it runs. The model just needs to support tool calls. Five things make this work:</p>
+<ul>
+<li><b>The server needs no model and no API key.</b> Its tools return evidence: the traced history, the commits and the tickets. The model in your client (Claude, GPT, Gemini, or a local Llama or Qwen) reads that evidence. Tracing and search run fully offline. Gemini is only needed for the optional <code>explain_line</code> tool.</li>
+<li><b>Agents are told when to use it.</b> The tool descriptions say to call it <i>before</i> deleting or weakening a check. <code>provenance init</code> also writes a short rule into the files agents already read (<code>AGENTS.md</code>, <code>CLAUDE.md</code>, Cursor rules, <code>GEMINI.md</code>), which helps weaker models use the tool.</li>
+<li><b>A backstop that needs no model.</b> Even if an agent never asks, the CI check catches the removed guard on the pull request.</li>
+<li><b>A compatibility matrix before v1.0.</b> The same “simplify make_password()” task runs in Claude Code, Cursor, VS Code Copilot, Gemini CLI, Codex CLI and a local-model client. We record whether each agent called the tool and kept the guard, and publish the table.</li>
+<li><b>Both transports.</b> The server speaks stdio, for desktop and CLI clients, and Streamable HTTP, for clients that need a URL.</li>
+</ul>
 <div class="box blue">
 <p><b>The through-line:</b> this semester proved the method works and measured how well. Next semester ships it — as a server agents can call, a CI check teams can adopt, and a benchmark researchers can build on.</p>
 </div>

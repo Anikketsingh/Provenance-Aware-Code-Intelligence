@@ -34,7 +34,7 @@ Say: *Layer A parses every change in 35,000 commits and proves which ones kept t
 
 Press **Ask Gemini, with citations**. The answer appears with citations [E1], [E2] linking to the commit and the Trac ticket.
 
-Say: *The system retrieved the ticket from a local store of 17,000 Trac tickets, and Gemini may only answer from that evidence — every claim cites it, and when the evidence doesn't say why a line exists, it abstains rather than guesses.*
+Say: *The system retrieved the ticket from a local store of 17,178 Trac tickets, and Gemini may only answer from that evidence — every claim cites it, and when the evidence doesn't say why a line exists, it abstains rather than guesses.*
 
 Optionally open the **Tickets** tab and search `password bytes` to show the full-text index.
 

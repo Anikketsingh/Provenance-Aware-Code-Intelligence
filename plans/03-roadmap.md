@@ -1,10 +1,12 @@
 # Roadmap
 
+> **From 22 Nov 2026 the completion phases live in [08-completion-plan.md](08-completion-plan.md).** This file keeps the Project-I history.
+
 **Level:** project. **Updated:** 16 Nov 2026.
 
 ## 1. Where we stand
 
-- **Dates fixed on 16 Nov:** the beta evaluation is **17 Nov 2026** and the final Project-I evaluation is **28 Nov 2026** (not ~21 Nov as first assumed). The project carries forward as the team's final-year major project, and next semester ends in a public release of the MCP server.
+- **Dates fixed on 16 Nov:** the beta evaluation is **17 Nov 2026** and the final Project-I evaluation is **27 Nov 2026** (moved from 28 Nov on 22 Nov). The project carries forward as the team's final-year major project, and next semester ends in a public release of the MCP server.
 - Everything runs on one 8 GB M1 MacBook Air.
 - That leaves little time, so Project-I focuses on line tracing, with **Django as the main repo** and Redis as the second.
 
@@ -46,7 +48,7 @@ Built on 16 Nov, for the beta evaluation on 17 Nov (Phase II stages 3 and 6, fir
 - Explanations cover blocks of up to 40 lines, and malformed Gemini replies are retried once and never cached.
 - The panel deck (17 slides, three presenters), the demo script, and a 14-page beginner-friendly guide (`reports/2026-11-16-project-guide.pdf`).
 
-**Plan 17–28 Nov:** beta evaluation on the 17th; then fold in feedback, push to a private GitHub repo, record the backup demo; 21–25 Nov write the final report from `eval/results/` and the guide; 25–27 Nov rehearse; final evaluation on the 28th. **Next semester in one line:** package and release the MCP server publicly (PyPI + MCP registries), extend to React/PostgreSQL and GitHub crawls, ship the protective-code CI check, run the agent study, submit the paper, and promote the release.
+**Plan 17–27 Nov:** beta evaluation on the 17th; then fold in feedback, push to a private GitHub repo, record the backup demo; 21–25 Nov write the final report from `eval/results/` and the guide; 25–27 Nov rehearse; final evaluation on the 27th. **Next semester in one line:** package and release the MCP server publicly (PyPI + MCP registries), extend to React/PostgreSQL and GitHub crawls, ship the protective-code CI check, run the agent study, submit the paper, and promote the release.
 
 ### Status on 9 Nov
 
