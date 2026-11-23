@@ -1,0 +1,38 @@
+{
+  "protocol": "Claude labelled each claim (as split by the judge model) against the evidence the explainer was given, from eval/gold/explain_check_sheet.md, with the judge's verdicts hidden. Where the sheet's 900-character excerpt was cut, the full evidence text in eval/results/explain_runs.json was read. For each abstention on an answerable question, Claude judged whether the evidence actually said why the line exists (abstain_justified). These are AI labels by the method's author's assistant, not human labels.",
+  "labeller": "Claude (Opus 5.5), 2026-11-23",
+  "labels": {
+    "Q01": {"claims": [true, true, true, false], "final_claims": [true, true, false, false], "verdict": "partly", "note": "Claim 4 (ImproperlyConfigured is no longer raised at import time) is not in the 1,500 characters of the ticket the explainer saw. Settled: the judge was right on claim 3, since the evidence shows the warning for LayerMapError, not LayerMapping."},
+    "Q02": {"claims": [true, true, true], "verdict": "correct"},
+    "Q03": {"claims": [true, true, true], "verdict": "correct"},
+    "Q04": {"claims": [true, true, true], "verdict": "correct"},
+    "Q05": {"claims": [true, true, true], "verdict": "correct"},
+    "Q06": {"claims": [true, true, true], "verdict": "correct"},
+    "Q07": {"claims": [true, true, true], "verdict": "correct", "note": "Settled for Claude's labels: the judge marked claims 2 and 3 unsupported because it was not shown the traced chain, which the explainer was given and which lists both commits as touching this line."},
+    "Q08": {"claims": [true, true, true], "verdict": "correct"},
+    "Q09": {"claims": [true, true], "verdict": "correct", "note": "A feature-level reason (the checks framework); the evidence gives nothing narrower."},
+    "Q20": {"claims": [true, true, true], "verdict": "correct"},
+    "Q22": {"claims": [true, true, true], "verdict": "correct"},
+    "Q23": {"claims": [true, true], "verdict": "correct"},
+    "Q28": {"claims": [true, true], "verdict": "correct"},
+    "Q29": {"claims": [true, true, true], "verdict": "correct"},
+    "Q32": {"claims": [true, true, true], "verdict": "correct"},
+    "Q33": {"claims": [true, true, true], "verdict": "correct"},
+    "Q34": {"claims": [true, true], "verdict": "correct"},
+    "Q36": {"claims": [true, true, true], "verdict": "correct"},
+    "Q37": {"claims": [true, true], "verdict": "correct"}
+  },
+  "abstentions": {
+    "Q10": {"abstain_justified": false, "note": "A test of the PR-limit script; the ticket and PR explain the feature it tests, which is enough for a feature-level answer."},
+    "Q15": {"abstain_justified": true, "note": "Evidence is a later optimisation of hdr_histogram; nothing on the zfree declaration."},
+    "Q16": {"abstain_justified": false, "note": "A line of the BLESS implementation; the PR explains the feature, so a feature-level answer was possible."},
+    "Q17": {"abstain_justified": true, "note": "Vendored TRE regex code; the Redis Array PR text shown never mentions TRE."},
+    "Q18": {"abstain_justified": true, "note": "Squashed hiredis subtree commit. Its hiredis PR numbers were linked to unrelated redis/redis issues with the same numbers (a linking error)."},
+    "Q19": {"abstain_justified": true, "note": "Vendored TRE code, as Q17."},
+    "Q21": {"abstain_justified": true, "note": "A generic atomic-store macro; the hash-templates PR shown does not mention it."},
+    "Q24": {"abstain_justified": true, "note": "Vendored TRE code, as Q17."},
+    "Q30": {"abstain_justified": true, "note": "Evidence is the reply-encoding PR; it does not mention resolving server references."},
+    "Q31": {"abstain_justified": true, "note": "Generic 'add fixture components' PR; nothing on the radio fixture's handler."},
+    "Q35": {"abstain_justified": true, "note": "The ESLint-config PR shown does not mention the yarn linc hint."}
+  }
+}

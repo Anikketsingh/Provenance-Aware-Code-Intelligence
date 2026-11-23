@@ -13,6 +13,10 @@ is then re-weighted to the real share of positives among all labelled removals. 
 on a balanced sample would flatter the check, so the re-weighted figure is the one reported,
 next to the base rate.
 
+The held-out test split is small enough to score in full, so there it scores every labelled
+removal and reports exact counts, per window (30, 90 and 180 days) and per repo, with
+bootstrap intervals. Nothing is re-weighted.
+
 Usage:
   uv run python eval/protect_bench.py --split tune   # choose the threshold (events before 2020)
   uv run python eval/protect_bench.py --split test   # the held-out run, frozen threshold
@@ -20,6 +24,7 @@ Usage:
 
 import argparse
 import json
+import multiprocessing
 import random
 import re
 from collections import Counter
@@ -35,6 +40,8 @@ EVENTS = HERE / "data" / "guard_events.jsonl"
 SEED = 41
 CAP = 250
 WINDOW = "90"  # the primary window; 30 and 180 are reported too
+WINDOWS = ("30", "90", "180")
+BOOTSTRAPS = 2000
 THRESHOLDS = [round(0.05 * i, 2) for i in range(1, 20)]
 #: The keyword baseline: a removal is flagged when the guard's own code mentions these.
 _KEYWORDS = re.compile(
@@ -114,12 +121,140 @@ def average_precision(labels, scores, n_pos, n_neg) -> float:
     return area
 
 
+def _score_chunk(args: tuple[list[dict], dict[str, int]]) -> list[float]:
+    return score_events(*args)
+
+
+def score_all(events: list[dict], removed_in_commit: dict[str, int], workers: int) -> list[float]:
+    """score_events over worker processes; the order of `events` is kept."""
+    size = -(-len(events) // workers)
+    chunks = [(events[i : i + size], removed_in_commit) for i in range(0, len(events), size)]
+    with multiprocessing.get_context("spawn").Pool(workers) as pool:
+        return [s for part in pool.map(_score_chunk, chunks) for s in part]
+
+
+def confusion(labels: list[int], flagged: list[bool]) -> dict:
+    """Exact counts and rates, no re-weighting: every labelled removal was scored."""
+    tp = sum(1 for y, f in zip(labels, flagged, strict=True) if y and f)
+    fp = sum(1 for y, f in zip(labels, flagged, strict=True) if not y and f)
+    pos = labels.count(1)
+    precision = tp / (tp + fp) if tp + fp else 0.0
+    recall = tp / pos if pos else 0.0
+    base = pos / len(labels) if labels else 0.0
+    return {
+        "flagged": tp + fp,
+        "true_positives": tp,
+        "positives": pos,
+        "removals": len(labels),
+        "precision": precision,
+        "recall": recall,
+        "fpr": fp / (len(labels) - pos) if len(labels) > pos else 0.0,
+        "base_rate": base,
+        "lift": precision / base if base else 0.0,
+    }
+
+
+def interval(labels, flagged, key: str, rng: random.Random) -> list[float]:
+    """A 95% bootstrap interval for one confusion() figure."""
+    pairs = list(zip(labels, flagged, strict=True))
+    values = []
+    for _ in range(BOOTSTRAPS):
+        draw = [pairs[rng.randrange(len(pairs))] for _ in pairs]
+        values.append(confusion([y for y, _ in draw], [f for _, f in draw])[key])
+    values.sort()
+    return [values[int(0.025 * BOOTSTRAPS)], values[int(0.975 * BOOTSTRAPS) - 1]]
+
+
+def exact_ap(labels: list[int], scores: list[float]) -> float:
+    """Area under the precision-recall curve, on the full (unsampled) set."""
+    pos = labels.count(1)
+    area, last_recall = 0.0, 0.0
+    for threshold in sorted(set(scores), reverse=True):
+        m = confusion(labels, [s >= threshold for s in scores])
+        area += (m["recall"] - last_recall) * m["precision"]
+        last_recall = m["recall"]
+    return area if pos else 0.0
+
+
+def test_report(events: list[dict], workers: int) -> dict:
+    """The held-out run: every labelled removal of 2020 and later, at the frozen threshold."""
+    labelled = [e for e in events if any(e["label"][w] is not None for w in WINDOWS)]
+    print(f"test: scoring all {len(labelled)} labelled removals with {workers} workers")
+    removed_in_commit = Counter(e["sha"] for e in events)
+    scores = score_all(labelled, removed_in_commit, workers)
+    keyword = [bool(_KEYWORDS.search(e["code"])) for e in labelled]
+    rng = random.Random(SEED)
+
+    def block(subset: list[int], window: str) -> dict:
+        idx = [i for i in subset if labelled[i]["label"][window] is not None]
+        labels = [labelled[i]["label"][window] for i in idx]
+        ours = [scores[i] >= DEFAULT_THRESHOLD for i in idx]
+        result = {
+            "ours": confusion(labels, ours),
+            "flag_every_removal": confusion(labels, [True] * len(idx)),
+            "keyword_rule": confusion(labels, [keyword[i] for i in idx]),
+            "average_precision": exact_ap(labels, [scores[i] for i in idx]),
+        }
+        result["ours"]["precision_ci95"] = interval(labels, ours, "precision", rng)
+        result["ours"]["recall_ci95"] = interval(labels, ours, "recall", rng)
+        return result
+
+    every = list(range(len(labelled)))
+    repos = sorted({e["repo"] for e in labelled})
+    report = {
+        "split": "test",
+        "frozen_threshold": DEFAULT_THRESHOLD,
+        "primary_window_days": int(WINDOW),
+        "method": (
+            "Every labelled removal in the test split is scored (no sampling), so precision, "
+            "recall and the base rate are exact counts. 95% intervals are bootstrap "
+            f"({BOOTSTRAPS} draws)."
+        ),
+        "windows": {w: block(every, w) for w in WINDOWS},
+        "by_repo": {
+            r: {w: block([i for i in every if labelled[i]["repo"] == r], w) for w in WINDOWS}
+            for r in repos
+        },
+        "by_kind": dict(Counter(e["kind"] for e in labelled)),
+        "score_distribution": dict(Counter(round(s, 2) for s in scores)),
+        "flagged_removals": [
+            {
+                "repo": e["repo"],
+                "sha": e["sha"][:10],
+                "path": e["path"],
+                "line": e["line"],
+                "kind": e["kind"],
+                "labels": e["label"],
+                "score": s,
+            }
+            for e, s in zip(labelled, scores, strict=True)
+            if s >= DEFAULT_THRESHOLD
+        ],
+    }
+    for w in WINDOWS:
+        m = report["windows"][w]["ours"]
+        lo, hi = m["precision_ci95"]
+        print(
+            f"  {w:>3} days: base rate {m['base_rate']:.2%}  precision {m['precision']:.1%} "
+            f"[{lo:.1%}, {hi:.1%}]  recall {m['recall']:.1%}  lift {m['lift']:.1f}x  "
+            f"({m['true_positives']}/{m['flagged']} flagged, {m['positives']} positives)"
+        )
+    return report
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--split", choices=("tune", "test"), required=True)
+    parser.add_argument("--workers", type=int, default=4)
     args = parser.parse_args()
 
     events = load(args.split)
+    if args.split == "test":
+        report = test_report(events, args.workers)
+        out = HERE / "results" / "protect_bench.json"
+        out.write_text(json.dumps(report, indent=2) + "\n")
+        print(f"Saved to {out}")
+        return
     labelled = [e for e in events if e["label"][WINDOW] is not None]
     pos = [e for e in labelled if e["label"][WINDOW] == 1]
     neg = [e for e in labelled if e["label"][WINDOW] == 0]
@@ -172,26 +307,18 @@ def main() -> None:
             for e, y, s in zip(sample, labels, scores, strict=True)
         ],
     }
-    if args.split == "tune":
-        best = max(THRESHOLDS, key=lambda t: (curve[str(t)]["f0.5"], t))
-        report["chosen_threshold"] = best
-        report["rule"] = "the threshold with the highest F0.5 (precision-first), ties to the higher"
-        out = HERE / "results" / "protect_threshold.json"
-    else:
-        report["frozen_threshold"] = DEFAULT_THRESHOLD
-        report["at_threshold"] = curve.get(str(DEFAULT_THRESHOLD)) or natural(
-            *rates(labels, [s >= DEFAULT_THRESHOLD for s in scores]), n_pos, n_neg
-        )
-        out = HERE / "results" / "protect_bench.json"
+    best = max(THRESHOLDS, key=lambda t: (curve[str(t)]["f0.5"], t))
+    report["chosen_threshold"] = best
+    report["rule"] = "the threshold with the highest F0.5 (precision-first), ties to the higher"
+    out = HERE / "results" / "protect_threshold.json"
     out.write_text(json.dumps(report, indent=2) + "\n")
     print(
         f"base rate {report['base_rate']:.1%}  average precision {report['average_precision']:.3f}"
     )
     for name, m in report["baselines"].items():
         print(f"  {name:20} precision {m['precision']:.1%} recall {m['recall']:.1%}")
-    key = report.get("chosen_threshold", DEFAULT_THRESHOLD)
-    m = curve.get(str(key)) or report.get("at_threshold")
-    print(f"  ours @ {key:<14} precision {m['precision']:.1%} recall {m['recall']:.1%}")
+    m = curve[str(best)]
+    print(f"  ours @ {best:<14} precision {m['precision']:.1%} recall {m['recall']:.1%}")
     print(f"Saved to {out}")
 
 

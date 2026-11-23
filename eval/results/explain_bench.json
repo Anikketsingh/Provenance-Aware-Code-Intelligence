@@ -1,0 +1,99 @@
+{
+  "explainer_model": "gemini-3.8-flash",
+  "judge_model": "gemini-4-hydrogen",
+  "questions": {
+    "answerable": 30,
+    "unanswerable": 10
+  },
+  "by_repo": {
+    "django": 10,
+    "redis": 10,
+    "react": 10
+  },
+  "answerable": {
+    "answered": 19,
+    "coverage": 0.6333333333333333,
+    "correct": 18,
+    "partly": 1,
+    "wrong": 0,
+    "accuracy_of_all": 0.6,
+    "accuracy_when_answered": 0.9473684210526315,
+    "abstained": 11,
+    "abstentions_justified": 9,
+    "false_abstentions": 2,
+    "by_repo": {
+      "django": {
+        "questions": 10,
+        "answered": 9,
+        "correct": 8
+      },
+      "redis": {
+        "questions": 10,
+        "answered": 3,
+        "correct": 3
+      },
+      "react": {
+        "questions": 10,
+        "answered": 7,
+        "correct": 7
+      }
+    }
+  },
+  "unanswerable": {
+    "abstained": 10,
+    "abstention_rate": 1.0,
+    "by_kind": {
+      "formatting-only": {
+        "questions": 4,
+        "abstained": 4
+      },
+      "mismatched": {
+        "questions": 6,
+        "abstained": 6
+      }
+    }
+  },
+  "claims": {
+    "total": 53,
+    "supported": 51,
+    "citation_correctness": 0.9622641509433962,
+    "judge_only_supported": 0.9433962264150944
+  },
+  "agreement": {
+    "labelled_by_claude": 19,
+    "claims_compared": 53,
+    "claim_agreement": 0.9245283018867925,
+    "claim_kappa": -0.029126213592232775,
+    "verdict_agreement": 0.9473684210526315,
+    "verdict_kappa": 0.6415094339622639
+  },
+  "by_confidence": {
+    "high": {
+      "answers": 16,
+      "correct": 15
+    },
+    "medium": {
+      "answers": 3,
+      "correct": 3
+    },
+    "low": {
+      "answers": 0,
+      "correct": 0
+    }
+  },
+  "selective": {
+    "high": {
+      "coverage": 0.5333333333333333,
+      "accuracy": 0.9375
+    },
+    "medium": {
+      "coverage": 0.6333333333333333,
+      "accuracy": 0.9473684210526315
+    },
+    "all": {
+      "coverage": 0.6333333333333333,
+      "accuracy": 0.9473684210526315
+    }
+  },
+  "note": "Final labels: Claude's, after settling disagreements with the judge (noted per question in the labels file); the judge's alone where Claude has no label."
+}

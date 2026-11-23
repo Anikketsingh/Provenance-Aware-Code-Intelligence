@@ -1,0 +1,699 @@
+{
+  "seed": 53,
+  "questions": [
+    {
+      "repo": "django",
+      "rev": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
+      "file": "django/contrib/gis/utils/__init__.py",
+      "line": 16,
+      "code": "\"LayerMapping\",",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "d8426f64a75356832655c457be3c9761102d9cf1",
+      "withheld_evidence": null,
+      "id": "Q01"
+    },
+    {
+      "repo": "django",
+      "rev": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
+      "file": "django/utils/deconstruct.py",
+      "line": 21,
+      "code": "def deconstruct(obj):",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "e565e1332ddfbb44fe7e6139375e3c243af7398d",
+      "withheld_evidence": null,
+      "id": "Q02"
+    },
+    {
+      "repo": "django",
+      "rev": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
+      "file": "django/db/backends/postgresql/schema.py",
+      "line": 54,
+      "code": "sql_drop_indentity = (",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "2eea361eff58dd98c409c5227064b901f41bd0d6",
+      "withheld_evidence": null,
+      "id": "Q03"
+    },
+    {
+      "repo": "django",
+      "rev": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
+      "file": "django/conf/locale/eo/formats.py",
+      "line": 33,
+      "code": "\"%Y-%m-%d %H:%M:%S\",  # '1887-07-26 18:59:00'",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "b4f21d1807e0faf709ee5ae3a1518d6db8983581",
+      "withheld_evidence": null,
+      "id": "Q04"
+    },
+    {
+      "repo": "django",
+      "rev": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
+      "file": "django/db/migrations/operations/__init__.py",
+      "line": 25,
+      "code": "\"AlterModelTable\",",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "36ded01527b690b5df0574492af9cfcc2ea3d1dc",
+      "withheld_evidence": null,
+      "id": "Q05"
+    },
+    {
+      "repo": "django",
+      "rev": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
+      "file": "django/contrib/postgres/apps.py",
+      "line": 76,
+      "code": "register_type_handlers(conn)",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "b91868507af08234a30e9a8e7c90b37c561ba315",
+      "withheld_evidence": null,
+      "id": "Q06"
+    },
+    {
+      "repo": "django",
+      "rev": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
+      "file": "django/contrib/auth/urls.py",
+      "line": 18,
+      "code": "name=\"password_change_done\",",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "df41b5a05d4e00e80e73afe629072e37873e767a",
+      "withheld_evidence": null,
+      "id": "Q07"
+    },
+    {
+      "repo": "django",
+      "rev": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
+      "file": "django/conf/locale/ta/formats.py",
+      "line": 5,
+      "code": "DATE_FORMAT = \"j F, Y\"",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "9233d0426537615e06b78d28010d17d5a66adf44",
+      "withheld_evidence": null,
+      "id": "Q08"
+    },
+    {
+      "repo": "django",
+      "rev": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
+      "file": "django/db/models/fields/__init__.py",
+      "line": 2325,
+      "code": "def _check_blank_and_null_values(self, **kwargs):",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "d818e0c9b2b88276cc499974f9eee893170bf0a8",
+      "withheld_evidence": null,
+      "id": "Q09"
+    },
+    {
+      "repo": "django",
+      "rev": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
+      "file": "scripts/pr_limit/tests.py",
+      "line": 49,
+      "code": "self.assertTrue(",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "9b83f7513c06aef91a20669450809ddd944e0792",
+      "withheld_evidence": null,
+      "id": "Q10"
+    },
+    {
+      "repo": "django",
+      "rev": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
+      "file": "django/contrib/flatpages/urls.py",
+      "line": 5,
+      "code": "path(\"<path:url>\", views.flatpage, name=\"django.contrib.flatpages.views.flatpage\"),",
+      "kind": "formatting-only",
+      "answerable": false,
+      "origin": "df41b5a05d4e00e80e73afe629072e37873e767a",
+      "withheld_evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "9c19aff7c7",
+          "title": "Refs #33476 -- Reformatted code with Black.",
+          "text": "Refs #33476 -- Reformatted code with Black.",
+          "url": null,
+          "date": null
+        }
+      ],
+      "id": "Q11"
+    },
+    {
+      "repo": "django",
+      "rev": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
+      "file": "django/db/backends/oracle/base.py",
+      "line": 24,
+      "code": "import oracledb as Database",
+      "kind": "formatting-only",
+      "answerable": false,
+      "origin": "9946f0b0d9356b55e819f861b31615fa5b548f99",
+      "withheld_evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "b4bc393b23",
+          "title": "Refs #33817 -- Removed support for cx_Oracle per deprecation timeline.",
+          "text": "Refs #33817 -- Removed support for cx_Oracle per deprecation timeline.",
+          "url": null,
+          "date": null
+        },
+        {
+          "id": "E2",
+          "kind": "commit",
+          "ref": "cdbd31960e",
+          "title": "Refs #33817 -- Corrected errors raised when Oracle driver is not installed.",
+          "text": "Refs #33817 -- Corrected errors raised when Oracle driver is not installed.\n\noracledb_any should reraise ImportError instead of raising\nImproperlyConfigured.",
+          "url": null,
+          "date": null
+        }
+      ],
+      "id": "Q12"
+    },
+    {
+      "repo": "django",
+      "rev": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
+      "file": "django/tasks/backends/immediate.py",
+      "line": 86,
+      "code": "kwargs=kwargs,",
+      "kind": "mismatched",
+      "answerable": false,
+      "origin": "4289966d1b8e848e5e460b7c782dac009d746b20",
+      "withheld_evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "d8426f64a7",
+          "title": "Fixed #36577 -- Removed obsolete try-except for GIS layermapping imports.",
+          "text": "Fixed #36577 -- Removed obsolete try-except for GIS layermapping imports.",
+          "url": null,
+          "date": "2025-08-27"
+        },
+        {
+          "id": "E2",
+          "kind": "ticket",
+          "ref": "Ticket #36577",
+          "title": "Remove try/except around GIS layermapping imports",
+          "text": "I tried [https://docs.astral.sh/ty/ ty] on a client project and it reported this error:\r\n\r\n{{{\r\nwarning[possibly-unbound-import]: Member `LayerMapError` of module `django.contrib.gis.utils` is possibly unbound\r\n  --> ...\r\n   |\r\n36 | from django.contrib.contenttypes.models import ContentType\r\n37 | from django.contrib.gis.geos import GEOSGeometry, MultiPolygon, Point, Polygon\r\n38 | from django.contrib.gis.utils import LayerMapError\r\n   |                                      ^^^^^^^^^^^^^\r\n39 | from django.contrib.messages import get_messages\r\n40 | from django.contrib.messages.middleware import MessageMiddleware\r\n   |\r\ninfo: rule `possibly-unbound-import` is enabled by default\r\n}}}\r\n\r\nLooking at the `django.contrib.gis.utils` source code, there\u2019s a `try`/`except ImproperlyConfigured` around the import of `LayerMapError` and `LayerMapping`:\r\n\r\n{{{#!python\r\ntry:\r\n    # LayerMapping requires DJANGO_SETTINGS_MODULE to be set,\r\n    # and ImproperlyConfigured is raised if that's not the case.\r\n    from django.contrib.gis.utils.layermapping import LayerMapError, LayerMapping\r\n\r\n    __all__ += [\"LayerMapError\", \"LayerMapping\"]\r\n\r\nexcept ImproperlyConfigured:\r\n    pass\r\n}}}\r\n\r\nThis block blames back to 79e68c225b926302ebb29c808dda8afa49856f5c, the initial merge of `django.contrib.gis` into Django core.\r\n\r\nI looked at the code and couldn\u2019t see how `ImproperlyConfigured` could be raised at import time, and also tried it, with no error:\r\n\r\n{{{\r\n$ python -c 'import django.contrib.gis.utils.l",
+          "url": "https://code.djangoproject.com/ticket/36577",
+          "date": null
+        },
+        {
+          "id": "E3",
+          "kind": "pr",
+          "ref": "PR #19784",
+          "title": "Fixed #36577 -- Removed obsolete try/except around GIS layermapping imports.",
+          "text": "#### Trac ticket number\r\n\r\nticket-36577\r\n\r\n#### Branch description\r\n\r\nPer the investigation on the ticket, remove this now-unnecessary `try`/`except`.\r\n\r\n#### Checklist\r\n- [x] This PR targets the `main` branch. <!-- Backports will be evaluated and done by mergers, when necessary. -->\r\n- [x] The commit message is written in past tense, mentions the ticket number, and ends with a period.\r\n- [x] I have checked the \"Has patch\" ticket flag in the Trac system.\r\n- [x] I have added or updated relevant tests.\r\n- [x] I have added or updated relevant docs, including release notes if applicable.\r\n- [x] I have attached screenshots in both light and dark modes for any UI changes.",
+          "url": "https://github.com/django/django/pull/19784",
+          "date": null
+        }
+      ],
+      "evidence_from": "django/contrib/gis/utils/__init__.py:16",
+      "id": "Q13"
+    },
+    {
+      "repo": "django",
+      "rev": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
+      "file": "django/contrib/messages/storage/session.py",
+      "line": 42,
+      "code": "self.request.session.pop(self.session_key, None)",
+      "kind": "mismatched",
+      "answerable": false,
+      "origin": "25020ddb05543fff1c37d77b49bd937fd2bbb170",
+      "withheld_evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "e565e1332d",
+          "title": "Fixed #21275 -- Fixed a serializer error when generating migrations for contrib.auth.",
+          "text": "Fixed #21275 -- Fixed a serializer error when generating migrations for contrib.auth.\n\nThe migration serializer now looks for a deconstruct method on any object.",
+          "url": null,
+          "date": "2013-10-21"
+        },
+        {
+          "id": "E2",
+          "kind": "ticket",
+          "ref": "Ticket #21275",
+          "title": "Cannot use migrations if model field specifies validators",
+          "text": "My assumption is that we shouldn't try to serialize the `validators` attribute.\r\n\r\nTraceback:\r\n{{{\r\n  File \"/home/tim/.virtualenvs/foo/local/lib/python2.7/site-packages/django/db/migrations/writer.py\", line 185, in serialize\r\n    raise ValueError(\"Cannot serialize: %r\" % value)\r\nValueError: Cannot serialize: <django.core.validators.RegexValidator object at 0x1bacc10>\r\n}}}",
+          "url": "https://code.djangoproject.com/ticket/21275",
+          "date": null
+        }
+      ],
+      "evidence_from": "django/utils/deconstruct.py:21",
+      "id": "Q14"
+    },
+    {
+      "repo": "redis",
+      "rev": "5b69ba2ce91fea8e9fc70ebac8ce341b37e75533",
+      "file": "deps/hdr_histogram/hdr_redis_malloc.h",
+      "line": 7,
+      "code": "void zfree(void *ptr);",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "5075e74366c99033886bce13fcd504a2c57fa180",
+      "withheld_evidence": null,
+      "id": "Q15"
+    },
+    {
+      "repo": "redis",
+      "rev": "5b69ba2ce91fea8e9fc70ebac8ce341b37e75533",
+      "file": "src/bless.c",
+      "line": 93,
+      "code": "debugServerAssert(de != NULL);",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "b9800e06b2109ac1319ebc7ba72034da2ba1d10d",
+      "withheld_evidence": null,
+      "id": "Q16"
+    },
+    {
+      "repo": "redis",
+      "rev": "5b69ba2ce91fea8e9fc70ebac8ce341b37e75533",
+      "file": "deps/tre/lib/tre-filter.c",
+      "line": 49,
+      "code": "counts[*(str - window_len)]--;",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "0d9576435f83af79122c7db4e97f32afbba5bc3e",
+      "withheld_evidence": null,
+      "id": "Q17"
+    },
+    {
+      "repo": "redis",
+      "rev": "5b69ba2ce91fea8e9fc70ebac8ce341b37e75533",
+      "file": "deps/hiredis/adapters/poll.h",
+      "line": 103,
+      "code": "redisAsyncHandleWrite(ac);",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "fad6c713c26d6e4f2dd867db4d341c7abe0fcbda",
+      "withheld_evidence": null,
+      "id": "Q18"
+    },
+    {
+      "repo": "redis",
+      "rev": "5b69ba2ce91fea8e9fc70ebac8ce341b37e75533",
+      "file": "deps/tre/lib/xmalloc.c",
+      "line": 55,
+      "code": "hash_table_new(void)",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "0d9576435f83af79122c7db4e97f32afbba5bc3e",
+      "withheld_evidence": null,
+      "id": "Q19"
+    },
+    {
+      "repo": "redis",
+      "rev": "5b69ba2ce91fea8e9fc70ebac8ce341b37e75533",
+      "file": "src/hyperloglog.c",
+      "line": 1470,
+      "code": "_mm_storeu_si128((__m128i *)(t + 12), higher);",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "fdeb97629ef8964a5d9040328ee63734884ac874",
+      "withheld_evidence": null,
+      "id": "Q20"
+    },
+    {
+      "repo": "redis",
+      "rev": "5b69ba2ce91fea8e9fc70ebac8ce341b37e75533",
+      "file": "src/atomicvar.h",
+      "line": 117,
+      "code": "atomic_store_explicit(&var,value,memory_order_release)",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "ba99faa230643931f91d2d5d68a0393e25fa07f5",
+      "withheld_evidence": null,
+      "id": "Q21"
+    },
+    {
+      "repo": "redis",
+      "rev": "5b69ba2ce91fea8e9fc70ebac8ce341b37e75533",
+      "file": "deps/croaring/include/roaring/containers/mixed_intersection.h",
+      "line": 42,
+      "code": "const array_container_t *src_1, const bitset_container_t *src_2);",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "f3b9b68ec67e5ebd6a7c07b3d629c477d30648c6",
+      "withheld_evidence": null,
+      "id": "Q22"
+    },
+    {
+      "repo": "redis",
+      "rev": "5b69ba2ce91fea8e9fc70ebac8ce341b37e75533",
+      "file": "src/pubsub.c",
+      "line": 746,
+      "code": "if (type.shard) {",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "9f8885760b53e6d3952b9c9b41f9e6c48dfa6cec",
+      "withheld_evidence": null,
+      "id": "Q23"
+    },
+    {
+      "repo": "redis",
+      "rev": "5b69ba2ce91fea8e9fc70ebac8ce341b37e75533",
+      "file": "deps/tre/lib/regerror.c",
+      "line": 50,
+      "code": "gettext_noop(\"Invalid character range\"),\t\t\t\t\t/* REG_ERANGE */",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "0d9576435f83af79122c7db4e97f32afbba5bc3e",
+      "withheld_evidence": null,
+      "id": "Q24"
+    },
+    {
+      "repo": "redis",
+      "rev": "5b69ba2ce91fea8e9fc70ebac8ce341b37e75533",
+      "file": "src/crccombine.c",
+      "line": 201,
+      "code": "uint64_t row = 1;",
+      "kind": "mismatched",
+      "answerable": false,
+      "origin": "cf838038802b6d5049e3368953a3a737dd3aaee5",
+      "withheld_evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "5075e74366",
+          "title": "Optimized `hdr_value_at_percentile` (#10606)",
+          "text": "Optimized `hdr_value_at_percentile` (#10606)\n\n`hdr_value_at_percentile()` is part of the Hdr_Histogram library\nused when generating `latencystats` report. \n\nThere's a pending optimization for this function which greatly\naffects the performance of `info latencystats`.\nhttps://github.com/HdrHistogram/HdrHistogram_c/pull/107\n\nThis PR:\n1. Upgrades the sources in _deps/hdr_histogram_ to the latest Hdr_Histogram\n  version 0.11.5\n2. Applies the referenced optimization.\n3. Adds minor documentation about the hdr_histogram dependency which was\n  missing under _deps/README.md_.\n\nbenchmark on my machine:\nrunning: `redis-benchmark -n 100000 info latencystats` on a clean build with no data.\n\n| benchmark |",
+          "url": null,
+          "date": "2022-04-20"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #10606",
+          "title": "Optimized `hdr_value_at_percentile`",
+          "text": "`hdr_value_at_percentile()` is part of the Hdr_Histogram library used when generating `latencystats` report. \r\n\r\nThere's a [pending optimization](https://github.com/HdrHistogram/HdrHistogram_c/pull/107) for this function which greatly affects the performance of `info latencystats`.\r\n\r\nThis PR:\r\n1. Upgrades the sources in _deps/hdr_histogram_ to the latest Hdr_Histogram version 0.11.5\r\n2. Applies the referenced optimization.\r\n3. Adds minor documentation about the hdr_histogram dependency which was missing under _deps/README.md_.\r\n\r\nbenchmark on my machine:\r\nrunning: `redis-benchmark -n 100000 info latencystats` on a clean build with no data.\r\n\r\n| benchmark | RPS |\r\n| ---- | ---- |\r\n| before upgrade to v0.11.05  | 7,681 |\r\n| before optimization | 12,474 |\r\n| after optimization | 52,606 |",
+          "url": "https://github.com/redis/redis/pull/10606",
+          "date": null
+        }
+      ],
+      "evidence_from": "deps/hdr_histogram/hdr_redis_malloc.h:7",
+      "id": "Q25"
+    },
+    {
+      "repo": "redis",
+      "rev": "5b69ba2ce91fea8e9fc70ebac8ce341b37e75533",
+      "file": "src/t_array.c",
+      "line": 1829,
+      "code": "if (o == NULL) {",
+      "kind": "mismatched",
+      "answerable": false,
+      "origin": "0d9576435f83af79122c7db4e97f32afbba5bc3e",
+      "withheld_evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "b9800e06b2",
+          "title": "RED-211767 - Add BLESS \u2014 protect keys from eviction (#15649)",
+          "text": "RED-211767 - Add BLESS \u2014 protect keys from eviction (#15649)\n\n# Add `BLESS` \u2014 protect keys from eviction\n\nAdds `BLESS`, a keyspace command family for marking specific keys as\n**NO-EVICT** under `maxmemory`. A blessed key is never chosen as an\neviction victim. The protection is stored per-key and survives restart\n(RDB/AOF), replication, and slot migration.\n\n## Commands\n\nAll `since 8.12.0`, container `BLESS`.\n\n| Command | Description | Reply | Flags |\n| --- | --- | --- | --- |\n| `BLESS SET <key> NO-EVICT` | Turn the flag on | `1` if the key's flag\nset changed, else `0` | WRITE, DENYOOM, FAST |\n| `BLESS CLEAR <key> NO-EVICT` | Turn the flag off | `1` / `0` | WRITE,\nFAST |\n| `BLESS GET <key>` |",
+          "url": null,
+          "date": "2026-09-15"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #15649",
+          "title": "RED-211767 - Add BLESS \u2014 protect keys from eviction",
+          "text": "# Add `BLESS` \u2014 protect keys from eviction\r\n\r\nAdds `BLESS`, a keyspace command family for marking specific keys as **NO-EVICT** under `maxmemory`. A blessed key is never chosen as an eviction victim. The protection is stored per-key and survives restart (RDB/AOF), replication, and slot migration.\r\n\r\n## Commands\r\n\r\nAll `since 8.12.0`, container `BLESS`.\r\n\r\n| Command | Description | Reply | Flags |\r\n| --- | --- | --- | --- |\r\n| `BLESS SET <key> NO-EVICT` | Turn the flag on | `1` if the key's flag set changed, else `0` | WRITE, DENYOOM, FAST |\r\n| `BLESS CLEAR <key> NO-EVICT` | Turn the flag off | `1` / `0` | WRITE, FAST |\r\n| `BLESS GET <key>` | The key's active flag names (`[]` if none) | array; errors if the key is missing | FAST |\r\n| `BLESS SCAN <cursor> NO-EVICT [COUNT <count>]` | Cursored scan of the current DB's blessed keys carrying the flag | `[cursor, [key ...]]` | \u2014 |\r\n\r\n- The flag argument is **mandatory** \u2014 there is no default.\r\n- `BLESS CLEAR` is intentionally **not** DENYOOM, so you can always unbless to recover under memory pressure.\r\n- `BLESS SCAN` mirrors `SCAN` semantics (`COUNT` is a hint, buckets are emitted whole). Without `COUNT` the whole index is returned in one call with cursor `0`; with `COUNT` it paginates.\r\n- `INFO Stats \u2192 blessed_keys` \u2014 instance-wide count of blessed keys (replaces the earlier `BLESS COUNT` idea).\r\n\r\n## Eviction\r\n\r\nBlessed keys are never chosen as eviction victims, on all `maxmemory` policies (LRU / LFU / random, and the `volatile-*`",
+          "url": "https://github.com/redis/redis/pull/15649",
+          "date": null
+        }
+      ],
+      "evidence_from": "src/bless.c:93",
+      "id": "Q26"
+    },
+    {
+      "repo": "redis",
+      "rev": "5b69ba2ce91fea8e9fc70ebac8ce341b37e75533",
+      "file": "modules/vector-sets/vset_config.h",
+      "line": 20,
+      "code": "extern VSConfig VSGlobalConfig;",
+      "kind": "mismatched",
+      "answerable": false,
+      "origin": "94aebb7324c77e4acecaf6d9f08c23a658dc865f",
+      "withheld_evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "0d9576435f",
+          "title": "Implement the new Redis Array type (#15162)",
+          "text": "Implement the new Redis Array type (#15162)\n\n# Redis Array\n\nFor years, Redis has been missing a real indexed data structure for the\nuse cases where the index and the spatial relationship of elements are\nsemantic. Hashes give you random lookups, but you have to store an index\nas a key, and have no range visibility. Lists give you appending and\ntrimming, but what is in the middle remains hard to access. Streams give\nyou append-only events, which is another (useful, indeed) beast. None of\nthese is what you want when the *position itself* has business meaning \u2014\nslot 37, step 4, row 18552, day from 2934 to 2949, file line 11, 12, 15\nand so forth. And, all those types, for different reasons, are a",
+          "url": null,
+          "date": "2026-05-13"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #15162",
+          "title": "Implement the new Redis Array type",
+          "text": "# Redis Array\r\n\r\nFor years, Redis has been missing a real indexed data structure for the use cases where the index and the spatial relationship of elements are semantic. Hashes give you random lookups, but you have to store an index as a key, and have no range visibility. Lists give you appending and trimming, but what is in the middle remains hard to access. Streams give you append-only events, which is another (useful, indeed) beast. None of these is what you want when the *position itself* has business meaning \u2014 slot 37, step 4, row 18552, day from 2934 to 2949, file line 11, 12, 15 and so forth. And, all those types, for different reasons, are all suboptimal when you want a **ring buffer** able to store the latest N observed samples of something.\r\n\r\nUp to now, users found ways (they always do \\o/) using the fact that the data structures that are obvious in this universe are also extremely powerful, if well implemented. But this forces compromises. Arrays handle these index-first requirements natively, and usually with much better memory and CPU usage than the workarounds. If the use case is the right one, Arrays often provide much better space, time and usability at the same time.\r\n\r\n## Internal encoding\r\n\r\n1. When dense, an Array is essentially a more fancy C array. You don't pay anything for storing the index.\r\n2. Yet, instead of going really flat, arrays are sliced into 4096-element slices, and each slice, when it contains just a few elements, uses a special sparse enc",
+          "url": "https://github.com/redis/redis/pull/15162",
+          "date": null
+        }
+      ],
+      "evidence_from": "deps/tre/lib/tre-filter.c:49",
+      "id": "Q27"
+    },
+    {
+      "repo": "react",
+      "rev": "33e52451f2ab39e0a4d186256b2b4d55277e6041",
+      "file": "packages/react-dom-bindings/src/events/getEventTarget.js",
+      "line": 24,
+      "code": "target = target.correspondingUseElement;",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "2fdaba49c72d6c95046b05d0ef80de1e1bef69cc",
+      "withheld_evidence": null,
+      "id": "Q28"
+    },
+    {
+      "repo": "react",
+      "rev": "33e52451f2ab39e0a4d186256b2b4d55277e6041",
+      "file": "packages/react-dom/npm/static.node.js",
+      "line": 13,
+      "code": "exports.resumeAndPrerenderToNodeStream = s.resumeAndPrerenderToNodeStream;",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "473522093d3dd95582729d01cd5c0d15dcc9cd3b",
+      "withheld_evidence": null,
+      "id": "Q29"
+    },
+    {
+      "repo": "react",
+      "rev": "33e52451f2ab39e0a4d186256b2b4d55277e6041",
+      "file": "packages/react-server-dom-parcel/src/client/ReactFlightClientConfigBundlerParcel.js",
+      "line": 53,
+      "code": "export function resolveServerReference<T>(",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "ef8bdbecb6dbb9743b895c2e867e5a5264dd6651",
+      "withheld_evidence": null,
+      "id": "Q30"
+    },
+    {
+      "repo": "react",
+      "rev": "33e52451f2ab39e0a4d186256b2b4d55277e6041",
+      "file": "fixtures/dom/src/components/fixtures/input-change-events/RadioClickFixture.js",
+      "line": 13,
+      "code": "handleChange = () => {",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "2757a53fa5546236bdfa498724a270cf8db76e89",
+      "withheld_evidence": null,
+      "id": "Q31"
+    },
+    {
+      "repo": "react",
+      "rev": "33e52451f2ab39e0a4d186256b2b4d55277e6041",
+      "file": "packages/react-reconciler/src/ReactFiberPerformanceTrack.js",
+      "line": 1483,
+      "code": "performance.clearMeasures('Errored');",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "b9ec735de248f46da181afbc12aa906422be0dba",
+      "withheld_evidence": null,
+      "id": "Q32"
+    },
+    {
+      "repo": "react",
+      "rev": "33e52451f2ab39e0a4d186256b2b4d55277e6041",
+      "file": "packages/react-server-dom-parcel/server.node.js",
+      "line": 16,
+      "code": "decodeAction,",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "ca587425fe21b644bebb336f058f1a0d9763631b",
+      "withheld_evidence": null,
+      "id": "Q33"
+    },
+    {
+      "repo": "react",
+      "rev": "33e52451f2ab39e0a4d186256b2b4d55277e6041",
+      "file": "packages/react-devtools-shared/buildUtils.js",
+      "line": 12,
+      "code": "let flagsPath;",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "7e405d458d6481fb1c04dfca6afab0651e6f67cd",
+      "withheld_evidence": null,
+      "id": "Q34"
+    },
+    {
+      "repo": "react",
+      "rev": "33e52451f2ab39e0a4d186256b2b4d55277e6041",
+      "file": "scripts/tasks/eslint.js",
+      "line": 16,
+      "code": "console.log('Hint: run `yarn linc` to only lint changed files.');",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "e8e62ebb595434db40ee9a079189b1ee7e111ffe",
+      "withheld_evidence": null,
+      "id": "Q35"
+    },
+    {
+      "repo": "react",
+      "rev": "33e52451f2ab39e0a4d186256b2b4d55277e6041",
+      "file": "packages/react-server/src/createFastHashJS.js",
+      "line": 57,
+      "code": "let remainder, bytes, h1, h1b, c1, c2, k1, i;",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "68ac6dbcf8d58a67e94e9061395dd96a52d92377",
+      "withheld_evidence": null,
+      "id": "Q36"
+    },
+    {
+      "repo": "react",
+      "rev": "33e52451f2ab39e0a4d186256b2b4d55277e6041",
+      "file": "fixtures/dom/src/components/Header.js",
+      "line": 92,
+      "code": "<option value=\"/form-state\">Form State</option>",
+      "kind": "answerable",
+      "answerable": true,
+      "origin": "2078aa9a401aa91e97b42cdd36a6310888128ab2",
+      "withheld_evidence": null,
+      "id": "Q37"
+    },
+    {
+      "repo": "react",
+      "rev": "33e52451f2ab39e0a4d186256b2b4d55277e6041",
+      "file": "packages/shared/forks/ReactFeatureFlags.test-renderer.native-fb.js",
+      "line": 13,
+      "code": "export const alwaysThrottleRetries = false;",
+      "kind": "formatting-only",
+      "answerable": false,
+      "origin": "425f72bdd4263dcaba829cf52545309bbfde56b4",
+      "withheld_evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "f14d7f0d25",
+          "title": "Prepare Feature Flags for React Native 0.75 (#29903)",
+          "text": "Prepare Feature Flags for React Native 0.75 (#29903)\n\n## Summary\n\nConfigures the React Native open source feature flags in preparation for\nReact Native 0.75, which will be upgraded to React 19.\n\n## How did you test this change?\n\n```\n$ yarn test\n$ yarn flow fabric\n```",
+          "url": null,
+          "date": null
+        }
+      ],
+      "id": "Q38"
+    },
+    {
+      "repo": "react",
+      "rev": "33e52451f2ab39e0a4d186256b2b4d55277e6041",
+      "file": "packages/react-server-dom-webpack/npm/static.browser.js",
+      "line": 4,
+      "code": "if (process.env.NODE_ENV === 'production') {",
+      "kind": "formatting-only",
+      "answerable": false,
+      "origin": "1d25aa5787d4e19704c049c3cfa985d3b5190e0d",
+      "withheld_evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "3bb71dfd4b",
+          "title": "Rename react-server-dom-webpack entry points to /client and /server (#25504)",
+          "text": "Rename react-server-dom-webpack entry points to /client and /server (#25504)",
+          "url": null,
+          "date": null
+        },
+        {
+          "id": "E2",
+          "kind": "commit",
+          "ref": "5fd9db732d",
+          "title": "[Flight] Rename react-transport-... packages to react-server-... (#20403)",
+          "text": "[Flight] Rename react-transport-... packages to react-server-... (#20403)\n\n* Move files\n\n* Update paths\n\n* Rename import variables\n\n* Rename /server to /writer\n\nThis is mainly because \"React Server Server\" is weird so we need another\ndimension.\n\n* Use \"react-server\" convention to enforce that writer is only loaded in a server",
+          "url": null,
+          "date": null
+        },
+        {
+          "id": "E3",
+          "kind": "commit",
+          "ref": "64d4b84204",
+          "title": "Rename Flight to Transport (#18808)",
+          "text": "Rename Flight to Transport (#18808)\n\n* Rename Flight to Transport\n\nFlight is still the codename for the implementation details (like Fiber).\n\nHowever, now the public package is react-transport-... which is only\nintended to be used directly by integrators.\n\n* Rename names",
+          "url": null,
+          "date": null
+        },
+        {
+          "id": "E4",
+          "kind": "commit",
+          "ref": "39dbb14da3",
+          "title": "[Flight] Move Flight DOM to a Webpack Specific Package (#17372)",
+          "text": "[Flight] Move Flight DOM to a Webpack Specific Package (#17372)\n\n* Move Flight DOM to Webpack Specific Packagee\n\nWe'll have Webpack specific coupling so we need to ensure that it can be\nversioned separately from various Webpack versions. We'll also have builds\nfor other bundlers in the future.\n\n* Move to peerDep\n\n* Move DOM Flight Tests\n\n* Merge ReactFlightIntegration into ReactFlightDOM\n\nThis was an integration test. We can add to it.\n\n* Fix fixture paths",
+          "url": null,
+          "date": null
+        },
+        {
+          "id": "E5",
+          "kind": "commit",
+          "ref": "f4e974d26e",
+          "title": "Add Experimental Flight Infrastructure (#16398)",
+          "text": "Add Experimental Flight Infrastructure (#16398)\n\n* Add Flight Build and Unify HostFormat Config between Flight and Fizz\n\n* Add basic resolution of models\n\n* Add basic Flight fixture\n\nDemonstrates the streaming protocol.\n\n* Rename to flight-server to distinguish from the client parts\n\n* Add Flight Client package and entry point\n\n* Fix fixture",
+          "url": null,
+          "date": null
+        }
+      ],
+      "id": "Q39"
+    },
+    {
+      "repo": "react",
+      "rev": "33e52451f2ab39e0a4d186256b2b4d55277e6041",
+      "file": "packages/scheduler/src/SchedulerPriorities.js",
+      "line": 17,
+      "code": "export const LowPriority = 4;",
+      "kind": "mismatched",
+      "answerable": false,
+      "origin": "0f6e3cd61cf4a5a1491bb3c92780936aebc2a146",
+      "withheld_evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "2fdaba49c7",
+          "title": "Fix #4963 - SVG <use> swallows click events",
+          "text": "Fix #4963 - SVG <use> swallows click events",
+          "url": null,
+          "date": "2016-02-17"
+        },
+        {
+          "id": "E2",
+          "kind": "issue",
+          "ref": "Issue #4963",
+          "title": "Click events are swallowed by SVG <use> elements in IE",
+          "text": "We've only managed to replicate this in Edge and <=IE11, not Chrome or Firefox. We've created a demo of the issue with [this jsbin](http://jsbin.com/jojosesupe).\n\nWe're using a common SVG element and linking to it with `xlink:href` as is common with SVG icons. When linking to the icons with a `<use>` tag inside an anchor, all click events on the icon will not bubble to onClick handlers on the anchor.\n\nAn example: I have a common SVG element with an icon `<svg><rect id=\"my-icon\" width=\"100\" height=\"100\"></rect></svg>`. I then make a link containing my icon `<a href=\"https://github.com\"><svg dangerouslySetInnerHTML={{__html: '<use xlink:href=\"#my-icon\"></use>'}}></svg></a>`. As `xlink:href` isn't supported by react yet, we have to use `dangerouslySetInnerHTML`. If we now click the SVG **any onClick handlers on the anchor will not run**.\n\nA temporary workaround is setting `pointer-events: none` on the SVG element inside the anchor.\n\nThis might be a dupe of #1509",
+          "url": "https://github.com/react/react/issues/4963",
+          "date": null
+        }
+      ],
+      "evidence_from": "packages/react-dom-bindings/src/events/getEventTarget.js:24",
+      "id": "Q40"
+    }
+  ]
+}

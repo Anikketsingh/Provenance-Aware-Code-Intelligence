@@ -169,7 +169,7 @@ def main() -> None:
         "items": len(items),
         "pool": len(pool),
         "seed": SEED,
-        "dev_items_excluded": len(set(dev)),
+        "dev_items_excluded": len({sha for sha, _ in dev}),
         "depth": DEPTH,
         "target_created_before_commit": reachable / len(items),
         "note": (

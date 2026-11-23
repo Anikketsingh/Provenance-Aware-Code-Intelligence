@@ -22,3 +22,6 @@ dist/
 
 # Regenerable mining output (eval/mine_guards.py); summaries are committed instead
 eval/data/*.jsonl
+
+# Run logs from long evaluation runs
+eval/results/logs/

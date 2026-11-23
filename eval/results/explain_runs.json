@@ -1,0 +1,1954 @@
+{
+  "runs": {
+    "Q01": {
+      "status": "explained",
+      "answer": "Commit d8426f64a7 resolved Ticket #36577 by removing an obsolete try-except block around the import of GIS layermapping utilities in django.contrib.gis.utils. Previously, LayerMapping was conditionally appended to __all__ inside a try block, which caused tooling to warn that the member was possibly unbound. Because ImproperlyConfigured is no longer raised at import time, LayerMapping could be listed and imported directly.",
+      "citations": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "confidence": "high",
+      "reason": null,
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "d8426f64a7",
+          "title": "Fixed #36577 -- Removed obsolete try-except for GIS layermapping imports.",
+          "text": "Fixed #36577 -- Removed obsolete try-except for GIS layermapping imports.",
+          "url": null,
+          "date": "2025-08-27"
+        },
+        {
+          "id": "E2",
+          "kind": "ticket",
+          "ref": "Ticket #36577",
+          "title": "Remove try/except around GIS layermapping imports",
+          "text": "I tried [https://docs.astral.sh/ty/ ty] on a client project and it reported this error:\r\n\r\n{{{\r\nwarning[possibly-unbound-import]: Member `LayerMapError` of module `django.contrib.gis.utils` is possibly unbound\r\n  --> ...\r\n   |\r\n36 | from django.contrib.contenttypes.models import ContentType\r\n37 | from django.contrib.gis.geos import GEOSGeometry, MultiPolygon, Point, Polygon\r\n38 | from django.contrib.gis.utils import LayerMapError\r\n   |                                      ^^^^^^^^^^^^^\r\n39 | from django.contrib.messages import get_messages\r\n40 | from django.contrib.messages.middleware import MessageMiddleware\r\n   |\r\ninfo: rule `possibly-unbound-import` is enabled by default\r\n}}}\r\n\r\nLooking at the `django.contrib.gis.utils` source code, there\u2019s a `try`/`except ImproperlyConfigured` around the import of `LayerMapError` and `LayerMapping`:\r\n\r\n{{{#!python\r\ntry:\r\n    # LayerMapping requires DJANGO_SETTINGS_MODULE to be set,\r\n    # and ImproperlyConfigured is raised if that's not the case.\r\n    from django.contrib.gis.utils.layermapping import LayerMapError, LayerMapping\r\n\r\n    __all__ += [\"LayerMapError\", \"LayerMapping\"]\r\n\r\nexcept ImproperlyConfigured:\r\n    pass\r\n}}}\r\n\r\nThis block blames back to 79e68c225b926302ebb29c808dda8afa49856f5c, the initial merge of `django.contrib.gis` into Django core.\r\n\r\nI looked at the code and couldn\u2019t see how `ImproperlyConfigured` could be raised at import time, and also tried it, with no error:\r\n\r\n{{{\r\n$ python -c 'import django.contrib.gis.utils.l",
+          "url": "https://code.djangoproject.com/ticket/36577",
+          "date": null
+        },
+        {
+          "id": "E3",
+          "kind": "pr",
+          "ref": "PR #19784",
+          "title": "Fixed #36577 -- Removed obsolete try/except around GIS layermapping imports.",
+          "text": "#### Trac ticket number\r\n\r\nticket-36577\r\n\r\n#### Branch description\r\n\r\nPer the investigation on the ticket, remove this now-unnecessary `try`/`except`.\r\n\r\n#### Checklist\r\n- [x] This PR targets the `main` branch. <!-- Backports will be evaluated and done by mergers, when necessary. -->\r\n- [x] The commit message is written in past tense, mentions the ticket number, and ends with a period.\r\n- [x] I have checked the \"Has patch\" ticket flag in the Trac system.\r\n- [x] I have added or updated relevant tests.\r\n- [x] I have added or updated relevant docs, including release notes if applicable.\r\n- [x] I have attached screenshots in both light and dark modes for any UI changes.",
+          "url": "https://github.com/django/django/pull/19784",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash",
+      "judge": {
+        "claims": [
+          {
+            "claim": "Commit d8426f64a7 resolved Ticket #36577 by removing an obsolete try-except block around the import of GIS layermapping utilities in django.contrib.gis.utils.",
+            "evidence": [
+              "E1",
+              "E2",
+              "E3"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "Previously, LayerMapping was conditionally appended to __all__ inside a try block.",
+            "evidence": [
+              "E2"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "This conditional block caused tooling to warn that LayerMapping was possibly unbound.",
+            "evidence": [
+              "E2"
+            ],
+            "supported": false
+          },
+          {
+            "claim": "Because ImproperlyConfigured is no longer raised at import time, LayerMapping could be listed and imported directly.",
+            "evidence": [
+              "E1",
+              "E2",
+              "E3"
+            ],
+            "supported": true
+          }
+        ],
+        "verdict": "partly",
+        "note": "The main reason for listing LayerMapping directly\u2014removing the obsolete try-except block for #36577\u2014is supported, though E2 shows the tooling warning was reported for LayerMapError rather than LayerMapping."
+      },
+      "judge_model": "gemini-4-hydrogen"
+    },
+    "Q02": {
+      "status": "explained",
+      "answer": "This code was introduced in commit e565e1332d to resolve ticket #21275, which reported a serializer error when generating migrations for contrib.auth (E1). The issue occurred when the migration serializer raised a ValueError because it could not serialize certain objects, such as validators (E2). To fix this, the migration serializer was updated to look for a deconstruct method on any object (E1).",
+      "citations": [
+        "E1",
+        "E2"
+      ],
+      "confidence": "high",
+      "reason": null,
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "e565e1332d",
+          "title": "Fixed #21275 -- Fixed a serializer error when generating migrations for contrib.auth.",
+          "text": "Fixed #21275 -- Fixed a serializer error when generating migrations for contrib.auth.\n\nThe migration serializer now looks for a deconstruct method on any object.",
+          "url": null,
+          "date": "2013-10-21"
+        },
+        {
+          "id": "E2",
+          "kind": "ticket",
+          "ref": "Ticket #21275",
+          "title": "Cannot use migrations if model field specifies validators",
+          "text": "My assumption is that we shouldn't try to serialize the `validators` attribute.\r\n\r\nTraceback:\r\n{{{\r\n  File \"/home/tim/.virtualenvs/foo/local/lib/python2.7/site-packages/django/db/migrations/writer.py\", line 185, in serialize\r\n    raise ValueError(\"Cannot serialize: %r\" % value)\r\nValueError: Cannot serialize: <django.core.validators.RegexValidator object at 0x1bacc10>\r\n}}}",
+          "url": "https://code.djangoproject.com/ticket/21275",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash",
+      "judge": {
+        "claims": [
+          {
+            "claim": "This code was introduced in commit e565e1332d to resolve ticket #21275, which reported a serializer error when generating migrations for contrib.auth.",
+            "evidence": [
+              "E1"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "The issue occurred when the migration serializer raised a ValueError because it could not serialize certain objects, such as validators.",
+            "evidence": [
+              "E2"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "To fix this, the migration serializer was updated to look for a deconstruct method on any object.",
+            "evidence": [
+              "E1"
+            ],
+            "supported": true
+          }
+        ],
+        "verdict": "correct",
+        "note": "Every claim in the explanation is directly supported by the commit message (E1) and ticket traceback (E2), which give the reason for introducing the deconstruct functionality."
+      },
+      "judge_model": "gemini-4-hydrogen"
+    },
+    "Q03": {
+      "status": "explained",
+      "answer": "This line was introduced in commit 2eea361eff to resolve ticket #30511 [E1]. Ticket #30511 requested support for PostgreSQL's identity column feature (GENERATED AS IDENTITY) as an alternative to serial columns [E2]. The commit fixed the ticket by using identity columns instead of serials on PostgreSQL, adding the necessary SQL handling for identity columns [E1, E2].",
+      "citations": [
+        "E1",
+        "E2"
+      ],
+      "confidence": "high",
+      "reason": null,
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "2eea361eff",
+          "title": "Fixed #30511 -- Used identity columns instead of serials on PostgreSQL.",
+          "text": "Fixed #30511 -- Used identity columns instead of serials on PostgreSQL.",
+          "url": null,
+          "date": "2022-04-13"
+        },
+        {
+          "id": "E2",
+          "kind": "ticket",
+          "ref": "Ticket #30511",
+          "title": "Support Identity columns on PostgreSQL.",
+          "text": "We are currently working on a Django / Postgresql 11 project. We needed an adjustment for the postgres module because of its compatibility with .NET Framework and dataset generation.\r\nIn postgres 10/11 there is the new feature identity column called GENERATED AS IDENTITY instead of serial.\r\ncolumn_name type GENERATED {ALWAYS | BY DEFAULT} AS IDENTITY [(sequence_option)]\r\nWe have created a module based on db.backends.postgres that adds 2 new django model fields. I would like implement the new feature into pyodbc module or new module for postgres 10/11 useful for later versions of django.\r\n\r\nAdjustments only in base.py (line 70ff):\r\n{{{\r\ndata_types = {\r\n        'IdentityAutoField': 'integer',\r\n        'IdentityBigAutoField': 'bigint',\r\n}}}\r\nand schema.py, def column_sql () (line 178ff):\r\n{{{\r\n# Primary key / unique outputs\r\n        if field.primary_key:\r\n            sql + = \"PRIMARY KEY\"\r\n            if field.get_internal_type () in (\"IdentityAutoField\", \"IdentityBigAutoField\"):\r\n                sql + = \"GENERATED ALWAYS AS IDENTITY\"\r\n        elif field.unique:\r\n            sql + = \"UNIQUE\"\r\n}}}\r\nI can also send our code\r\n\r\nbest regards\r\nMichael Kany",
+          "url": "https://code.djangoproject.com/ticket/30511",
+          "date": null
+        },
+        {
+          "id": "E3",
+          "kind": "pr",
+          "ref": "PR #15542",
+          "title": "Fixed #30511 -- Used identity columns instead of serials on PostgreSQL.",
+          "text": "",
+          "url": "https://github.com/django/django/pull/15542",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash",
+      "judge": {
+        "claims": [
+          {
+            "claim": "This line was introduced in commit 2eea361eff to resolve ticket #30511.",
+            "evidence": [
+              "E1"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "Ticket #30511 requested support for PostgreSQL's identity column feature (GENERATED AS IDENTITY) as an alternative to serial columns.",
+            "evidence": [
+              "E2"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "Commit 2eea361eff fixed ticket #30511 by using identity columns instead of serials on PostgreSQL and adding the necessary SQL handling for identity columns.",
+            "evidence": [
+              "E1",
+              "E2"
+            ],
+            "supported": true
+          }
+        ],
+        "verdict": "correct",
+        "note": "The explanation accurately reflects the cited commit message and ticket description for introducing PostgreSQL identity column support."
+      },
+      "judge_model": "gemini-4-hydrogen"
+    },
+    "Q04": {
+      "status": "explained",
+      "answer": "This line was added as part of introducing a formats.py file for Esperanto to fix ticket #19647 [E1]. The implementation was based on a draft from Translatewiki that defined DATETIME_INPUT_FORMATS using Python strftime syntax, which included '%Y-%m-%d %H:%M:%S' [E2].",
+      "citations": [
+        "E1",
+        "E2"
+      ],
+      "confidence": "high",
+      "reason": null,
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "b4f21d1807",
+          "title": "Fixed #19647 -- Added formats.py for Esperanto.",
+          "text": "Fixed #19647 -- Added formats.py for Esperanto.\n\nThanks to Objectivesea and Guttorm Flatab\u00f8 (dittaeva)!",
+          "url": null,
+          "date": "2014-02-19"
+        },
+        {
+          "id": "E2",
+          "kind": "ticket",
+          "ref": "Ticket #19647",
+          "title": "esperanto formats.py",
+          "text": "Here's a draft Esperanto formats.py from [https://translatewiki.net/wiki/Thread:User_talk:Objectivesea/Thank_you_for_your_contributions_to_the_Esperanto_translation_of_Waymarked_Trails!/reply Translatewiki]:\r\n\r\n{{{\r\n# -*- encoding: utf-8 -*-\r\n# This file is distributed under the same license as the Django package.\r\n#\r\nfrom __future__ import unicode_literals\r\n\r\n# The *_FORMAT strings use the Django date format syntax,\r\n# see http://docs.djangoproject.com/en/dev/ref/templates/builtins/#date\r\nDATE_FORMAT = r'j\\-\\a \\d\\e F\\, Y'\r\nTIME_FORMAT = 'H:i'\r\nDATETIME_FORMAT = r'j\\-\\a \\d\\e F\\, Y\\, \\j\\e H:i'\r\nYEAR_MONTH_FORMAT = r'F \\d\\e Y'\r\nMONTH_DAY_FORMAT = r'j\\-\\a \\d\\e F'\r\nSHORT_DATE_FORMAT = 'Y-m-d'         # ISO 8601\r\nSHORT_DATETIME_FORMAT = 'Y-m-d H:i' # ISO 8601\r\nFIRST_DAY_OF_WEEK = 0  # Diman\u00c4\u0089o\r\n\r\n# The *_INPUT_FORMATS strings use the Python strftime format syntax,\r\n# see http://docs.python.org/library/datetime.html#strftime-strptime-behavior\r\nDATE_INPUT_FORMATS = (\r\n '%Y-%m-%d', '%y-%m-%d', # '2013-10-25', '13-10-25'\r\n # '%d-a de %b-o %Y', '%d %b %Y',   # '25-a de okt-o 2013', '25 okt 2013'\r\n # 'la %d-a de %B, %Y', '%d %B %Y', # 'la 25-a de oktobro, 2013', '25 oktobro 2013', \r\n)\r\nDATETIME_INPUT_FORMATS = (\r\n '%Y-%m-%d %H:%M:%S',     # '2013-10-25 14:30:59'\r\n '%Y-%m-%d %H:%M',        # '2013-10-25 14:30'\r\n '%Y-%m-%d',              # '2013-10-25'\r\n '%y-%m-%d %H:%M:%S',     # '13-10-25 14:30:59'\r\n '%y-%m-%d %H:%M',        # '13-10-25 14:30'\r\n\u00a0'%y-%m-%d',              # '13-10-25'\r\n)",
+          "url": "https://code.djangoproject.com/ticket/19647",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash",
+      "judge": {
+        "claims": [
+          {
+            "claim": "This line was added as part of introducing a formats.py file for Esperanto to fix ticket #19647.",
+            "evidence": [
+              "E1"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "The implementation was based on a draft Esperanto formats.py from Translatewiki.",
+            "evidence": [
+              "E1",
+              "E2"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "The draft defined DATETIME_INPUT_FORMATS using Python strftime syntax and included '%Y-%m-%d %H:%M:%S'.",
+            "evidence": [
+              "E2"
+            ],
+            "supported": true
+          }
+        ],
+        "verdict": "correct",
+        "note": "The commit message and ticket draft directly support that the line originated from adding Esperanto's formats.py using the Translatewiki draft's DATETIME_INPUT_FORMATS."
+      },
+      "judge_model": "gemini-4-hydrogen"
+    },
+    "Q05": {
+      "status": "explained",
+      "answer": "This code was introduced in commit 36ded01527 to resolve ticket #21302 by fixing unused imports and replacing wildcard imports [E1]. Ticket #21302 noted that `import *` was being used to import objects across namespaces for convenience, including from operations in migrations [E2]. The ticket called for replacing `import *` with explicit imports so flake8 rule F403 could be removed from the ignore list [E2].",
+      "citations": [
+        "E1",
+        "E2"
+      ],
+      "confidence": "high",
+      "reason": null,
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "36ded01527",
+          "title": "Fixed #21302 -- Fixed unused imports and import *.",
+          "text": "Fixed #21302 -- Fixed unused imports and import *.",
+          "url": null,
+          "date": "2013-11-02"
+        },
+        {
+          "id": "E2",
+          "kind": "ticket",
+          "ref": "Ticket #21302",
+          "title": "Fix or ignore remaining \"import *\" statements",
+          "text": "The remaining `import *` statements are primarily to put all the objects from one module into another namespace for convenience imports. I'm unsure if we're fine with using `import *` to accomplish this or if we should be explicit. We should either replace `import *` with the appropriate imports, or mark each line as `# NOQA` so we can remove F403 from the flake8 ignore list in setup.cfg:\r\n{{{\r\n./django/forms/__init__.py:6:1: F403 'from django.forms.fields import *' used; unable to detect undefined names\r\n./django/forms/__init__.py:7:1: F403 'from django.forms.forms import *' used; unable to detect undefined names\r\n./django/forms/__init__.py:8:1: F403 'from django.forms.models import *' used; unable to detect undefined names\r\n./django/forms/__init__.py:9:1: F403 'from django.forms.widgets import *' used; unable to detect undefined names\r\n./django/forms/extras/__init__.py:1:1: F403 'from django.forms.extras.widgets import *' used; unable to detect undefined names\r\n./django/db/migrations/__init__.py:2:1: F403 'from operations import *' used; unable to detect undefined names\r\n./django/db/models/__init__.py:9:1: F403 'from django.db.models.aggregates import *' used; unable to detect undefined names\r\n./django/db/models/__init__.py:10:1: F403 'from django.db.models.fields import *' used; unable to detect undefined names\r\n./django/db/models/sql/__init__.py:2:1: F403 'from django.db.models.sql.subqueries import *' used; unable to detect undefined names\r\n./django/db/models/sql/__init_",
+          "url": "https://code.djangoproject.com/ticket/21302",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash",
+      "judge": {
+        "claims": [
+          {
+            "claim": "This code was introduced in commit 36ded01527 to resolve ticket #21302 by fixing unused imports and replacing wildcard imports.",
+            "evidence": [
+              "E1"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "Ticket #21302 noted that `import *` was being used to import objects across namespaces for convenience, including from operations in migrations.",
+            "evidence": [
+              "E2"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "The ticket called for replacing `import *` with explicit imports so flake8 rule F403 could be removed from the ignore list.",
+            "evidence": [
+              "E2"
+            ],
+            "supported": true
+          }
+        ],
+        "verdict": "correct",
+        "note": "The explanation accurately reflects the commit message and ticket details explaining why this line was added as part of fixing wildcard imports in migrations."
+      },
+      "judge_model": "gemini-4-hydrogen"
+    },
+    "Q06": {
+      "status": "explained",
+      "answer": "Commit b91868507a added this line to fix ticket #28161, where queries on `ArrayField(CITextField())` returned an unparsed string instead of a proper list. Ticket #28161 noted that psycopg2 requires registering an adapter for citext array types to produce the expected return behavior. Calling `register_type_handlers(conn)` allows Django to automatically register the necessary type handlers for the connection.",
+      "citations": [
+        "E1",
+        "E2"
+      ],
+      "confidence": "high",
+      "reason": null,
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "b91868507a",
+          "title": "Fixed #28161 -- Fixed return type of ArrayField(CITextField()).",
+          "text": "Fixed #28161 -- Fixed return type of ArrayField(CITextField()).\n\nThanks Tim for the review.",
+          "url": null,
+          "date": "2017-05-04"
+        },
+        {
+          "id": "E2",
+          "kind": "ticket",
+          "ref": "Ticket #28161",
+          "title": "contrib.postgres: ArrayField(CITextField) returns string instead of list",
+          "text": "The following code\r\n\r\n{{{\r\nfrom django.db import models\r\nfrom django.contrib.postgres.fields import ArrayField, CITextField\r\n\r\nclass Foo(models.Model):\r\n    bar = ArrayField(models.TextField)\r\n    baz = ArrayField(CITextField())\r\n}}}\r\n\r\nhas this wrong behaviour:\r\n\r\n{{{\r\nx = Foo.objects.get(id=1)\r\nx.bar #  => [\"Foo\", \"Bar\"]\r\nx.baz #  => \"{Foo,Bar}\"\r\n}}}\r\n\r\nThis is due to https://github.com/psycopg/psycopg2/issues/268 which requires registering a new adapter for citext fields:\r\n\r\nUse \r\n\r\n{{{\r\nselect typarray from pg_type where typname = 'citext';\r\n}}}\r\n\r\nto get the oid, then do\r\n\r\n{{{\r\npsycopg2.extensions.register_type(\r\n    psycopg2.extensions.new_array_type(\r\n        (the_returned_oid,), 'citext[]', psycopg2.STRING))\r\n}}}\r\n\r\nfor the correct behaviour in plain psycopg2.\r\n\r\nDjango should do that automatically if any of the CI*Fields is used. Alternatively, the ArrayField should convert the result string manually to the proper list.",
+          "url": "https://code.djangoproject.com/ticket/28161",
+          "date": null
+        },
+        {
+          "id": "E3",
+          "kind": "pr",
+          "ref": "PR #8453",
+          "title": "Fixed #28161 -- Converted arrays of citext to the correct Python datatype.",
+          "text": "https://code.djangoproject.com/ticket/28161",
+          "url": "https://github.com/django/django/pull/8453",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash",
+      "judge": {
+        "claims": [
+          {
+            "claim": "Commit b91868507a added this line to fix ticket #28161, where queries on ArrayField(CITextField()) returned an unparsed string instead of a proper list.",
+            "evidence": [
+              "E1",
+              "E2"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "Ticket #28161 noted that psycopg2 requires registering an adapter for citext array types to produce the expected return behavior.",
+            "evidence": [
+              "E2"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "Calling register_type_handlers(conn) allows Django to automatically register the necessary type handlers for the connection.",
+            "evidence": [
+              "E1",
+              "E2"
+            ],
+            "supported": true
+          }
+        ],
+        "verdict": "correct",
+        "note": "The explanation accurately reflects the commit message and ticket details explaining why Django automatically registers type handlers for the connection."
+      },
+      "judge_model": "gemini-4-hydrogen"
+    },
+    "Q07": {
+      "status": "explained",
+      "answer": "This line exists because commit 4c457bca85 added names to URLs in the convenience contrib.auth urls.py file to resolve ticket #16789. The line was later updated when class-based views were introduced for password change and reset in ticket #17209, and again when simplified URL routing syntax was implemented per DEP 0201 in ticket #28593.",
+      "citations": [
+        "E1",
+        "E4",
+        "E9"
+      ],
+      "confidence": "high",
+      "reason": null,
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "df41b5a05d",
+          "title": "Fixed #28593 -- Added a simplified URL routing syntax per DEP 0201.",
+          "text": "Fixed #28593 -- Added a simplified URL routing syntax per DEP 0201.\n\nThanks Aymeric Augustin for shepherding the DEP and patch review.\nThanks Marten Kenbeek and Tim Graham for contributing to the code.\nThanks Tom Christie, Shai Berger, and Tim Graham for the docs.",
+          "url": null,
+          "date": "2017-09-20"
+        },
+        {
+          "id": "E2",
+          "kind": "ticket",
+          "ref": "Ticket #28593",
+          "title": "DEP 0201: Simplified routing syntax",
+          "text": "[https://github.com/django/deps/blob/master/accepted/0201-simplified-routing-syntax.rst DEP]",
+          "url": "https://code.djangoproject.com/ticket/28593",
+          "date": null
+        },
+        {
+          "id": "E3",
+          "kind": "pr",
+          "ref": "PR #7482",
+          "title": "Fixed #28593 -- Added a simplified URL routing syntax per DEP 0201.",
+          "text": "This is a PR for the simplified URL routing as mentioned in https://github.com/django/deps/pull/27.\r\n\r\nThanks to Tom Christie in formulating the DEP where this is based off.\r\nThanks to Aaron Lelevier and Jacob Kaplan-Moss for their help in bouncing around ideas.",
+          "url": "https://github.com/django/django/pull/7482",
+          "date": null
+        },
+        {
+          "id": "E4",
+          "kind": "commit",
+          "ref": "255fb99284",
+          "title": "Fixed #17209 -- Added password reset/change class-based views",
+          "text": "Fixed #17209 -- Added password reset/change class-based views\n\nThanks Tim Graham for the review.",
+          "url": null,
+          "date": "2016-07-16"
+        },
+        {
+          "id": "E5",
+          "kind": "ticket",
+          "ref": "Ticket #17209",
+          "title": "Dogfood class-based views in contrib.auth",
+          "text": "Right now, the views provided by contrib.auth are not very extensible, since they are still functional. It would be great to add class-based versions which could eventually replace the functional versions. This is related to #17208; when this change is made, the admin login view should be tweaked to extend the new view.",
+          "url": "https://code.djangoproject.com/ticket/17209",
+          "date": null
+        },
+        {
+          "id": "E6",
+          "kind": "pr",
+          "ref": "PR #6854",
+          "title": "Fixed #17209 -- Added password change/reset class-based views",
+          "text": "",
+          "url": "https://github.com/django/django/pull/6854",
+          "date": null
+        },
+        {
+          "id": "E7",
+          "kind": "commit",
+          "ref": "d73d0e071c",
+          "title": "Fixed #22218 -- Deprecated django.conf.urls.patterns.",
+          "text": "Fixed #22218 -- Deprecated django.conf.urls.patterns.\n\nThanks Carl Meyer for the suggestion and Alex Gaynor and Carl for reviews.",
+          "url": null,
+          "date": "2014-04-03"
+        },
+        {
+          "id": "E8",
+          "kind": "ticket",
+          "ref": "Ticket #22218",
+          "title": "Deprecate 'prefix' arg to django.conf.urls.patterns",
+          "text": "In the olden days of Django, it was encouraged to reference views as strings in url patterns:\r\n\r\n{{{\r\nurlpatterns = patterns('',\r\n    url('^$', 'myapp.views.myview'),\r\n)\r\n}}}\r\n\r\nand Django would magically import \"myapp.views.myview\" internally and turn the string into a real function reference.\r\n\r\nIn order to reduce repetition when referencing many views from the same module, the `patterns` function takes a required initial \"prefix\" arg, which is prepended to all views-as-strings in that set of url patterns:\r\n\r\n{{{\r\nurlpatterns = patterns('myapp.views',\r\n    url('^$', 'myview'),\r\n    url('^other/$', 'otherview'),\r\n)\r\n}}}\r\n\r\nIn the modern era, we have updated the tutorial to instead recommend actually importing your views module and referencing your view functions (or classes) directly. This has a number of advantages, all deriving from the fact that we are now using Normal Python in place of Django String Magic: the errors when you mistype a view name are less obscure, IDEs can help with autocompleting view names, etc.\r\n\r\nWith the advent of the class-based generic views, it is even more likely that users are referencing view callables directly in their urlconf, due to the need to call `.as_view()`.\r\n\r\nSo these days, the above use of the prefix arg is much more likely to be written (and is better written) as:\r\n\r\n{{{\r\nfrom myapp import views\r\n\r\nurlpatterns = patterns('',\r\n    url('^$', views.myview),\r\n    url('^other/$', views.otherview),\r\n)\r\n}}}\r\n\r\nThis leaves the 'prefix' arg",
+          "url": "https://code.djangoproject.com/ticket/22218",
+          "date": null
+        },
+        {
+          "id": "E9",
+          "kind": "commit",
+          "ref": "4c457bca85",
+          "title": "Fixed #16789 -- Added names to URLs in convenience contrib.auth urls.py.",
+          "text": "Fixed #16789 -- Added names to URLs in convenience contrib.auth urls.py.\n\nThanks wim AT go2people DOT nl for the report, cmheisel for the patch and\nfcurella for reviewing it.\n\ngit-svn-id: http://code.djangoproject.com/svn/django/trunk@16901 bcc190cf-cafb-0310-a4f2-bffc1f526a37",
+          "url": null,
+          "date": "2011-09-24"
+        },
+        {
+          "id": "E10",
+          "kind": "commit",
+          "ref": "64f5ab67a5",
+          "title": "Changed some URL conf regexes to rawstrings for consistency",
+          "text": "Changed some URL conf regexes to rawstrings for consistency\n\ngit-svn-id: http://code.djangoproject.com/svn/django/trunk@8172 bcc190cf-cafb-0310-a4f2-bffc1f526a37",
+          "url": null,
+          "date": "2008-08-01"
+        },
+        {
+          "id": "E11",
+          "kind": "commit",
+          "ref": "f69cf70ed8",
+          "title": "MERGED MAGIC-REMOVAL BRANCH TO TRUNK. This change is highly backwards-incompatible. Please read http://code.djangoproject.com/wiki/RemovingTheMagic for upgrade instructions.",
+          "text": "MERGED MAGIC-REMOVAL BRANCH TO TRUNK. This change is highly backwards-incompatible. Please read http://code.djangoproject.com/wiki/RemovingTheMagic for upgrade instructions.\n\ngit-svn-id: http://code.djangoproject.com/svn/django/trunk@2809 bcc190cf-cafb-0310-a4f2-bffc1f526a37",
+          "url": null,
+          "date": "2006-05-02"
+        }
+      ],
+      "model": "gemini-3.8-flash",
+      "judge": {
+        "claims": [
+          {
+            "claim": "This line exists because commit 4c457bca85 added names to URLs in the convenience contrib.auth urls.py file to resolve ticket #16789.",
+            "evidence": [
+              "E9"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "The line was later updated when class-based views were introduced for password change and reset in ticket #17209.",
+            "evidence": [
+              "E4"
+            ],
+            "supported": false
+          },
+          {
+            "claim": "The line was updated again when simplified URL routing syntax was implemented per DEP 0201 in ticket #28593.",
+            "evidence": [
+              "E1"
+            ],
+            "supported": false
+          }
+        ],
+        "verdict": "partly",
+        "note": "E9 supports that the URL name was added to contrib.auth urls.py in commit 4c457bca85 for ticket #16789, but E4 and E1 only describe adding class-based views and simplified URL routing syntax without showing that this specific line was updated."
+      },
+      "judge_model": "gemini-4-hydrogen"
+    },
+    "Q08": {
+      "status": "explained",
+      "answer": "This line was added in commit 9233d04265 to fix Ticket #7980, which improved Django's i18n framework to support locale-aware formatting for dates and numbers, as well as form processing [E1]. Ticket #7980 specifically proposed customizing date and datetime display formats based on the current locale [E2].",
+      "citations": [
+        "E1",
+        "E2"
+      ],
+      "confidence": "high",
+      "reason": null,
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "9233d04265",
+          "title": "Fixed #7980 - Improved i18n framework to support locale aware formatting (dates and numbers) and form processing.",
+          "text": "Fixed #7980 - Improved i18n framework to support locale aware formatting (dates and numbers) and form processing.\n\nThanks to Marc Garcia for working on this during his Google Summer of Code 2009!\n\nAdditionally fixes #1061, #2203, #3940, #5526, #6449, #6231, #6693, #6783, #9366 and #10891.\n\ngit-svn-id: http://code.djangoproject.com/svn/django/trunk@11964 bcc190cf-cafb-0310-a4f2-bffc1f526a37",
+          "url": null,
+          "date": "2009-12-22"
+        },
+        {
+          "id": "E2",
+          "kind": "ticket",
+          "ref": "Ticket #7980",
+          "title": "I18N needs improvements",
+          "text": "As described in http://vaig.be/2008/07/26/django-i18n-status/ Django's i18n has many features missing.\r\n\r\nThis ticket is a proposal to:\r\n * Customize first day of week in admin's calendar (based on current locale).\r\n * Customize date/datetime formats when a date/datetime is displayed (based on current locale).\r\n * Customize number format when a decimal number is displayed (based on current locale).\r\n * Customize input format for date/datetime widgets (based on current locale). It also includes displaying existing data in the same format, when shown on the widget.\r\n * Customize input format for decimal number widgets (based on current locale). It also includes displaying existing data in the same format, when shown on the widget.\r\n\r\nSome other i18n features should be added later, but those are basic for Web site i18n.",
+          "url": "https://code.djangoproject.com/ticket/7980",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash",
+      "judge": {
+        "claims": [
+          {
+            "claim": "This line was added in commit 9233d04265 to fix Ticket #7980.",
+            "evidence": [
+              "E1"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "Commit 9233d04265 improved Django's i18n framework to support locale-aware formatting for dates and numbers, as well as form processing.",
+            "evidence": [
+              "E1"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "Ticket #7980 specifically proposed customizing date and datetime display formats based on the current locale.",
+            "evidence": [
+              "E2"
+            ],
+            "supported": true
+          }
+        ],
+        "verdict": "correct",
+        "note": "All claims accurately paraphrase the provided commit and ticket evidence explaining why this locale-specific date format line exists."
+      },
+      "judge_model": "gemini-4-hydrogen"
+    },
+    "Q09": {
+      "status": "explained",
+      "answer": "This method was added in commit d818e0c9b2 as part of an extensible checks (validation) framework [E1]. According to Ticket #16905, this framework was introduced so that fields could participate directly in the model-declaration validation phase instead of relying on a chain of `isinstance` checks in `management.validation.get_validation_errors` [E1, E2].",
+      "citations": [
+        "E1",
+        "E2"
+      ],
+      "confidence": "medium",
+      "reason": null,
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "d818e0c9b2",
+          "title": "Fixed #16905 -- Added extensible checks (nee validation) framework",
+          "text": "Fixed #16905 -- Added extensible checks (nee validation) framework\n\nThis is the result of Christopher Medrela's 2013 Summer of Code project.\n\nThanks also to Preston Holmes, Tim Graham, Anssi K\u00e4\u00e4ri\u00e4inen, Florian\nApolloner, and Alex Gaynor for review notes along the way.\n\nAlso: Fixes #8579, fixes #3055, fixes #19844.",
+          "url": null,
+          "date": "2014-01-20"
+        },
+        {
+          "id": "E2",
+          "kind": "ticket",
+          "ref": "Ticket #16905",
+          "title": "Custom fields and apps should have a way to hook into BaseCommand.validate",
+          "text": "Right now, management.validation.get_validation_errors has a long chain of elif isinstance's for built-in fields.\r\n\r\nIt should be possible for custom fields to participate in this model-declaration validation phase.",
+          "url": "https://code.djangoproject.com/ticket/16905",
+          "date": null
+        },
+        {
+          "id": "E3",
+          "kind": "ticket",
+          "ref": "Ticket #8579",
+          "title": "Move admin validation to only run as part of \"validate\" management command",
+          "text": "Normal practice within Django is that validation code is only run when requested, since code is correct more often than it is wrong. The admin validation code runs every time a URL conf file is imported and `DEBUG = True`. It should be moved to be part of the `django-admin.py validate` run.\r\n\r\nThis isn't entirely trivial, since it's a bit tied up with admin registration and that's an issue when `admin.autodiscover()` is used.",
+          "url": "https://code.djangoproject.com/ticket/8579",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash",
+      "judge": {
+        "claims": [
+          {
+            "claim": "This method was added in commit d818e0c9b2 as part of an extensible checks (validation) framework.",
+            "evidence": [
+              "E1"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "According to Ticket #16905, the framework was introduced so fields could participate directly in the model-declaration validation phase instead of relying on a chain of isinstance checks in management.validation.get_validation_errors.",
+            "evidence": [
+              "E1",
+              "E2"
+            ],
+            "supported": true
+          }
+        ],
+        "verdict": "correct",
+        "note": "The explanation accurately reflects the reason given by commit d818e0c9b2 and Ticket #16905 without introducing unsupported claims."
+      },
+      "judge_model": "gemini-4-hydrogen"
+    },
+    "Q10": {
+      "status": "abstained",
+      "answer": null,
+      "citations": [],
+      "confidence": null,
+      "reason": "The evidence describes the pull request limit feature for Ticket #37426 and PR #22172, but does not mention scripts/pr_limit/tests.py or explain why line 49 specifically exists.",
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "9b83f7513c",
+          "title": "Fixed #37426 -- Added a pull request limit for new contributors.",
+          "text": "Fixed #37426 -- Added a pull request limit for new contributors.",
+          "url": null,
+          "date": "2026-10-20"
+        },
+        {
+          "id": "E2",
+          "kind": "ticket",
+          "ref": "Ticket #37426",
+          "title": "Restrict the allowed number of open PRs to django/django for new contributors",
+          "text": "Following discussions with many Django contributors, we have agreed that Django should use a GitHub Action to limit the number of open pull requests from new contributors.\r\n\r\nWhen a pull request is opened on `django/django`, the action will check whether the contributor meets all three conditions:\r\n\r\n- Has fewer than five commits on Django\u2019s `main` branch.\r\n- Has another open pull request created within the past six months.\r\n- Is not a member of a Django organisation GitHub team, such as the triage and review team, accessibility team, or steering council.\r\n\r\nIf all three conditions hold, the new pull request will be automatically closed with an explanatory message.\r\n\r\n> Thank you for contributing to Django!\r\n>\r\n> Since you have fewer than five commits in Django and already have an open pull request created within the past six months, please finish or close that pull request before opening another. We are closing this pull request because you have reached this limit.\r\n>\r\n> Please focus on your existing pull request and any outstanding review feedback. If you would prefer to work on this issue, you can close your existing pull request and unassign yourself from its associated ticket so someone else can take it on. You can then reopen this pull request.\r\n\r\nThe aim is to help new contributors learn Django\u2019s contribution and review process by focusing on one contribution at a time, responding to feedback, and bringing their work to completion. This would also discourage contributo",
+          "url": "https://code.djangoproject.com/ticket/37426",
+          "date": null
+        },
+        {
+          "id": "E3",
+          "kind": "pr",
+          "ref": "PR #22172",
+          "title": "Fixed #37426 -- Added a pull request limit for new contributors.",
+          "text": "#### Trac ticket number\r\n<!-- Replace XXXXX with the corresponding Trac ticket number. -->\r\n<!-- Or delete the line and write \"N/A - typo\" for typo fixes. -->\r\n\r\nticket-37426\r\n\r\n#### Branch description\r\n<!-- Provide a concise overview of the issue or rationale behind the proposed changes. Minimum five words. -->\r\n\r\nThis adds a GitHub action to limit the number of PRs allowed to be open against django/django at one time by a contributor. You are only allowed 1 at a time unless:\r\n- The other PRs you have open are more than 180 days old\r\n- You have 5 commits or more on main\r\n- You have special permissions on the django repository (often a member of the Triage and Review team, Fellow, etc)\r\n\r\nHere are some example outputs from local testing:\r\n```\r\n>>> main(repo=\"django/django\", token=token, pr_number=22169, autoclose=False)\r\nINFO: PR #22169 author meets the commit threshold.\r\n0\r\n>>> main(repo=\"django/django\", token=token, pr_number=22168, autoclose=False)\r\nINFO: PR #22168 exceeds the limit; other recent open PRs: #22130, #21811.\r\nINFO: AUTOCLOSE is disabled -- would comment and close PR #22168.\r\n0\r\n>>> main(repo=\"django/django\", token=token, pr_number=22167, autoclose=False)\r\nINFO: PR #22167 author has exempt repository permissions.\r\n0\r\n```\r\n\r\n#### AI Assistance Disclosure (REQUIRED)\r\n<!-- Select exactly ONE of the following: -->\r\n- [ ] **No AI tools were used** in preparing this PR.\r\n- [X] **If AI tools were used**, I have disclosed which ones, and fully reviewed and verified th",
+          "url": "https://github.com/django/django/pull/22172",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash"
+    },
+    "Q11": {
+      "status": "abstained",
+      "answer": null,
+      "citations": [],
+      "confidence": null,
+      "reason": "The only evidence provided (E1) describes code reformatting with Black and does not explain why the line of code exists or was added.",
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "9c19aff7c7",
+          "title": "Refs #33476 -- Reformatted code with Black.",
+          "text": "Refs #33476 -- Reformatted code with Black.",
+          "url": null,
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash"
+    },
+    "Q12": {
+      "status": "abstained",
+      "answer": null,
+      "citations": [],
+      "confidence": null,
+      "reason": "The provided evidence does not mention commit 9946f0b0d9 or explain why the line importing oracledb as Database exists.",
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "b4bc393b23",
+          "title": "Refs #33817 -- Removed support for cx_Oracle per deprecation timeline.",
+          "text": "Refs #33817 -- Removed support for cx_Oracle per deprecation timeline.",
+          "url": null,
+          "date": null
+        },
+        {
+          "id": "E2",
+          "kind": "commit",
+          "ref": "cdbd31960e",
+          "title": "Refs #33817 -- Corrected errors raised when Oracle driver is not installed.",
+          "text": "Refs #33817 -- Corrected errors raised when Oracle driver is not installed.\n\noracledb_any should reraise ImportError instead of raising\nImproperlyConfigured.",
+          "url": null,
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash"
+    },
+    "Q13": {
+      "status": "abstained",
+      "answer": null,
+      "citations": [],
+      "confidence": null,
+      "reason": "The provided evidence only discusses removing an obsolete try-except block for GIS layermapping imports in ticket #36577 and does not contain any information about django/tasks/backends/immediate.py or commit 4289966d1b.",
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "d8426f64a7",
+          "title": "Fixed #36577 -- Removed obsolete try-except for GIS layermapping imports.",
+          "text": "Fixed #36577 -- Removed obsolete try-except for GIS layermapping imports.",
+          "url": null,
+          "date": "2025-08-27"
+        },
+        {
+          "id": "E2",
+          "kind": "ticket",
+          "ref": "Ticket #36577",
+          "title": "Remove try/except around GIS layermapping imports",
+          "text": "I tried [https://docs.astral.sh/ty/ ty] on a client project and it reported this error:\r\n\r\n{{{\r\nwarning[possibly-unbound-import]: Member `LayerMapError` of module `django.contrib.gis.utils` is possibly unbound\r\n  --> ...\r\n   |\r\n36 | from django.contrib.contenttypes.models import ContentType\r\n37 | from django.contrib.gis.geos import GEOSGeometry, MultiPolygon, Point, Polygon\r\n38 | from django.contrib.gis.utils import LayerMapError\r\n   |                                      ^^^^^^^^^^^^^\r\n39 | from django.contrib.messages import get_messages\r\n40 | from django.contrib.messages.middleware import MessageMiddleware\r\n   |\r\ninfo: rule `possibly-unbound-import` is enabled by default\r\n}}}\r\n\r\nLooking at the `django.contrib.gis.utils` source code, there\u2019s a `try`/`except ImproperlyConfigured` around the import of `LayerMapError` and `LayerMapping`:\r\n\r\n{{{#!python\r\ntry:\r\n    # LayerMapping requires DJANGO_SETTINGS_MODULE to be set,\r\n    # and ImproperlyConfigured is raised if that's not the case.\r\n    from django.contrib.gis.utils.layermapping import LayerMapError, LayerMapping\r\n\r\n    __all__ += [\"LayerMapError\", \"LayerMapping\"]\r\n\r\nexcept ImproperlyConfigured:\r\n    pass\r\n}}}\r\n\r\nThis block blames back to 79e68c225b926302ebb29c808dda8afa49856f5c, the initial merge of `django.contrib.gis` into Django core.\r\n\r\nI looked at the code and couldn\u2019t see how `ImproperlyConfigured` could be raised at import time, and also tried it, with no error:\r\n\r\n{{{\r\n$ python -c 'import django.contrib.gis.utils.l",
+          "url": "https://code.djangoproject.com/ticket/36577",
+          "date": null
+        },
+        {
+          "id": "E3",
+          "kind": "pr",
+          "ref": "PR #19784",
+          "title": "Fixed #36577 -- Removed obsolete try/except around GIS layermapping imports.",
+          "text": "#### Trac ticket number\r\n\r\nticket-36577\r\n\r\n#### Branch description\r\n\r\nPer the investigation on the ticket, remove this now-unnecessary `try`/`except`.\r\n\r\n#### Checklist\r\n- [x] This PR targets the `main` branch. <!-- Backports will be evaluated and done by mergers, when necessary. -->\r\n- [x] The commit message is written in past tense, mentions the ticket number, and ends with a period.\r\n- [x] I have checked the \"Has patch\" ticket flag in the Trac system.\r\n- [x] I have added or updated relevant tests.\r\n- [x] I have added or updated relevant docs, including release notes if applicable.\r\n- [x] I have attached screenshots in both light and dark modes for any UI changes.",
+          "url": "https://github.com/django/django/pull/19784",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash"
+    },
+    "Q14": {
+      "status": "abstained",
+      "answer": null,
+      "citations": [],
+      "confidence": null,
+      "reason": "The provided evidence (E1 and E2) relates to migration serialization for contrib.auth (Ticket #21275) and contains no information about django/contrib/messages/storage/session.py or commit 25020ddb05.",
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "e565e1332d",
+          "title": "Fixed #21275 -- Fixed a serializer error when generating migrations for contrib.auth.",
+          "text": "Fixed #21275 -- Fixed a serializer error when generating migrations for contrib.auth.\n\nThe migration serializer now looks for a deconstruct method on any object.",
+          "url": null,
+          "date": "2013-10-21"
+        },
+        {
+          "id": "E2",
+          "kind": "ticket",
+          "ref": "Ticket #21275",
+          "title": "Cannot use migrations if model field specifies validators",
+          "text": "My assumption is that we shouldn't try to serialize the `validators` attribute.\r\n\r\nTraceback:\r\n{{{\r\n  File \"/home/tim/.virtualenvs/foo/local/lib/python2.7/site-packages/django/db/migrations/writer.py\", line 185, in serialize\r\n    raise ValueError(\"Cannot serialize: %r\" % value)\r\nValueError: Cannot serialize: <django.core.validators.RegexValidator object at 0x1bacc10>\r\n}}}",
+          "url": "https://code.djangoproject.com/ticket/21275",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash"
+    },
+    "Q15": {
+      "status": "abstained",
+      "answer": null,
+      "citations": [],
+      "confidence": null,
+      "reason": "The provided evidence describes upgrading the sources in deps/hdr_histogram to version 0.11.5 and optimizing hdr_value_at_percentile in commit 5075e74366 (PR #10606), but it does not mention zfree or hdr_redis_malloc.h, nor does it explain why this specific declaration exists.",
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "5075e74366",
+          "title": "Optimized `hdr_value_at_percentile` (#10606)",
+          "text": "Optimized `hdr_value_at_percentile` (#10606)\n\n`hdr_value_at_percentile()` is part of the Hdr_Histogram library\nused when generating `latencystats` report. \n\nThere's a pending optimization for this function which greatly\naffects the performance of `info latencystats`.\nhttps://github.com/HdrHistogram/HdrHistogram_c/pull/107\n\nThis PR:\n1. Upgrades the sources in _deps/hdr_histogram_ to the latest Hdr_Histogram\n  version 0.11.5\n2. Applies the referenced optimization.\n3. Adds minor documentation about the hdr_histogram dependency which was\n  missing under _deps/README.md_.\n\nbenchmark on my machine:\nrunning: `redis-benchmark -n 100000 info latencystats` on a clean build with no data.\n\n| benchmark |",
+          "url": null,
+          "date": "2022-04-20"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #10606",
+          "title": "Optimized `hdr_value_at_percentile`",
+          "text": "`hdr_value_at_percentile()` is part of the Hdr_Histogram library used when generating `latencystats` report. \r\n\r\nThere's a [pending optimization](https://github.com/HdrHistogram/HdrHistogram_c/pull/107) for this function which greatly affects the performance of `info latencystats`.\r\n\r\nThis PR:\r\n1. Upgrades the sources in _deps/hdr_histogram_ to the latest Hdr_Histogram version 0.11.5\r\n2. Applies the referenced optimization.\r\n3. Adds minor documentation about the hdr_histogram dependency which was missing under _deps/README.md_.\r\n\r\nbenchmark on my machine:\r\nrunning: `redis-benchmark -n 100000 info latencystats` on a clean build with no data.\r\n\r\n| benchmark | RPS |\r\n| ---- | ---- |\r\n| before upgrade to v0.11.05  | 7,681 |\r\n| before optimization | 12,474 |\r\n| after optimization | 52,606 |",
+          "url": "https://github.com/redis/redis/pull/10606",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash"
+    },
+    "Q16": {
+      "status": "abstained",
+      "answer": null,
+      "citations": [],
+      "confidence": null,
+      "reason": "The provided evidence describes the high-level BLESS feature introduced in commit b9800e06b2 and PR #15649, but does not provide any information or context regarding the assertion `debugServerAssert(de != NULL)`.",
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "b9800e06b2",
+          "title": "RED-211767 - Add BLESS \u2014 protect keys from eviction (#15649)",
+          "text": "RED-211767 - Add BLESS \u2014 protect keys from eviction (#15649)\n\n# Add `BLESS` \u2014 protect keys from eviction\n\nAdds `BLESS`, a keyspace command family for marking specific keys as\n**NO-EVICT** under `maxmemory`. A blessed key is never chosen as an\neviction victim. The protection is stored per-key and survives restart\n(RDB/AOF), replication, and slot migration.\n\n## Commands\n\nAll `since 8.12.0`, container `BLESS`.\n\n| Command | Description | Reply | Flags |\n| --- | --- | --- | --- |\n| `BLESS SET <key> NO-EVICT` | Turn the flag on | `1` if the key's flag\nset changed, else `0` | WRITE, DENYOOM, FAST |\n| `BLESS CLEAR <key> NO-EVICT` | Turn the flag off | `1` / `0` | WRITE,\nFAST |\n| `BLESS GET <key>` |",
+          "url": null,
+          "date": "2026-09-15"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #15649",
+          "title": "RED-211767 - Add BLESS \u2014 protect keys from eviction",
+          "text": "# Add `BLESS` \u2014 protect keys from eviction\r\n\r\nAdds `BLESS`, a keyspace command family for marking specific keys as **NO-EVICT** under `maxmemory`. A blessed key is never chosen as an eviction victim. The protection is stored per-key and survives restart (RDB/AOF), replication, and slot migration.\r\n\r\n## Commands\r\n\r\nAll `since 8.12.0`, container `BLESS`.\r\n\r\n| Command | Description | Reply | Flags |\r\n| --- | --- | --- | --- |\r\n| `BLESS SET <key> NO-EVICT` | Turn the flag on | `1` if the key's flag set changed, else `0` | WRITE, DENYOOM, FAST |\r\n| `BLESS CLEAR <key> NO-EVICT` | Turn the flag off | `1` / `0` | WRITE, FAST |\r\n| `BLESS GET <key>` | The key's active flag names (`[]` if none) | array; errors if the key is missing | FAST |\r\n| `BLESS SCAN <cursor> NO-EVICT [COUNT <count>]` | Cursored scan of the current DB's blessed keys carrying the flag | `[cursor, [key ...]]` | \u2014 |\r\n\r\n- The flag argument is **mandatory** \u2014 there is no default.\r\n- `BLESS CLEAR` is intentionally **not** DENYOOM, so you can always unbless to recover under memory pressure.\r\n- `BLESS SCAN` mirrors `SCAN` semantics (`COUNT` is a hint, buckets are emitted whole). Without `COUNT` the whole index is returned in one call with cursor `0`; with `COUNT` it paginates.\r\n- `INFO Stats \u2192 blessed_keys` \u2014 instance-wide count of blessed keys (replaces the earlier `BLESS COUNT` idea).\r\n\r\n## Eviction\r\n\r\nBlessed keys are never chosen as eviction victims, on all `maxmemory` policies (LRU / LFU / random, and the `volatile-*`",
+          "url": "https://github.com/redis/redis/pull/15649",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash"
+    },
+    "Q17": {
+      "status": "abstained",
+      "answer": null,
+      "citations": [],
+      "confidence": null,
+      "reason": "The provided evidence describes the implementation of the Redis Array data structure in commit 0d9576435f and PR #15162, but contains no explanation or context for the tre-filter code or line 49.",
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "0d9576435f",
+          "title": "Implement the new Redis Array type (#15162)",
+          "text": "Implement the new Redis Array type (#15162)\n\n# Redis Array\n\nFor years, Redis has been missing a real indexed data structure for the\nuse cases where the index and the spatial relationship of elements are\nsemantic. Hashes give you random lookups, but you have to store an index\nas a key, and have no range visibility. Lists give you appending and\ntrimming, but what is in the middle remains hard to access. Streams give\nyou append-only events, which is another (useful, indeed) beast. None of\nthese is what you want when the *position itself* has business meaning \u2014\nslot 37, step 4, row 18552, day from 2934 to 2949, file line 11, 12, 15\nand so forth. And, all those types, for different reasons, are a",
+          "url": null,
+          "date": "2026-05-13"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #15162",
+          "title": "Implement the new Redis Array type",
+          "text": "# Redis Array\r\n\r\nFor years, Redis has been missing a real indexed data structure for the use cases where the index and the spatial relationship of elements are semantic. Hashes give you random lookups, but you have to store an index as a key, and have no range visibility. Lists give you appending and trimming, but what is in the middle remains hard to access. Streams give you append-only events, which is another (useful, indeed) beast. None of these is what you want when the *position itself* has business meaning \u2014 slot 37, step 4, row 18552, day from 2934 to 2949, file line 11, 12, 15 and so forth. And, all those types, for different reasons, are all suboptimal when you want a **ring buffer** able to store the latest N observed samples of something.\r\n\r\nUp to now, users found ways (they always do \\o/) using the fact that the data structures that are obvious in this universe are also extremely powerful, if well implemented. But this forces compromises. Arrays handle these index-first requirements natively, and usually with much better memory and CPU usage than the workarounds. If the use case is the right one, Arrays often provide much better space, time and usability at the same time.\r\n\r\n## Internal encoding\r\n\r\n1. When dense, an Array is essentially a more fancy C array. You don't pay anything for storing the index.\r\n2. Yet, instead of going really flat, arrays are sliced into 4096-element slices, and each slice, when it contains just a few elements, uses a special sparse enc",
+          "url": "https://github.com/redis/redis/pull/15162",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash"
+    },
+    "Q18": {
+      "status": "abstained",
+      "answer": null,
+      "citations": [],
+      "confidence": null,
+      "reason": "The provided evidence does not contain information explaining why redisAsyncHandleWrite(ac) exists in deps/hiredis/adapters/poll.h; commit fad6c713c2 only lists squashed hiredis commit summaries that do not mention the poll adapter or this specific line, and the provided issues are unrelated.",
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "fad6c713c2",
+          "title": "Squashed 'deps/hiredis/' changes from f8de9a4bd..b6a052fe0",
+          "text": "Squashed 'deps/hiredis/' changes from f8de9a4bd..b6a052fe0\n\nb6a052fe0 Helper for setting TCP_USER_TIMEOUT socket option (#1188)\n3fa9b6944 Add RedisModule adapter (#1182)\nd13c091e9 Fix wincrypt symbols conflict\n5d84c8cfd Add a test ensuring we don't clobber connection error.\n3f95fcdae Don't attempt to set a timeout if we are in an error state.\naacb84b8d Fix typo in makefile.\n563b062e3 Accept -nan per the RESP3 spec recommendation.\n04c1b5b02 Fix colliding option values\n4ca8e73f6 Rework searching for openssl\ncd208812f Attempt to find the correct path for openssl.\n011f7093c Allow specifying the keepalive interval\ne9243d4f7 Cmake static or shared (#1160)\n1cbd5bc76 Write a version file for the CMa",
+          "url": null,
+          "date": "2023-05-30"
+        },
+        {
+          "id": "E2",
+          "kind": "issue",
+          "ref": "Issue #1045",
+          "title": "undefined\u2002reference to \u2018log\u2019",
+          "text": "",
+          "url": "https://github.com/redis/redis/issues/1045",
+          "date": null
+        },
+        {
+          "id": "E3",
+          "kind": "issue",
+          "ref": "Issue #1047",
+          "title": "redis cluster doesn't failover automatically",
+          "text": "This is what I get when I stop the master.\n\n[8465] 10 Apr 22:05:43.433 \\* Caching the disconnected master state.\n[8465] 10 Apr 22:05:43.769 \\* Connecting to MASTER...\n[8465] 10 Apr 22:05:43.769 \\* MASTER <-> SLAVE sync started\n[8465] 10 Apr 22:05:43.769 # Error condition on socket for SYNC: Connection refused\n[8465] 10 Apr 22:05:44.771 \\* Connecting to MASTER...\n[8465] 10 Apr 22:05:44.771 \\* MASTER <-> SLAVE sync started\n[8465] 10 Apr 22:05:44.772 # Error condition on socket for SYNC: Connection refused\n[8465] 10 Apr 22:05:45.774 \\* Connecting to MASTER...\n[8465] 10 Apr 22:05:45.775 \\* MASTER <-> SLAVE sync started\n[8465] 10 Apr 22:05:45.775 # Error condition on socket for SYNC: Connection refused\n[8465] 10 Apr 22:05:46.777 \\* Connecting to MASTER...\n[8465] 10 Apr 22:05:46.777 \\* MASTER <-> SLAVE sync started\n[8465] 10 Apr 22:05:46.777 # Error condition on socket for SYNC: Connection refused\n[8465] 10 Apr 22:05:47.779 \\* Connecting to MASTER...\n[8465] 10 Apr 22:05:47.780 \\* MASTER <-> SLAVE sync started\n[8465] 10 Apr 22:05:47.780 # Cluster state changed: fail\n[8465] 10 Apr 22:05:47.780 # Error condition on socket for SYNC: Connection refused\n[8465] 10 Apr 22:05:48.782 \\* Connecting to MASTER...\n[8465] 10 Apr 22:05:48.783 \\* MASTER <-> SLAVE sync started\n[8465] 10 Apr 22:05:48.783 # Error condition on socket for SYNC: Connection refused\n\n...and it continues like this.\nThis is a test using localhost. I've tried to use one maser and one slave and one master and two slaves, but t",
+          "url": "https://github.com/redis/redis/issues/1047",
+          "date": null
+        },
+        {
+          "id": "E4",
+          "kind": "issue",
+          "ref": "Issue #1050",
+          "title": "Random access to hash",
+          "text": "Please add the functionality to get random key/value from a hash",
+          "url": "https://github.com/redis/redis/issues/1050",
+          "date": null
+        },
+        {
+          "id": "E5",
+          "kind": "issue",
+          "ref": "Issue #1054",
+          "title": "redis crash",
+          "text": "## hi, my redis crashed today. Thanks for your help\n\nredis version : 2.6.10  ( role : master ) \nserver info : ubuntu 12.10   (3.5.0-17-generic x86_64)\ngcc : 4.7.2\n\nerror log : \n\n[1752 | signal handler] (1365998382) Received SIGTERM, scheduling shutdown...\n[1752] 15 Apr 12:59:42.800 # User requested shutdown...\n[1752] 15 Apr 12:59:42.800 # Redis is now ready to exit, bye bye...",
+          "url": "https://github.com/redis/redis/issues/1054",
+          "date": null
+        },
+        {
+          "id": "E6",
+          "kind": "issue",
+          "ref": "Issue #1057",
+          "title": "Crash report",
+          "text": "Hello !\n\nI just got a segmentation fault on redis-server while doing a master-slave replication from a master on 2.6.5 and a slave on 2.4.6. I'm pretty sure this is just not supposed to work and I will just upgrade version on my slave but I thought that you might like to have the crash report anyway so here it is:\n\n[21758] 17 Apr 14:56:59 # === REDIS BUG REPORT START: Cut & paste starting from here ===\n[21758] 17 Apr 14:56:59 # === ASSERTION FAILED ===\n[21758] 17 Apr 14:56:59 # ==> replication.c:267 'server.replstate == REDIS_REPL_TRANSFER' is not true\n[21758] 17 Apr 14:56:59 # (forcing SIGSEGV to print the bug report.)\n[21758] 17 Apr 14:56:59 #     Redis 2.4.6 crashed by signal: 11\n[21758] 17 Apr 14:56:59 #     Failed assertion: server.replstate == REDIS_REPL_TRANSFER (replication.c:267)\n[21758] 17 Apr 14:57:00 # --- STACK TRACE\n[21758] 17 Apr 14:57:00 # redis-server(_redisAssert+0x6f) [0x432b6f]\n[21758] 17 Apr 14:57:00 # redis-server(_redisAssert+0x6f) [0x432b6f]\n[21758] 17 Apr 14:57:00 # redis-server(replicationAbortSyncTransfer+0x75) [0x41de15]\n[21758] 17 Apr 14:57:00 # redis-server(readSyncBulkPayload+0x9c) [0x41e24c]\n[21758] 17 Apr 14:57:00 # redis-server(aeProcessEvents+0x153) [0x40d5b3]\n[21758] 17 Apr 14:57:00 # redis-server(aeMain+0x2e) [0x40d7fe]\n[21758] 17 Apr 14:57:00 # redis-server(main+0xff) [0x412d9f]\n[21758] 17 Apr 14:57:00 # /lib/libc.so.6(__libc_start_main+0xfd) [0x7f10fc7e3c4d]\n[21758] 17 Apr 14:57:00 # redis-server() [0x40cb09]\n[21758] 17 Apr 14:57:00 # --",
+          "url": "https://github.com/redis/redis/issues/1057",
+          "date": null
+        },
+        {
+          "id": "E7",
+          "kind": "issue",
+          "ref": "Issue #1058",
+          "title": ".gitignore files are too aggressive in 2.6.12",
+          "text": "When using thirdparty tools in our system, my company will commit the third party source code so that the tool can built and distributed easily across various systems.  We also use git for version control.  When committing the redis 2.6.12 source to our repository, I noticed that a few of the files required for building redis and jemalloc were being ignored in the main .gitignore and deps/jemalloc/.gitignore.\n\nSpecifically, the main .gitignore was ignoring:\n\nsrc/redis-benchmark.c\nsrc/redis-check-aof.c\nsrc/redis-check-dump.c\nsrc/redis-cli.c\nsrc/release.h\ntests/assets/encodings.rdb\ntests/assets/hash-zipmap.rdb\ntests/integration/redis-cli.tcl\nutils/redis-copy.rb\nutils/redis-sha1.rb\n\nI believe that the offending lines in .gitignore are:\nredis-*\nrelease.h\n*.rdb\n\nSecond, in deps/jemalloc/.gitignore, the following files were being ignored:\ndeps/jemalloc/VERSION\ndeps/jemalloc/configure\ndeps/jemalloc/doc/jemalloc.3\ndeps/jemalloc/doc/jemalloc.html\ndeps/jemalloc/test/jemalloc_test.h.in\n\nI believe that the offending lines in deps/jemalloc/.gitignore are:\n/configure\ndoc/jemalloc.html\n/doc/jemalloc.3\n/test/jemalloc_test.h\n/VERSION\n\nI understand that this practice of committing the source code of third-party tools may not be the norm, but it would be nice to fix the .gitignores tonot ignore files that are already committed/part of the tarball (as .gitignore has no effect on files that are already being tracked).",
+          "url": "https://github.com/redis/redis/issues/1058",
+          "date": null
+        },
+        {
+          "id": "E8",
+          "kind": "issue",
+          "ref": "Issue #1061",
+          "title": "redis crash",
+          "text": "=== REDIS BUG REPORT START: Cut & paste starting from here ===\n[6718] 19 Apr 09:30:01.701 # ------------------------------------------------\n[6718] 19 Apr 09:30:01.701 # !!! Software Failure. Press left mouse button to continue\n[6718] 19 Apr 09:30:01.701 # Guru Meditation: \"OOM\" #redis.c:2617\n[6718] 19 Apr 09:30:01.701 # (forcing SIGSEGV in order to print the stack trace)\n[6718] 19 Apr 09:30:01.701 # ------------------------------------------------\n[6718] 19 Apr 09:30:01.701 #     Redis 2.6.12 crashed by signal: 11\n[6718] 19 Apr 09:30:01.701 #     Failed assertion: <no assertion failed> (<no file>:0)\n[6718] 19 Apr 09:30:01.701 # --- STACK TRACE\n/usr/local/bin/redis-server(logStackTrace+0x71)[0x8087341]\n/usr/local/bin/redis-server(_redisPanic+0x84)[0x8086184]\n[0xf57fe40c]\n/usr/local/bin/redis-server(_redisPanic+0x84)[0x8086184]\n/usr/local/bin/redis-server(redisOutOfMemoryHandler+0x3b)[0x805c31b]\n/usr/local/bin/redis-server(zrealloc+0xe1)[0x8062681]\n/usr/local/bin/redis-server(sdsMakeRoomFor+0x41)[0x8061451]\n/usr/local/bin/redis-server(readQueryFromClient+0x4a)[0x80688ca]\n/usr/local/bin/redis-server(aeProcessEvents+0x140)[0x8059b00]\n/usr/local/bin/redis-server(aeMain+0x2c)[0x8059e5c]\n/usr/local/bin/redis-server(main+0x2c5)[0x8058c85]\n/lib/i386-linux-gnu/libc.so.6(__libc_start_main+0xf3)[0xb756a4d3]\n/usr/local/bin/redis-server[0x8058e21]\n[6718] 19 Apr 09:30:01.702 # --- INFO OUTPUT\n[6718] 19 Apr 09:30:01.702 # # Server\nredis_version:2.6.12\nredis_git_sha1:00000000\nredis_git_dirty",
+          "url": "https://github.com/redis/redis/issues/1061",
+          "date": null
+        },
+        {
+          "id": "E9",
+          "kind": "issue",
+          "ref": "Issue #1063",
+          "title": "slave memory leaks unexpected",
+          "text": "our redis has one master and two slaves. master is used for writing and slaves for read\nthe load of two slaves are not balanced.\none of the slaves shows memery increasion and reaches 64G in nearly one week\nis it a known issue?\n\ninfo as below:\nredis_version:2.4.17\nredis_git_sha1:00000000\nredis_git_dirty:0\narch_bits:64\nmultiplexing_api:epoll\ngcc_version:3.4.5\nprocess_id:12810\nrun_id:4572562df85e606f2b104c91a4f12d384aa442dd\nuptime_in_seconds:935738\nuptime_in_days:10\nlru_clock:320363\nused_cpu_sys:15491.18\nused_cpu_user:40038.00\nused_cpu_sys_children:1145.14\nused_cpu_user_children:6828.54\nconnected_clients:144\nconnected_slaves:0\nclient_longest_output_list:1002795\nclient_biggest_input_buf:0\nblocked_clients:0\nused_memory:30112603920\nused_memory_human:28.04G\nused_memory_rss:27719020544\nused_memory_peak:30112857704\nused_memory_peak_human:28.04G\nmem_fragmentation_ratio:0.92\nmem_allocator:jemalloc-3.0.0\nloading:0\naof_enabled:1\nchanges_since_last_save:5279\nbgsave_in_progress:0\nlast_save_time:1366352293\nbgrewriteaof_in_progress:0\ntotal_connections_received:1157\ntotal_commands_processed:1405498323\nexpired_keys:0\nevicted_keys:0\nkeyspace_hits:1354193664\nkeyspace_misses:25036293\npubsub_channels:0\npubsub_patterns:0\nlatest_fork_usec:365363\nvm_enabled:0\nrole:slave\naof_current_size:1160106744\naof_base_size:66\naof_pending_rewrite:0\naof_buffer_length:0\naof_pending_bio_fsync:0\nmaster_host:10.36.72.40\nmaster_port:8615\nmaster_link_status:up\nmaster_last_io_seconds_ago:0\nmaster_sync_in_progress:0\nslave_",
+          "url": "https://github.com/redis/redis/issues/1063",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash"
+    },
+    "Q19": {
+      "status": "abstained",
+      "answer": null,
+      "citations": [],
+      "confidence": null,
+      "reason": "The provided evidence describes the high-level Redis Array data structure (commit 0d9576435f and PR #15162) but contains no explanation or mention of hash_table_new(void) or deps/tre/lib/xmalloc.c.",
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "0d9576435f",
+          "title": "Implement the new Redis Array type (#15162)",
+          "text": "Implement the new Redis Array type (#15162)\n\n# Redis Array\n\nFor years, Redis has been missing a real indexed data structure for the\nuse cases where the index and the spatial relationship of elements are\nsemantic. Hashes give you random lookups, but you have to store an index\nas a key, and have no range visibility. Lists give you appending and\ntrimming, but what is in the middle remains hard to access. Streams give\nyou append-only events, which is another (useful, indeed) beast. None of\nthese is what you want when the *position itself* has business meaning \u2014\nslot 37, step 4, row 18552, day from 2934 to 2949, file line 11, 12, 15\nand so forth. And, all those types, for different reasons, are a",
+          "url": null,
+          "date": "2026-05-13"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #15162",
+          "title": "Implement the new Redis Array type",
+          "text": "# Redis Array\r\n\r\nFor years, Redis has been missing a real indexed data structure for the use cases where the index and the spatial relationship of elements are semantic. Hashes give you random lookups, but you have to store an index as a key, and have no range visibility. Lists give you appending and trimming, but what is in the middle remains hard to access. Streams give you append-only events, which is another (useful, indeed) beast. None of these is what you want when the *position itself* has business meaning \u2014 slot 37, step 4, row 18552, day from 2934 to 2949, file line 11, 12, 15 and so forth. And, all those types, for different reasons, are all suboptimal when you want a **ring buffer** able to store the latest N observed samples of something.\r\n\r\nUp to now, users found ways (they always do \\o/) using the fact that the data structures that are obvious in this universe are also extremely powerful, if well implemented. But this forces compromises. Arrays handle these index-first requirements natively, and usually with much better memory and CPU usage than the workarounds. If the use case is the right one, Arrays often provide much better space, time and usability at the same time.\r\n\r\n## Internal encoding\r\n\r\n1. When dense, an Array is essentially a more fancy C array. You don't pay anything for storing the index.\r\n2. Yet, instead of going really flat, arrays are sliced into 4096-element slices, and each slice, when it contains just a few elements, uses a special sparse enc",
+          "url": "https://github.com/redis/redis/pull/15162",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash"
+    },
+    "Q20": {
+      "status": "explained",
+      "answer": "This line was introduced in commit fdeb97629e (PR #13558) to optimize the performance of HyperLogLog commands such as PFCOUNT and PFMERGE using SIMD acceleration. It forms part of the AVX2 fast paths added for conversion between raw and dense HyperLogLog representations, providing significantly faster execution compared to the scalar implementation.",
+      "citations": [
+        "E1",
+        "E3"
+      ],
+      "confidence": "high",
+      "reason": null,
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "fdeb97629e",
+          "title": "Optimize PFCOUNT, PFMERGE command by SIMD acceleration (#13558)",
+          "text": "Optimize PFCOUNT, PFMERGE command by SIMD acceleration (#13558)\n\nThis PR optimizes the performance of HyperLogLog commands (PFCOUNT,\nPFMERGE) by adding AVX2 fast paths.\n\nTwo AVX2 functions are added for conversion between raw representation\nand dense representation. They are 15 ~ 30 times faster than scalar\nimplementaion. Note that sparse representation is not accelerated.\n\nAVX2 fast paths are enabled when the CPU supports AVX2 (checked at\nruntime) and the hyperloglog configuration is default (HLL_REGISTERS ==\n16384 && HLL_BITS == 6).\n\nWhen merging 3 dense hll structures, the benchmark shows a 12x speedup\ncompared to the scalar version.\n\n```\npfcount key1 key2 key3\npfmerge keyall key1 key2 ke",
+          "url": null,
+          "date": "2024-11-08"
+        },
+        {
+          "id": "E2",
+          "kind": "issue",
+          "ref": "Issue #13551",
+          "title": "[NEW] Optimize HyperLogLog by SIMD acceleration",
+          "text": "We found that the dense-encoding part of HyperLogLog can be significantly accelerated by SIMD instructions.\r\n\r\nOur benchmark tests the performance of merging 3 dense hll structures.\r\n\r\n```\r\npfcount key1 key2 key3\r\npfmerge keyall key1 key2 key3\r\n```\r\n\r\nThe result shows a 12x speedup compared to the scalar version.\r\n\r\n```\r\n======================================================================================================\r\nType             Ops/sec    Avg. Latency     p50 Latency     p99 Latency   p99.9 Latency       KB/sec \r\n------------------------------------------------------------------------------------------------------\r\nPFCOUNT-scalar    5280.76        37.93893        34.81500        69.63100        73.72700       283.63\r\nPFCOUNT-avx2     69802.99         2.85844         2.75100         5.53500         6.97500      3749.18\r\n------------------------------------------------------------------------------------------------------\r\nPFMERGE-scalar    9445.56        21.17554        20.09500        38.91100        41.21500       590.35\r\nPFMERGE-avx2    120642.02         1.65367         1.59100         3.21500         5.11900      7540.13\r\n------------------------------------------------------------------------------------------------------\r\n\r\nCPU:    13th Gen Intel\u00ae Core\u2122 i9-13900H \u00d7 20\r\nMemory: 32.0 GiB\r\nOS:     Ubuntu 22.04.5 LTS\r\n```\r\n\r\n+ Fork: https://github.com/Nugine/redis/tree/hll-simd\r\n+ Experiment repo: https://github.com/Nugine/redis-hyperloglog\r\n+ Benchmark: https://",
+          "url": "https://github.com/redis/redis/issues/13551",
+          "date": null
+        },
+        {
+          "id": "E3",
+          "kind": "pr",
+          "ref": "PR #13558",
+          "title": "Optimize PFCOUNT, PFMERGE command by SIMD acceleration",
+          "text": "This PR optimizes the performance of HyperLogLog commands (PFCOUNT, PFMERGE) by adding AVX2 fast paths.\r\n\r\nTwo AVX2 functions are added for conversion between raw representation and dense representation. They are 15 ~ 30 times faster than scalar implementaion. Note that sparse representation is not accelerated.\r\n\r\nAVX2 fast paths are enabled when the CPU supports AVX2 (checked at runtime) and the hyperloglog configuration is default (HLL_REGISTERS == 16384 && HLL_BITS == 6).\r\n\r\nWhen merging 3 dense hll structures, the benchmark shows a 12x speedup compared to the scalar version.\r\n\r\n```\r\npfcount key1 key2 key3\r\npfmerge keyall key1 key2 key3\r\n```\r\n\r\n```\r\n======================================================================================================\r\nType             Ops/sec    Avg. Latency     p50 Latency     p99 Latency   p99.9 Latency       KB/sec \r\n------------------------------------------------------------------------------------------------------\r\nPFCOUNT-scalar    5570.09        35.89060        32.51100        65.27900        69.11900       299.17\r\nPFCOUNT-avx2     72604.92         2.82072         2.73500         5.50300         7.13500      3899.68\r\n------------------------------------------------------------------------------------------------------\r\nPFMERGE-scalar    7879.13        25.52156        24.19100        46.33500        48.38300       492.45\r\nPFMERGE-avx2    126448.64         1.58120         1.53500         3.08700         4.89500      7903.04\r\n-------",
+          "url": "https://github.com/redis/redis/pull/13558",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash",
+      "judge": {
+        "claims": [
+          {
+            "claim": "This line was introduced in commit fdeb97629e (PR #13558) to optimize the performance of HyperLogLog commands such as PFCOUNT and PFMERGE using SIMD acceleration.",
+            "evidence": [
+              "E1",
+              "E3"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "It forms part of the AVX2 fast paths added for conversion between raw and dense HyperLogLog representations.",
+            "evidence": [
+              "E1",
+              "E3"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "The AVX2 fast paths provide significantly faster execution compared to the scalar implementation.",
+            "evidence": [
+              "E1",
+              "E3"
+            ],
+            "supported": true
+          }
+        ],
+        "verdict": "correct",
+        "note": "The cited commit message and PR description directly support every claim about the purpose, conversion role, and speedup of the SIMD fast paths."
+      },
+      "judge_model": "gemini-4-hydrogen"
+    },
+    "Q21": {
+      "status": "abstained",
+      "answer": null,
+      "citations": [],
+      "confidence": null,
+      "reason": "The provided evidence describes the Hinted Hash Templates feature in PR #15364 but does not mention atomicvar.h or explain why this specific atomic store line was introduced.",
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "ba99faa230",
+          "title": "Introduce hinted hash templates (#15364)",
+          "text": "Introduce hinted hash templates (#15364)\n\n# Hinted Hash Templates\n\n## Summary\n\nThis PR introduces Hinted Hash Templates, a way to cut the memory used\nby hashes that share the same field names.\n\nWhen many hashes have the same layout (for example one hash per user,\neach with name, email, age), every key normally stores its own copy of\nthose field names. With this new feature, the shared field-name set is\nstored once in an internal template and each key keeps only its values\nplus a small reference to it. Redis creates, shares (reference-counted),\nand frees templates automatically.\n\nTemplates are an internal encoding, not exposed to users: for most\ncases, users may not tell the difference. Exist",
+          "url": null,
+          "date": "2026-07-18"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #15364",
+          "title": "Introduce hinted hash templates",
+          "text": "# Hinted Hash Templates\r\n\r\n## Summary\r\n\r\nThis PR introduces Hinted Hash Templates, a way to cut the memory used by hashes that share the same field names.\r\n\r\nWhen many hashes have the same layout (for example one hash per user, each with name, email, age), every key normally stores its own copy of those field names. With this new feature, the shared field-name set is stored once in an internal template and each key keeps only its values plus a small reference to it. Redis creates, shares (reference-counted), and frees templates automatically.\r\n\r\nTemplates are an internal encoding, not exposed to users: for most cases, users may not tell the difference. Existing hash commands keep working exactly as before, with the same semantics and replies; the hash just uses less memory. The application never creates or sees a template. As templates are internal encoding, Redis is free choose when to encode a hash as template based or convert a template based key back to plain hash (to listpack or hashtable encoding). \r\n\r\nThe PR exposes this two ways, both opt-in:\r\n\r\n**1. A new command: HIMPORT.** An explicit bulk-import API for hashes. A client first names a fieldset with `HIMPORT PREPARE` (sending the field names once), then creates keys with `HIMPORT SET` by sending only the values:\r\n\r\n```shell\r\n# HIMPORT PREPARE <fieldset-name> <field1> <field2> <field3> ...  -- name a reusable set of field names\r\nHIMPORT PREPARE u name email age\r\n\r\n# HIMPORT SET <key> <fieldset-name> <value> ...  -- c",
+          "url": "https://github.com/redis/redis/pull/15364",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash"
+    },
+    "Q22": {
+      "status": "explained",
+      "answer": "This line exists as part of vendoring the CRoaring v4.7.2 library into Redis under `deps/croaring` via commit f3b9b68ec6 and PR #15331 [E1, E3]. The library was added to provide a native compressed Roaring bitmap representation to address Issue #15296, cutting memory usage for sparse or large bitmap workloads while preserving bit semantics [E1, E2, E3].",
+      "citations": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "confidence": "high",
+      "reason": null,
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "f3b9b68ec6",
+          "title": "Redis native compressed bitmaps (redis-roaring) (#15331)",
+          "text": "Redis native compressed bitmaps (redis-roaring) (#15331)\n\nFixes #15296\n\n## Native Roaring bitmaps\n\nAdds a native **Roaring bitmap** representation for Redis bitmaps,\nbacked by vendored **CRoaring v4.7.2** (`deps/croaring`, built with SIMD\ndisabled and symbols hidden for portability). A string bitmap costs one\nbyte per 8 bit positions up to its highest offset, regardless of how\nmany bits are set; sparse or large bitmaps are instead stored\ncompressed, cutting memory dramatically while preserving exact bit\nsemantics.\n\n### Type & object model\n- New object type `OBJ_BITMAP` with encoding\n`OBJ_ENCODING_BITMAP_ROARING`. `TYPE` \u2192 `bitmap`, `OBJECT ENCODING` \u2192\n`bitmap-roaring`.\n- Object header: `enco",
+          "url": null,
+          "date": "2026-10-14"
+        },
+        {
+          "id": "E2",
+          "kind": "issue",
+          "ref": "Issue #15296",
+          "title": "[NEW] Compressed bitmaps on Redis",
+          "text": "**The problem/use-case that the feature addresses**\n\nRedis current bitmap representation is very simple: raw string values have their bits set whenever an operation is performed. This preserves simple and powerful semantics, but it can be memory-inefficient for sparse or high-offset bitmap workloads:\n\n- user activity flags\n- sparse ID membership\n- analytics\n\nToday, users who need compressed bitmap storage often use external modules such as [redisroaring](https://redisroaring.com). That demonstrates demand for compressed bitmaps, but modules introduce separate types, commands,  and migration complexity.\n\nThis proposal is to integrate compressed bitmaps on Redis core.\n\nAs for the specific implementation, it's worth noting that [CRoaring](https://github.com/RoaringBitmap/CRoaring) is one of the most performant and well maintained libraries in the world, so it's the best first pick for this optimization.\n\nThis suggestion would reduce memory usage for bitmap workloads while preserving the existing API and allowing for more interesting use cases.\n\n**Description of the feature**\n\nAdd Roaring Bitmap as a native internal encoding for Redis string bitmap values.\n\nThe feature would keep Redis bitmap values as strings from the user's point of view:\n\n- `TYPE key` continues to return `string`.\n- Existing commands such as `SETBIT`, `GETBIT`, `BITCOUNT`, `BITPOS`, `BITOP`, `BITFIELD`, and `BITFIELD_RO` preserve their current behavior.\n- Generic string commands continue to observe the exact s",
+          "url": "https://github.com/redis/redis/issues/15296",
+          "date": null
+        },
+        {
+          "id": "E3",
+          "kind": "pr",
+          "ref": "PR #15331",
+          "title": "Redis native compressed bitmaps (redis-roaring)",
+          "text": "Fixes #15296\n\n## Native Roaring bitmaps\n\nAdds a native **Roaring bitmap** representation for Redis bitmaps, backed by vendored **CRoaring v4.7.2** (`deps/croaring`, built with SIMD disabled and symbols hidden for portability). A string bitmap costs one byte per 8 bit positions up to its highest offset, regardless of how many bits are set; sparse or large bitmaps are instead stored compressed, cutting memory dramatically while preserving exact bit semantics.\n\n### Type & object model\n- New object type `OBJ_BITMAP` with encoding `OBJ_ENCODING_BITMAP_ROARING`. `TYPE` \u2192 `bitmap`, `OBJECT ENCODING` \u2192 `bitmap-roaring`.\n- Object header: `encoding` widened 4\u21925 bits to fit the new encoding value; to keep `redisObject` the same width, `refcount` drops 23\u219222 bits, lowering the maximum non-shared refcount from 8388605 to 4194301 (still far above any real per-object refcount).\n\n### Enabling it \u2014 `bitmap-default-roaring`\n- New boolean config (default **no**, runtime-modifiable). When **off**, bitmap writes keep creating plain strings. Native bitmaps remain supported and can enter the keyspace through `BITOP` with a Roaring source, `RESTORE`, replication, or loading an RDB/AOF containing them.\n- When **on**, bit-writes that create or extend a bitmap produce a native Roaring bitmap, an existing string bitmap converts in place on the next bit-write (TTL and module metadata preserved), and `BITOP` destinations are Roaring. Automatic creation/conversion is disabled on replicas and when a write's",
+          "url": "https://github.com/redis/redis/pull/15331",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash",
+      "judge": {
+        "claims": [
+          {
+            "claim": "This line exists as part of vendoring the CRoaring v4.7.2 library into Redis under deps/croaring via commit f3b9b68ec6 and PR #15331.",
+            "evidence": [
+              "E1",
+              "E3"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "The CRoaring library was added to provide a native compressed Roaring bitmap representation to address Issue #15296.",
+            "evidence": [
+              "E1",
+              "E2",
+              "E3"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "The native Roaring bitmap representation cuts memory usage for sparse or large bitmap workloads while preserving bit semantics.",
+            "evidence": [
+              "E1",
+              "E2",
+              "E3"
+            ],
+            "supported": true
+          }
+        ],
+        "verdict": "correct",
+        "note": "All claims accurately reflect the cited commit, issue, and PR describing the vendoring of CRoaring v4.7.2 under deps/croaring for native compressed bitmaps."
+      },
+      "judge_model": "gemini-4-hydrogen"
+    },
+    "Q23": {
+      "status": "explained",
+      "answer": "This line was added in commit 9f8885760b (PR #8621) to implement sharded pubsub based on shard channels and cluster hashing [E1, E2]. PR #8621 introduced this implementation along with shard-specific commands such as SPUBLISH, SSUBSCRIBE, and SUNSUBSCRIBE, where the prefix 'S' denotes 'SHARD' [E2].",
+      "citations": [
+        "E1",
+        "E2"
+      ],
+      "confidence": "medium",
+      "reason": null,
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "9f8885760b",
+          "title": "Sharded pubsub implementation (#8621)",
+          "text": "Sharded pubsub implementation (#8621)\n\nThis commit implements a sharded pubsub implementation based off of shard channels.\n\nCo-authored-by: Harkrishn Patro <harkrisp@amazon.com>\nCo-authored-by: Madelyn Olson <madelyneolson@gmail.com>",
+          "url": null,
+          "date": "2022-01-03"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #8621",
+          "title": "Sharded pubsub implementation",
+          "text": "This is a PR to support a sharded pubsub implementation based on cluster hashing.\r\n\r\nAPI Definitions can be found [here](https://github.com/redis/redis/issues/8029#issuecomment-793160824)\r\n \r\nNew commands introduced:\r\n* SPUBLISH\r\n* SSUBSCRIBE\r\n* SUNSUBSCRIBE\r\n\r\nPrefix `S` denotes `SHARD`.\r\n\r\nNew Sub commands\r\n* PUBSUB SHARDCHANNELS\r\n* PUBSUB SHARDNUMSUB\r\n\r\nNew Configs\r\n\r\n* cluster-allow-pubsubshard-when-down: Controls whether local pubsub is allowed when the cluster is down (when a majority of slots can't be served or we can't reach a majority of primaries.) Unlike key based commands, which defaults to rejecting commands, pubusub by default allows pubsub messages, since they are best effort. \r\n\r\nConsiderations made:\r\n* Slot Migration and cleanup are handled. Slot migration works by having the migrating node continue to serve the pubsub channels, and at the very end of the migration clients will be redirected to the importing node. \r\n* Local channels are allocated to the same node as keys (same hashing logic).\r\n* Client(s) will be redirected to the master node of the slot if they try to connect to a node not serving the slot.\r\n* Client(s) can connect to replica node(s) serving the slot and perform operations.\r\n* READ_ONLY flag doesn't impact pubsublocal feature. As pubsub operations are neither read/write.\r\n* Global channels and local channels share the ACL rule(s).\r\n* Client(s) are sent a \"unsubscribe <channel>\" for each channel in the slot when on slot migration after applyi",
+          "url": "https://github.com/redis/redis/pull/8621",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash",
+      "judge": {
+        "claims": [
+          {
+            "claim": "This line was added in commit 9f8885760b (PR #8621) to implement sharded pubsub based on shard channels and cluster hashing.",
+            "evidence": [
+              "E1",
+              "E2"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "PR #8621 introduced this implementation along with shard-specific commands such as SPUBLISH, SSUBSCRIBE, and SUNSUBSCRIBE, where the prefix 'S' denotes 'SHARD'.",
+            "evidence": [
+              "E2"
+            ],
+            "supported": true
+          }
+        ],
+        "verdict": "correct",
+        "note": "Both claims accurately reflect the commit and PR details provided in the evidence for sharded pubsub."
+      },
+      "judge_model": "gemini-4-hydrogen"
+    },
+    "Q24": {
+      "status": "abstained",
+      "answer": null,
+      "citations": [],
+      "confidence": null,
+      "reason": "The provided evidence only discusses the implementation of the Redis Array data structure in commit 0d9576435f and PR #15162, with no mention or explanation of the TRE regex library error message line in deps/tre/lib/regerror.c.",
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "0d9576435f",
+          "title": "Implement the new Redis Array type (#15162)",
+          "text": "Implement the new Redis Array type (#15162)\n\n# Redis Array\n\nFor years, Redis has been missing a real indexed data structure for the\nuse cases where the index and the spatial relationship of elements are\nsemantic. Hashes give you random lookups, but you have to store an index\nas a key, and have no range visibility. Lists give you appending and\ntrimming, but what is in the middle remains hard to access. Streams give\nyou append-only events, which is another (useful, indeed) beast. None of\nthese is what you want when the *position itself* has business meaning \u2014\nslot 37, step 4, row 18552, day from 2934 to 2949, file line 11, 12, 15\nand so forth. And, all those types, for different reasons, are a",
+          "url": null,
+          "date": "2026-05-13"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #15162",
+          "title": "Implement the new Redis Array type",
+          "text": "# Redis Array\r\n\r\nFor years, Redis has been missing a real indexed data structure for the use cases where the index and the spatial relationship of elements are semantic. Hashes give you random lookups, but you have to store an index as a key, and have no range visibility. Lists give you appending and trimming, but what is in the middle remains hard to access. Streams give you append-only events, which is another (useful, indeed) beast. None of these is what you want when the *position itself* has business meaning \u2014 slot 37, step 4, row 18552, day from 2934 to 2949, file line 11, 12, 15 and so forth. And, all those types, for different reasons, are all suboptimal when you want a **ring buffer** able to store the latest N observed samples of something.\r\n\r\nUp to now, users found ways (they always do \\o/) using the fact that the data structures that are obvious in this universe are also extremely powerful, if well implemented. But this forces compromises. Arrays handle these index-first requirements natively, and usually with much better memory and CPU usage than the workarounds. If the use case is the right one, Arrays often provide much better space, time and usability at the same time.\r\n\r\n## Internal encoding\r\n\r\n1. When dense, an Array is essentially a more fancy C array. You don't pay anything for storing the index.\r\n2. Yet, instead of going really flat, arrays are sliced into 4096-element slices, and each slice, when it contains just a few elements, uses a special sparse enc",
+          "url": "https://github.com/redis/redis/pull/15162",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash"
+    },
+    "Q25": {
+      "status": "abstained",
+      "answer": null,
+      "citations": [],
+      "confidence": null,
+      "reason": "The provided evidence does not mention commit cf83803880, src/crccombine.c, or the line of code in question.",
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "5075e74366",
+          "title": "Optimized `hdr_value_at_percentile` (#10606)",
+          "text": "Optimized `hdr_value_at_percentile` (#10606)\n\n`hdr_value_at_percentile()` is part of the Hdr_Histogram library\nused when generating `latencystats` report. \n\nThere's a pending optimization for this function which greatly\naffects the performance of `info latencystats`.\nhttps://github.com/HdrHistogram/HdrHistogram_c/pull/107\n\nThis PR:\n1. Upgrades the sources in _deps/hdr_histogram_ to the latest Hdr_Histogram\n  version 0.11.5\n2. Applies the referenced optimization.\n3. Adds minor documentation about the hdr_histogram dependency which was\n  missing under _deps/README.md_.\n\nbenchmark on my machine:\nrunning: `redis-benchmark -n 100000 info latencystats` on a clean build with no data.\n\n| benchmark |",
+          "url": null,
+          "date": "2022-04-20"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #10606",
+          "title": "Optimized `hdr_value_at_percentile`",
+          "text": "`hdr_value_at_percentile()` is part of the Hdr_Histogram library used when generating `latencystats` report. \r\n\r\nThere's a [pending optimization](https://github.com/HdrHistogram/HdrHistogram_c/pull/107) for this function which greatly affects the performance of `info latencystats`.\r\n\r\nThis PR:\r\n1. Upgrades the sources in _deps/hdr_histogram_ to the latest Hdr_Histogram version 0.11.5\r\n2. Applies the referenced optimization.\r\n3. Adds minor documentation about the hdr_histogram dependency which was missing under _deps/README.md_.\r\n\r\nbenchmark on my machine:\r\nrunning: `redis-benchmark -n 100000 info latencystats` on a clean build with no data.\r\n\r\n| benchmark | RPS |\r\n| ---- | ---- |\r\n| before upgrade to v0.11.05  | 7,681 |\r\n| before optimization | 12,474 |\r\n| after optimization | 52,606 |",
+          "url": "https://github.com/redis/redis/pull/10606",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash"
+    },
+    "Q26": {
+      "status": "abstained",
+      "answer": null,
+      "citations": [],
+      "confidence": null,
+      "reason": "The provided evidence does not mention commit 0d9576435f, src/t_array.c, or the purpose of line 1829.",
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "b9800e06b2",
+          "title": "RED-211767 - Add BLESS \u2014 protect keys from eviction (#15649)",
+          "text": "RED-211767 - Add BLESS \u2014 protect keys from eviction (#15649)\n\n# Add `BLESS` \u2014 protect keys from eviction\n\nAdds `BLESS`, a keyspace command family for marking specific keys as\n**NO-EVICT** under `maxmemory`. A blessed key is never chosen as an\neviction victim. The protection is stored per-key and survives restart\n(RDB/AOF), replication, and slot migration.\n\n## Commands\n\nAll `since 8.12.0`, container `BLESS`.\n\n| Command | Description | Reply | Flags |\n| --- | --- | --- | --- |\n| `BLESS SET <key> NO-EVICT` | Turn the flag on | `1` if the key's flag\nset changed, else `0` | WRITE, DENYOOM, FAST |\n| `BLESS CLEAR <key> NO-EVICT` | Turn the flag off | `1` / `0` | WRITE,\nFAST |\n| `BLESS GET <key>` |",
+          "url": null,
+          "date": "2026-09-15"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #15649",
+          "title": "RED-211767 - Add BLESS \u2014 protect keys from eviction",
+          "text": "# Add `BLESS` \u2014 protect keys from eviction\r\n\r\nAdds `BLESS`, a keyspace command family for marking specific keys as **NO-EVICT** under `maxmemory`. A blessed key is never chosen as an eviction victim. The protection is stored per-key and survives restart (RDB/AOF), replication, and slot migration.\r\n\r\n## Commands\r\n\r\nAll `since 8.12.0`, container `BLESS`.\r\n\r\n| Command | Description | Reply | Flags |\r\n| --- | --- | --- | --- |\r\n| `BLESS SET <key> NO-EVICT` | Turn the flag on | `1` if the key's flag set changed, else `0` | WRITE, DENYOOM, FAST |\r\n| `BLESS CLEAR <key> NO-EVICT` | Turn the flag off | `1` / `0` | WRITE, FAST |\r\n| `BLESS GET <key>` | The key's active flag names (`[]` if none) | array; errors if the key is missing | FAST |\r\n| `BLESS SCAN <cursor> NO-EVICT [COUNT <count>]` | Cursored scan of the current DB's blessed keys carrying the flag | `[cursor, [key ...]]` | \u2014 |\r\n\r\n- The flag argument is **mandatory** \u2014 there is no default.\r\n- `BLESS CLEAR` is intentionally **not** DENYOOM, so you can always unbless to recover under memory pressure.\r\n- `BLESS SCAN` mirrors `SCAN` semantics (`COUNT` is a hint, buckets are emitted whole). Without `COUNT` the whole index is returned in one call with cursor `0`; with `COUNT` it paginates.\r\n- `INFO Stats \u2192 blessed_keys` \u2014 instance-wide count of blessed keys (replaces the earlier `BLESS COUNT` idea).\r\n\r\n## Eviction\r\n\r\nBlessed keys are never chosen as eviction victims, on all `maxmemory` policies (LRU / LFU / random, and the `volatile-*`",
+          "url": "https://github.com/redis/redis/pull/15649",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash"
+    },
+    "Q27": {
+      "status": "abstained",
+      "answer": null,
+      "citations": [],
+      "confidence": null,
+      "reason": "The provided evidence only discusses the Redis Array data structure (commit 0d9576435f and PR #15162) and contains no information regarding commit 94aebb7324 or modules/vector-sets/vset_config.h.",
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "0d9576435f",
+          "title": "Implement the new Redis Array type (#15162)",
+          "text": "Implement the new Redis Array type (#15162)\n\n# Redis Array\n\nFor years, Redis has been missing a real indexed data structure for the\nuse cases where the index and the spatial relationship of elements are\nsemantic. Hashes give you random lookups, but you have to store an index\nas a key, and have no range visibility. Lists give you appending and\ntrimming, but what is in the middle remains hard to access. Streams give\nyou append-only events, which is another (useful, indeed) beast. None of\nthese is what you want when the *position itself* has business meaning \u2014\nslot 37, step 4, row 18552, day from 2934 to 2949, file line 11, 12, 15\nand so forth. And, all those types, for different reasons, are a",
+          "url": null,
+          "date": "2026-05-13"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #15162",
+          "title": "Implement the new Redis Array type",
+          "text": "# Redis Array\r\n\r\nFor years, Redis has been missing a real indexed data structure for the use cases where the index and the spatial relationship of elements are semantic. Hashes give you random lookups, but you have to store an index as a key, and have no range visibility. Lists give you appending and trimming, but what is in the middle remains hard to access. Streams give you append-only events, which is another (useful, indeed) beast. None of these is what you want when the *position itself* has business meaning \u2014 slot 37, step 4, row 18552, day from 2934 to 2949, file line 11, 12, 15 and so forth. And, all those types, for different reasons, are all suboptimal when you want a **ring buffer** able to store the latest N observed samples of something.\r\n\r\nUp to now, users found ways (they always do \\o/) using the fact that the data structures that are obvious in this universe are also extremely powerful, if well implemented. But this forces compromises. Arrays handle these index-first requirements natively, and usually with much better memory and CPU usage than the workarounds. If the use case is the right one, Arrays often provide much better space, time and usability at the same time.\r\n\r\n## Internal encoding\r\n\r\n1. When dense, an Array is essentially a more fancy C array. You don't pay anything for storing the index.\r\n2. Yet, instead of going really flat, arrays are sliced into 4096-element slices, and each slice, when it contains just a few elements, uses a special sparse enc",
+          "url": "https://github.com/redis/redis/pull/15162",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash"
+    },
+    "Q28": {
+      "status": "explained",
+      "answer": "This line was introduced in commit 2fdaba49c7 to resolve issue #4963, where SVG <use> elements swallowed click events [E1]. In Edge and IE11 or earlier, clicking an SVG icon rendered with a <use> tag would fail to bubble events to onClick handlers on parent elements such as anchors [E2].",
+      "citations": [
+        "E1",
+        "E2"
+      ],
+      "confidence": "high",
+      "reason": null,
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "2fdaba49c7",
+          "title": "Fix #4963 - SVG <use> swallows click events",
+          "text": "Fix #4963 - SVG <use> swallows click events",
+          "url": null,
+          "date": "2016-02-17"
+        },
+        {
+          "id": "E2",
+          "kind": "issue",
+          "ref": "Issue #4963",
+          "title": "Click events are swallowed by SVG <use> elements in IE",
+          "text": "We've only managed to replicate this in Edge and <=IE11, not Chrome or Firefox. We've created a demo of the issue with [this jsbin](http://jsbin.com/jojosesupe).\n\nWe're using a common SVG element and linking to it with `xlink:href` as is common with SVG icons. When linking to the icons with a `<use>` tag inside an anchor, all click events on the icon will not bubble to onClick handlers on the anchor.\n\nAn example: I have a common SVG element with an icon `<svg><rect id=\"my-icon\" width=\"100\" height=\"100\"></rect></svg>`. I then make a link containing my icon `<a href=\"https://github.com\"><svg dangerouslySetInnerHTML={{__html: '<use xlink:href=\"#my-icon\"></use>'}}></svg></a>`. As `xlink:href` isn't supported by react yet, we have to use `dangerouslySetInnerHTML`. If we now click the SVG **any onClick handlers on the anchor will not run**.\n\nA temporary workaround is setting `pointer-events: none` on the SVG element inside the anchor.\n\nThis might be a dupe of #1509",
+          "url": "https://github.com/react/react/issues/4963",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash",
+      "judge": {
+        "claims": [
+          {
+            "claim": "This line was introduced in commit 2fdaba49c7 to resolve issue #4963, where SVG <use> elements swallowed click events.",
+            "evidence": [
+              "E1"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "In Edge and IE11 or earlier, clicking an SVG icon rendered with a <use> tag would fail to bubble events to onClick handlers on parent elements such as anchors.",
+            "evidence": [
+              "E2"
+            ],
+            "supported": true
+          }
+        ],
+        "verdict": "correct",
+        "note": "Both claims accurately reflect the cited commit message and issue description explaining why this code was added."
+      },
+      "judge_model": "gemini-4-hydrogen"
+    },
+    "Q29": {
+      "status": "explained",
+      "answer": "This line exists to add `resumeAndPrerender` capabilities to static rendering experimental exports alongside `resume`, as introduced in PR #30950. It enables performing a new prerender by resuming an already existing postponed state, useful with Postpone/Halt. This allows the creation of a chain of preludes where subsequent preludes include scripts to patch up the document.",
+      "citations": [
+        "E1",
+        "E2"
+      ],
+      "confidence": "high",
+      "reason": null,
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "473522093d",
+          "title": "[Fizz] Add resumeAndPrerender to Static Rendering (#30950)",
+          "text": "[Fizz] Add resumeAndPrerender to Static Rendering (#30950)\n\nThis is only in the same experimental exports as `resume`. Useful with\nPostpone/Halt.\n\nWe already have `prerender()` to create a partial tree with postponed\nstate. We also have `resume()` to dynamically resume such a tree.\n\nThis lets you do a new prerender by resuming an already existing\npostponed state. Basically creating a chain of preludes. The next\nprelude would include the scripts to patch up the document.\n\nThis mostly just works since both prerender and resume are already\nimplemented using the same code so we just enable both at the root. I'm\nsure we'll find some edge cases since this wasn't considered when it was\nfirst writte",
+          "url": null,
+          "date": "2024-09-12"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #30950",
+          "title": "[Fizz] Add resumeAndPrerender to Static Rendering",
+          "text": "This is only in the same experimental exports as `resume`. Useful with Postpone/Halt.\r\n\r\nWe already have `prerender()` to create a partial tree with postponed state. We also have `resume()` to dynamically resume such a tree.\r\n\r\nThis lets you do a new prerender by resuming an already existing postponed state. Basically creating a chain of preludes. The next prelude would include the scripts to patch up the document.\r\n\r\nThis mostly just works since both prerender and resume are already implemented using the same code so we just enable both at the root. I'm sure we'll find some edge cases since this wasn't considered when it was first written but so far I've only found an unrelated existing bug with `keyPath` fixed here.",
+          "url": "https://github.com/react/react/pull/30950",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash",
+      "judge": {
+        "claims": [
+          {
+            "claim": "This line exists to add resumeAndPrerender capabilities to static rendering experimental exports alongside resume, as introduced in PR #30950.",
+            "evidence": [
+              "E1",
+              "E2"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "It enables performing a new prerender by resuming an already existing postponed state, which is useful with Postpone/Halt.",
+            "evidence": [
+              "E1",
+              "E2"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "This allows creating a chain of preludes where subsequent preludes include scripts to patch up the document.",
+            "evidence": [
+              "E1",
+              "E2"
+            ],
+            "supported": true
+          }
+        ],
+        "verdict": "correct",
+        "note": "Every claim in the explanation directly reflects the purpose and details described in the commit message and PR description."
+      },
+      "judge_model": "gemini-4-hydrogen"
+    },
+    "Q30": {
+      "status": "abstained",
+      "answer": null,
+      "citations": [],
+      "confidence": null,
+      "reason": "The provided evidence describes the addition of reply encoding (encodeReply and decodeReply) in commit ef8bdbecb6 and PR #26360, but it does not mention resolveServerReference or explain why this specific function exists.",
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "ef8bdbecb6",
+          "title": "[Flight Reply] Add Reply Encoding (#26360)",
+          "text": "[Flight Reply] Add Reply Encoding (#26360)\n\nThis adds `encodeReply` to the Flight Client and `decodeReply` to the\nFlight Server.\n\nBasically, it's a reverse Flight. It serializes values passed from the\nclient to the server. I call this a \"Reply\". The tradeoffs and\nimplementation details are a bit different so it requires its own\nimplementation but is basically a clone of the Flight Server/Client but\nin reverse. Either through callServer or ServerContext.\n\nThe goal of this project is to provide the equivalent serialization as\npassing props through RSC to client. Except React Elements and\nComponents and such. So that you can pass a value to the client and back\nand it should have the same serial",
+          "url": null,
+          "date": "2023-03-10"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #26360",
+          "title": "[Flight Reply] Add Reply Encoding",
+          "text": "This adds `encodeReply` to the Flight Client and `decodeReply` to the Flight Server.\r\n\r\nBasically, it's a reverse Flight. It serializes values passed from the client to the server. I call this a \"Reply\". The tradeoffs and implementation details are a bit different so it requires its own implementation but is basically a clone of the Flight Server/Client but in reverse. Either through callServer or ServerContext.\r\n\r\nThe goal of this project is to provide the equivalent serialization as passing props through RSC to client. Except React Elements and Components and such. So that you can pass a value to the client and back and it should have the same serialization constraints so when we add features in one direction we should mostly add it in the other.\r\n\r\nBrowser support for streaming request bodies are currently very limited in that only Chrome supports it. So this doesn't produce a ReadableStream. Instead `encodeReply` produces either a JSON string or FormData. It uses a JSON string if it's a simple enough payload. For advanced features it uses FormData. This will also let the browser stream things like File objects (even though they're not yet supported since it follows the same rules as the other Flight).\r\n\r\nOn the server side, you can either consume this by blocking on generating a FormData object or you can stream in the `multipart/form-data`. Even if the client isn't streaming data, the network does. On Node.js busboy seems to be the canonical library for this, so I expose",
+          "url": "https://github.com/react/react/pull/26360",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash"
+    },
+    "Q31": {
+      "status": "abstained",
+      "answer": null,
+      "citations": [],
+      "confidence": null,
+      "reason": "The provided evidence mentions adding fixture components in commit 2757a53fa5 and PR #8860, but does not provide any specific explanation or details regarding why the handleChange function in RadioClickFixture exists.",
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "2757a53fa5",
+          "title": "Add fixture components (#8860)",
+          "text": "Add fixture components (#8860)\n\n* add fixture components\n\n* add a few more options and styles\n\n* Test fixture updates\n\n- Pull in React from window global\n- Add field to TestCase for fix PR links\n- Update some styles\n\n* Remove unused Fixture.Result comment\n\n* Remove leading # from resolvedBy link\n\n* Implement tag loading utility that caches response\n\nDon't bust the cache doing feature detection\n\nCOME ON\n\n* Use 'local' without version for option",
+          "url": null,
+          "date": "2017-03-02"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #8860",
+          "title": "Add fixture components",
+          "text": "related to: #8583\r\n\r\nLet me know if this is way off base with what ya\u2019ll are thinking :P Always fun to see how others build stuff\r\n\r\ncc @nhunzaker @aweary",
+          "url": "https://github.com/react/react/pull/8860",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash"
+    },
+    "Q32": {
+      "status": "explained",
+      "answer": "According to PR #34803 and commit b9ec735de2, performance measures must be cleared because recording copies of props can otherwise allocate too much memory in Chromium. This line adds a `performance.clearMeasures(...)` call in DEV mode to clean up these potentially large measures while still ensuring timeline entries appear in the Performance panel.",
+      "citations": [
+        "E1",
+        "E2"
+      ],
+      "confidence": "high",
+      "reason": null,
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "b9ec735de2",
+          "title": "[Perf Tracks]: Clear potentially large measures (#34803)",
+          "text": "[Perf Tracks]: Clear potentially large measures (#34803)\n\nFixes https://github.com/facebook/react/issues/34770.\n\nWe need to clear measures at some point, otherwise all these copies of\nprops that we end up recording will allocate too much memory in\nChromium. This adds `performance.clearMeasures(...)` calls to such cases\nin DEV.\n\nValidated that entries are still shown on Performance panel timeline.",
+          "url": null,
+          "date": "2025-10-13"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #34803",
+          "title": "[Perf Tracks]: Clear potentially large measures",
+          "text": "Fixes https://github.com/facebook/react/issues/34770.\r\n\r\nWe need to clear measures at some point, otherwise all these copies of props that we end up recording will allocate too much memory in Chromium.  This adds `performance.clearMeasures(...)` calls to such cases in DEV.\r\n\r\nValidated that entries are still shown on Performance panel timeline.",
+          "url": "https://github.com/react/react/pull/34803",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash",
+      "judge": {
+        "claims": [
+          {
+            "claim": "According to PR #34803 and commit b9ec735de2, performance measures must be cleared because recording copies of props can otherwise allocate too much memory in Chromium.",
+            "evidence": [
+              "E1",
+              "E2"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "This line adds a `performance.clearMeasures(...)` call in DEV mode to clean up potentially large measures.",
+            "evidence": [
+              "E1",
+              "E2"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "This cleanup is done while still ensuring timeline entries appear in the Performance panel.",
+            "evidence": [
+              "E1",
+              "E2"
+            ],
+            "supported": true
+          }
+        ],
+        "verdict": "correct",
+        "note": "Every claim in the explanation is directly supported by the commit message in E1 and the PR description in E2."
+      },
+      "judge_model": "gemini-4-hydrogen"
+    },
+    "Q33": {
+      "status": "explained",
+      "answer": "This code was added in PR #31725 to implement the `react-server-dom-parcel` package, which provides a React Server Components (RSC) integration for the Parcel bundler (E1, E2). The package was mostly copied from existing webpack and turbopack integrations, with modifications to use Parcel runtime APIs for loading and executing modules (E1, E2). In this setup, Parcel automatically injects references and registers server action IDs using `react-server-dom-parcel` (E2).",
+      "citations": [
+        "E1",
+        "E2"
+      ],
+      "confidence": "high",
+      "reason": null,
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "ca587425fe",
+          "title": "Implement react-server-dom-parcel (#31725)",
+          "text": "Implement react-server-dom-parcel (#31725)\n\nThis adds a new `react-server-dom-parcel-package`, which is an RSC\nintegration for the Parcel bundler. It is mostly copied from the\nexisting webpack/turbopack integrations, with some changes to utilize\nParcel runtime APIs for loading and executing bundles/modules.\n\nSee https://github.com/parcel-bundler/parcel/pull/10043 for the Parcel\nside of this, which includes the plugin needed to generate client and\nserver references. https://github.com/parcel-bundler/rsc-examples also\nincludes examples of various ways to use RSCs with Parcel.\n\nDifferences from other integrations:\n\n* Client and server modules are all part of the same graph, and we use\nParcel's",
+          "url": null,
+          "date": "2024-12-12"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #31725",
+          "title": "Implement react-server-dom-parcel",
+          "text": "This adds a new `react-server-dom-parcel-package`, which is an RSC integration for the Parcel bundler. It is mostly copied from the existing webpack/turbopack integrations, with some changes to utilize Parcel runtime APIs for loading and executing bundles/modules.\r\n\r\nSee https://github.com/parcel-bundler/parcel/pull/10043 for the Parcel side of this, which includes the plugin needed to generate client and server references. https://github.com/parcel-bundler/rsc-examples also includes examples of various ways to use RSCs with Parcel.\r\n\r\nDifferences from other integrations:\r\n\r\n* Client and server modules are all part of the same graph, and we use Parcel's [environments](https://parceljs.org/plugin-system/transformer/#the-environment) to distinguish them. The server is the Parcel build entry point, and it imports and renders server components in route handlers. When a `\"use client\"` directive is seen, the environment changes and Parcel creates a new client bundle for the page, combining all client modules together. CSS from both client and server components are also combined automatically.\r\n* There is no separate manifest file that needs to be passed around by the user. A [Runtime](https://parceljs.org/plugin-system/runtime/) plugin injects client and server references as needed into the relevant bundles, and registers server action ids using `react-server-dom-parcel` automatically.\r\n* A special `<Resources>` component is also generated by Parcel to render the `<script>` and `<l",
+          "url": "https://github.com/react/react/pull/31725",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash",
+      "judge": {
+        "claims": [
+          {
+            "claim": "This code was added in PR #31725 to implement the react-server-dom-parcel package, which provides a React Server Components (RSC) integration for the Parcel bundler.",
+            "evidence": [
+              "E1",
+              "E2"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "The package was mostly copied from existing webpack and turbopack integrations, with modifications to use Parcel runtime APIs for loading and executing modules.",
+            "evidence": [
+              "E1",
+              "E2"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "In this setup, Parcel automatically injects references and registers server action IDs using react-server-dom-parcel.",
+            "evidence": [
+              "E2"
+            ],
+            "supported": true
+          }
+        ],
+        "verdict": "correct",
+        "note": "Every claim in the explanation is directly supported by the commit and PR descriptions for implementing react-server-dom-parcel."
+      },
+      "judge_model": "gemini-4-hydrogen"
+    },
+    "Q34": {
+      "status": "explained",
+      "answer": "This line was introduced in commit 7e405d458d (PR #18994) to support adding DevTools forked feature flags [E1, E2]. The commit was also created to resolve an uncaught error in extension builds reported in issue #18843 [E1, E3].",
+      "citations": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "confidence": "medium",
+      "reason": null,
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "7e405d458d",
+          "title": "[DevTools] Add DevTools forked Feature flags (#18994)",
+          "text": "[DevTools] Add DevTools forked Feature flags (#18994)\n\nAlso resolve an uncaught error in extension build (#18843).\n\nCo-authored-by: Brian Vaughn <brian.david.vaughn@gmail.com>\nCo-authored-by: Brian Vaughn <bvaughn@fb.com>",
+          "url": null,
+          "date": "2020-10-12"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #18994",
+          "title": "[DevTools] Add DevTools forked Feature flags",
+          "text": "resolve #18843\r\nanother option is just use process.env.TARGET",
+          "url": "https://github.com/react/react/pull/18994",
+          "date": null
+        },
+        {
+          "id": "E3",
+          "kind": "issue",
+          "ref": "Issue #18843",
+          "title": "\"Pause on caught exceptions\" enabled always breaks on this line",
+          "text": "In Chrome, when I am using the current stable version of react devtools extenison (4.6.0 (3/26/2020)), if I have \"Pause on caught exceptions\" enabled, I always hit this breakpoint:\r\n\r\nhttps://github.com/facebook/react/blob/c2d1561c60507189b43ae96c6b89580874367e36/packages/react-devtools-shared/src/hook.js#L185\r\n\r\n`ReferenceError: i is not defined\r\n    at Object.inject (<anonymous>:1:1116)\r\n    at injectInternals (react-dom.development.js:9842)\r\n    at injectIntoDevTools (react-dom.development.js:20715)\r\n    at eval (react-dom.development.js:21244)`\r\n\r\nIt would be nice if the published extension had an options page so that I could disable this try/catch block. (for example enabling NODE_ENV=test or something). \r\n\r\nOr, perhaps that code block is not really relevant to the chrome extension case, and that code path could be ignored for the chrome extension.",
+          "url": "https://github.com/react/react/issues/18843",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash",
+      "judge": {
+        "claims": [
+          {
+            "claim": "This line was introduced in commit 7e405d458d (PR #18994) to support adding DevTools forked feature flags.",
+            "evidence": [
+              "E1",
+              "E2"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "The commit was also created to resolve an uncaught error in extension builds reported in issue #18843.",
+            "evidence": [
+              "E1",
+              "E3"
+            ],
+            "supported": true
+          }
+        ],
+        "verdict": "correct",
+        "note": "Both claims accurately reflect the commit message, PR, and linked issue provided in the evidence."
+      },
+      "judge_model": "gemini-4-hydrogen"
+    },
+    "Q35": {
+      "status": "abstained",
+      "answer": null,
+      "citations": [],
+      "confidence": null,
+      "reason": "The provided evidence explains changes to ESLint configuration and handling of ES5 versus ES6 files in PR #11794, but it does not explain why the specific console log hint to run `yarn linc` exists.",
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "e8e62ebb59",
+          "title": "use different eslint config for es6 and es5 (#11794)",
+          "text": "use different eslint config for es6 and es5 (#11794)\n\n* use different eslint config for es6 and es5\n\n* remove confusing eslint/baseConfig.js & add more eslint setting for es5, es6\n\n* more clear way to run eslint on es5 & es6 file\n\n* seperate ESNext, ES6, ES6 path, and use different lint config\n\n* rename eslint config file & update eslint rules\n\n* Undo yarn.lock changes\n\n* Rename a file\n\n* Remove unnecessary exceptions\n\n* Refactor a little bit\n\n* Refactor and tweak the logic\n\n* Minor issues",
+          "url": null,
+          "date": "2017-12-11"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #11794",
+          "title": "use different eslint config for es6 and es5",
+          "text": "This pr uses different eslint config to solve issues https://github.com/facebook/react/issues/11783.\r\n\r\nThe following is the updated part:\r\n\r\n* **share es path**: I move the es path pattern to a shared file `scripts/shared/esPath.js`, so that `prettier` and `eslint` can use same es path pattern\r\n\r\n* **separate lint call**: https://github.com/ctxhou/react/blob/c6b94daaabe89d7ac0b08a9c608ff734ced271d2/scripts/tasks/eslint.js#L13-L14\r\n\r\n* **judge es version**: For `lint changed`, because we need to define which changed files are es5 and others are es6, I create a file `scripts/shared/judgeJSFilesVersion.js` to get this info.\r\n\r\nSo now, when we run `yarn lint` or `yarn linc`, it will lint es5 and es6 separately.",
+          "url": "https://github.com/react/react/pull/11794",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash"
+    },
+    "Q36": {
+      "status": "explained",
+      "answer": "This code was introduced in commit 68ac6dbcf8 to provide a pure JS implementation of the MurmurHash3 algorithm when native hashing functions are unavailable [E1, E2]. According to PR #27399, it uses Gary Court's MurmurHash3 implementation to synchronously produce compact hashes where speed is prioritized over collision avoidance, such as hashing component key paths for useFormState [E2]. These variables are declared as part of that fallback hashing algorithm for environments lacking synchronous native hashing options like Node's crypto module or Bun.hash [E2].",
+      "citations": [
+        "E1",
+        "E2"
+      ],
+      "confidence": "high",
+      "reason": null,
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "68ac6dbcf8",
+          "title": "Use MurmurHash3 when native hashing function is not available (#27399)",
+          "text": "Use MurmurHash3 when native hashing function is not available (#27399)",
+          "url": null,
+          "date": "2023-09-21"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #27399",
+          "title": "Use MurmurHash3 when native hashing function is not available",
+          "text": "Adds a pure JS implementation of a string hashing function. We do not use it for security or obfuscation purposes, only to create compact hashes. So we prioritize speed over collision avoidance. For example, we use this to hash the component key path used by useFormState for MPA-style submissions. See #27397 for details.\r\n\r\nIn environments where built-in hashing functions are available, we prefer those instead. Like Node's crypto module, or Bun.hash. Unfortunately this does not include the web standard crypto API because those methods are all async. For our purposes, we need it to be sync because the cost of context switching is too high to be worth it.\r\n\r\nThe most popular hashing algorithm that meets these requirements in the JS ecosystem is MurmurHash3, and almost all implementations I could find used some version of the implementation by Gary Court. So that's the one I've used.\r\n\r\nIn the future we should try to migrate these to native calls whenever possible. It's especially unfortunate that the Edge build doesn't use a native implementation, because that's the one used by newer frameworks like Next.js.",
+          "url": "https://github.com/react/react/pull/27399",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash",
+      "judge": {
+        "claims": [
+          {
+            "claim": "This code was introduced in commit 68ac6dbcf8 to provide a pure JS implementation of the MurmurHash3 algorithm when native hashing functions are unavailable.",
+            "evidence": [
+              "E1",
+              "E2"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "According to PR #27399, it uses Gary Court's MurmurHash3 implementation to synchronously produce compact hashes where speed is prioritized over collision avoidance, such as hashing component key paths for useFormState.",
+            "evidence": [
+              "E2"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "These variables are declared as part of that fallback hashing algorithm for environments lacking synchronous native hashing options like Node's crypto module or Bun.hash.",
+            "evidence": [
+              "E2"
+            ],
+            "supported": true
+          }
+        ],
+        "verdict": "correct",
+        "note": "Every claim in the explanation is directly supported by the commit title and PR description."
+      },
+      "judge_model": "gemini-4-hydrogen"
+    },
+    "Q37": {
+      "status": "explained",
+      "answer": "This line of code exists to provide a DOM test fixture option for manual tests verifying that controlled form component state updates correctly when browser autofill or autocomplete is used [E1, E2]. It was added in PR #17951 in connection with ticket 10468 [E1, E2].",
+      "citations": [
+        "E1",
+        "E2"
+      ],
+      "confidence": "high",
+      "reason": null,
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "2078aa9a40",
+          "title": "Add dom fixture for autofilled form state (#17951)",
+          "text": "Add dom fixture for autofilled form state (#17951)",
+          "url": null,
+          "date": "2020-02-04"
+        },
+        {
+          "id": "E2",
+          "kind": "pr",
+          "ref": "PR #17951",
+          "title": "Add dom fixture for autofilled form state",
+          "text": "## Summary\r\n\r\n<!-- Explain the **motivation** for making this change. What existing problem does the pull request solve? -->\r\n\r\nThis change is to introduce another test fixture for adding manual tests for checking to make sure form state (for controlled form components) is updated by browser autofill/autocomplete. This is tied to ticket [10468](https://github.com/facebook/react/issues/10468).\r\n\r\n## Test Plan\r\n\r\nStreamable Video: https://streamable.com/fhx52",
+          "url": "https://github.com/react/react/pull/17951",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash",
+      "judge": {
+        "claims": [
+          {
+            "claim": "This line of code provides a DOM test fixture option for manual tests verifying that controlled form component state updates correctly when browser autofill or autocomplete is used.",
+            "evidence": [
+              "E1",
+              "E2"
+            ],
+            "supported": true
+          },
+          {
+            "claim": "It was added in PR #17951 in connection with ticket 10468.",
+            "evidence": [
+              "E1",
+              "E2"
+            ],
+            "supported": true
+          }
+        ],
+        "verdict": "correct",
+        "note": "Both claims accurately reflect the commit message and PR description explaining why the form-state DOM fixture option was added."
+      },
+      "judge_model": "gemini-4-hydrogen"
+    },
+    "Q38": {
+      "status": "abstained",
+      "answer": null,
+      "citations": [],
+      "confidence": null,
+      "reason": "The provided evidence does not mention the relevant commits (425f72bdd4 or d73d7d5908), the file, or the alwaysThrottleRetries flag, so it does not explain why this line of code exists.",
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "f14d7f0d25",
+          "title": "Prepare Feature Flags for React Native 0.75 (#29903)",
+          "text": "Prepare Feature Flags for React Native 0.75 (#29903)\n\n## Summary\n\nConfigures the React Native open source feature flags in preparation for\nReact Native 0.75, which will be upgraded to React 19.\n\n## How did you test this change?\n\n```\n$ yarn test\n$ yarn flow fabric\n```",
+          "url": null,
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash"
+    },
+    "Q39": {
+      "status": "abstained",
+      "answer": null,
+      "citations": [],
+      "confidence": null,
+      "reason": "The provided evidence does not contain information about commit 1d25aa5787 or explain why line 4 checking process.env.NODE_ENV was added.",
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "3bb71dfd4b",
+          "title": "Rename react-server-dom-webpack entry points to /client and /server (#25504)",
+          "text": "Rename react-server-dom-webpack entry points to /client and /server (#25504)",
+          "url": null,
+          "date": null
+        },
+        {
+          "id": "E2",
+          "kind": "commit",
+          "ref": "5fd9db732d",
+          "title": "[Flight] Rename react-transport-... packages to react-server-... (#20403)",
+          "text": "[Flight] Rename react-transport-... packages to react-server-... (#20403)\n\n* Move files\n\n* Update paths\n\n* Rename import variables\n\n* Rename /server to /writer\n\nThis is mainly because \"React Server Server\" is weird so we need another\ndimension.\n\n* Use \"react-server\" convention to enforce that writer is only loaded in a server",
+          "url": null,
+          "date": null
+        },
+        {
+          "id": "E3",
+          "kind": "commit",
+          "ref": "64d4b84204",
+          "title": "Rename Flight to Transport (#18808)",
+          "text": "Rename Flight to Transport (#18808)\n\n* Rename Flight to Transport\n\nFlight is still the codename for the implementation details (like Fiber).\n\nHowever, now the public package is react-transport-... which is only\nintended to be used directly by integrators.\n\n* Rename names",
+          "url": null,
+          "date": null
+        },
+        {
+          "id": "E4",
+          "kind": "commit",
+          "ref": "39dbb14da3",
+          "title": "[Flight] Move Flight DOM to a Webpack Specific Package (#17372)",
+          "text": "[Flight] Move Flight DOM to a Webpack Specific Package (#17372)\n\n* Move Flight DOM to Webpack Specific Packagee\n\nWe'll have Webpack specific coupling so we need to ensure that it can be\nversioned separately from various Webpack versions. We'll also have builds\nfor other bundlers in the future.\n\n* Move to peerDep\n\n* Move DOM Flight Tests\n\n* Merge ReactFlightIntegration into ReactFlightDOM\n\nThis was an integration test. We can add to it.\n\n* Fix fixture paths",
+          "url": null,
+          "date": null
+        },
+        {
+          "id": "E5",
+          "kind": "commit",
+          "ref": "f4e974d26e",
+          "title": "Add Experimental Flight Infrastructure (#16398)",
+          "text": "Add Experimental Flight Infrastructure (#16398)\n\n* Add Flight Build and Unify HostFormat Config between Flight and Fizz\n\n* Add basic resolution of models\n\n* Add basic Flight fixture\n\nDemonstrates the streaming protocol.\n\n* Rename to flight-server to distinguish from the client parts\n\n* Add Flight Client package and entry point\n\n* Fix fixture",
+          "url": null,
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash"
+    },
+    "Q40": {
+      "status": "abstained",
+      "answer": null,
+      "citations": [],
+      "confidence": null,
+      "reason": "The provided evidence only discusses an SVG click event bug (issue #4963 and commit 2fdaba49c7) and contains no information about SchedulerPriorities.js or LowPriority.",
+      "evidence": [
+        {
+          "id": "E1",
+          "kind": "commit",
+          "ref": "2fdaba49c7",
+          "title": "Fix #4963 - SVG <use> swallows click events",
+          "text": "Fix #4963 - SVG <use> swallows click events",
+          "url": null,
+          "date": "2016-02-17"
+        },
+        {
+          "id": "E2",
+          "kind": "issue",
+          "ref": "Issue #4963",
+          "title": "Click events are swallowed by SVG <use> elements in IE",
+          "text": "We've only managed to replicate this in Edge and <=IE11, not Chrome or Firefox. We've created a demo of the issue with [this jsbin](http://jsbin.com/jojosesupe).\n\nWe're using a common SVG element and linking to it with `xlink:href` as is common with SVG icons. When linking to the icons with a `<use>` tag inside an anchor, all click events on the icon will not bubble to onClick handlers on the anchor.\n\nAn example: I have a common SVG element with an icon `<svg><rect id=\"my-icon\" width=\"100\" height=\"100\"></rect></svg>`. I then make a link containing my icon `<a href=\"https://github.com\"><svg dangerouslySetInnerHTML={{__html: '<use xlink:href=\"#my-icon\"></use>'}}></svg></a>`. As `xlink:href` isn't supported by react yet, we have to use `dangerouslySetInnerHTML`. If we now click the SVG **any onClick handlers on the anchor will not run**.\n\nA temporary workaround is setting `pointer-events: none` on the SVG element inside the anchor.\n\nThis might be a dupe of #1509",
+          "url": "https://github.com/react/react/issues/4963",
+          "date": null
+        }
+      ],
+      "model": "gemini-3.8-flash"
+    }
+  }
+}
