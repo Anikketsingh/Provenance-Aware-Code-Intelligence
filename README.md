@@ -16,13 +16,15 @@ whyblame index                     # once per repo; later runs only add new comm
 whyblame why . path/to/file.py 42  # the line's real history
 ```
 
-Then give your AI agent the same answers. With Claude Code:
+Then give your AI agent the same answers:
 
 ```bash
-claude mcp add whyblame -- whyblame mcp /absolute/path/to/repo
+whyblame init
 ```
 
-Any MCP client works: Cursor, VS Code, Gemini CLI and others. The server runs on your machine, reads only git history, and needs no API key.
+`init` prints the exact command or config for Claude Code, Codex, Gemini CLI, VS Code, Cursor, LM Studio and Claude Desktop (with Claude Code it's `claude mcp add whyblame -- whyblame mcp /absolute/path/to/repo`). It also adds a short rule to `AGENTS.md`, `CLAUDE.md`, `GEMINI.md` and `.cursor/rules/`: check `why_line` before removing a guard. That rule is what makes smaller models actually call the tool. It sits between marker comments, so running `init` again changes nothing and your own text is never touched.
+
+Any MCP client works with any tool-calling model, including local ones. The server runs on your machine, reads only git history, and needs no API key. It speaks stdio by default; `whyblame mcp --http` serves Streamable HTTP at `http://127.0.0.1:8766/mcp` for clients that take a URL. Every reply is plain JSON with a `schema_version`, stays under about 5,000 tokens (saying what was cut, if anything), and reports failures as a `status`, never a stack trace.
 
 ## What the agent gets
 

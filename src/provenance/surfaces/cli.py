@@ -340,13 +340,73 @@ def explain(
 
 
 @app.command()
-def mcp(repo: RepoArg = ".") -> None:
-    """Run the MCP server for a repo, over stdio. Register it with your agent, for example:
-    claude mcp add whyblame -- whyblame mcp /path/to/repo"""
+def init(repo: RepoArg = ".") -> None:
+    """Tell agents in this repo to use whyblame, and print how to register it in each client.
+
+    Adds a short rule to AGENTS.md, CLAUDE.md, GEMINI.md and .cursor/rules/whyblame.mdc,
+    between marker comments, so running it again changes nothing and your text is kept."""
+    import subprocess
+
+    from provenance.agent_rules import registrations, write_rules
+    from provenance.indexing import is_indexed
+
+    target = _repo(repo, need_index=False)
+    try:
+        root = Path(
+            subprocess.run(
+                ["git", "-C", repo, "rev-parse", "--show-toplevel"],
+                check=True,
+                capture_output=True,
+                text=True,
+            ).stdout.strip()
+        )
+    except (subprocess.CalledProcessError, OSError):
+        raise _fail(f"{repo} has no working tree (a bare repo?); run init in a checkout.") from None
+
+    typer.echo(f"Agent rules in {root}:")
+    for result in write_rules(root):
+        why = f"  ({result.reason})" if result.reason else ""
+        typer.echo(f"  {result.action:9} {result.path}{why}")
+    typer.echo("\nRegister the server in your client (once per client):")
+    for client, how in registrations(root):
+        typer.echo(f"\n  {client}:")
+        typer.echo("\n".join(f"    {row}" for row in how.splitlines()))
+    if not is_indexed(target):
+        typer.echo("\nThen index the history (once; later runs only add new commits):")
+        typer.echo(f"  {_prog()} index {root}")
+
+
+LOOPBACK = ("127.0.0.1", "localhost", "::1")
+
+
+@app.command()
+def mcp(
+    repo: RepoArg = ".",
+    http: Annotated[
+        bool, typer.Option(help="Serve Streamable HTTP at http://HOST:PORT/mcp, not stdio.")
+    ] = False,
+    host: Annotated[str, typer.Option(help="With --http: the address to listen on.")] = (
+        "127.0.0.1"
+    ),
+    port: Annotated[int, typer.Option(help="With --http: the port.")] = 8766,
+) -> None:
+    """Run the MCP server for a repo, over stdio by default. Register it with your agent, e.g.
+    claude mcp add whyblame -- whyblame mcp /path/to/repo   (or run `whyblame init` there)"""
     from provenance.surfaces.mcp_server import build_server  # slow import, needed only here
 
-    # stdout carries the protocol, so every message here goes to stderr.
-    build_server(_repo(repo)).run()
+    server = build_server(_repo(repo))
+    if not http:
+        # stdout carries the protocol, so every message here goes to stderr.
+        server.run()
+        return
+    if host not in LOOPBACK:
+        typer.echo(
+            f"Warning: listening on {host}, not only this machine. Anyone who can reach it "
+            "can read this repo's history through the tools; there is no authentication.",
+            err=True,
+        )
+    typer.echo(f"whyblame MCP server at http://{host}:{port}/mcp", err=True)
+    server.run("streamable-http", host=host, port=port)
 
 
 @app.command()
