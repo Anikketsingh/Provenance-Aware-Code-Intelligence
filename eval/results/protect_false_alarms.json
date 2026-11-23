@@ -1,0 +1,9 @@
+{
+  "false_alarms_90d": 146,
+  "by_commit_subject": {
+    "rewritten (instead of / replaced)": 13,
+    "deprecation or old-format removal": 22,
+    "other": 111
+  },
+  "note": "Post-hoc keyword grouping of the commit subjects behind flagged removals that were not restored within 90 days. Descriptive only; not used to tune anything."
+}

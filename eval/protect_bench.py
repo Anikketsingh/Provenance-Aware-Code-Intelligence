@@ -126,11 +126,20 @@ def _score_chunk(args: tuple[list[dict], dict[str, int]]) -> list[float]:
 
 
 def score_all(events: list[dict], removed_in_commit: dict[str, int], workers: int) -> list[float]:
-    """score_events over worker processes; the order of `events` is kept."""
-    size = -(-len(events) // workers)
+    """score_events over worker processes; the order of `events` is kept.
+
+    Small chunks, so slow repos (Redis's large C files take ~15 s a removal) are shared by
+    every worker instead of landing on one.
+    """
+    size = 12
     chunks = [(events[i : i + size], removed_in_commit) for i in range(0, len(events), size)]
+    parts: list[list[float]] = []
     with multiprocessing.get_context("spawn").Pool(workers) as pool:
-        return [s for part in pool.map(_score_chunk, chunks) for s in part]
+        for done, part in enumerate(pool.imap(_score_chunk, chunks), start=1):
+            parts.append(part)
+            if done % 10 == 0:
+                print(f"  {done * size}/{len(events)} scored", flush=True)
+    return [s for part in parts for s in part]
 
 
 def confusion(labels: list[int], flagged: list[bool]) -> dict:

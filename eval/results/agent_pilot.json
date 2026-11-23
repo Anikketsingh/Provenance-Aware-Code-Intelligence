@@ -1,0 +1,620 @@
+{
+  "agent_model": "gemini-3.8-flash",
+  "judge_model": "gemini-4-hydrogen",
+  "cases": 16,
+  "seeds": [
+    1,
+    2
+  ],
+  "pairs": 32,
+  "control": {
+    "runs": 32,
+    "guard_kept": 16,
+    "guard_kept_rate": 0.5,
+    "protection_kept": 23,
+    "protected_and_done": 20,
+    "task_done": 23,
+    "task_partly": 4,
+    "task_done_rate": 0.71875,
+    "kept_and_done": 13,
+    "edited_target": 30,
+    "called_why_line": 0,
+    "called_check_change": 0,
+    "mean_steps": 26.03125,
+    "cost_usd": 7.522,
+    "errors": 0
+  },
+  "treatment": {
+    "runs": 32,
+    "guard_kept": 22,
+    "guard_kept_rate": 0.6875,
+    "protection_kept": 27,
+    "protected_and_done": 22,
+    "task_done": 24,
+    "task_partly": 3,
+    "task_done_rate": 0.75,
+    "kept_and_done": 17,
+    "edited_target": 28,
+    "called_why_line": 32,
+    "called_check_change": 28,
+    "mean_steps": 26.4375,
+    "cost_usd": 6.852,
+    "errors": 0
+  },
+  "guard_kept_mcnemar": {
+    "kept_only_with_tool": 6,
+    "kept_only_without_tool": 0,
+    "p_exact": 0.03125
+  },
+  "protection_kept_mcnemar": {
+    "kept_only_with_tool": 4,
+    "kept_only_without_tool": 0,
+    "p_exact": 0.125
+  },
+  "task_done_mcnemar": {
+    "done_only_with_tool": 4,
+    "done_only_without_tool": 3,
+    "p_exact": 1.0
+  },
+  "by_case": {
+    "c01": {
+      "control": [
+        {
+          "seed": 1,
+          "kept": false,
+          "protected": false,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": false,
+          "protected": false,
+          "done": "partly"
+        }
+      ],
+      "treatment": [
+        {
+          "seed": 1,
+          "kept": false,
+          "protected": false,
+          "done": "partly"
+        },
+        {
+          "seed": 2,
+          "kept": false,
+          "protected": false,
+          "done": "partly"
+        }
+      ]
+    },
+    "c02": {
+      "control": [
+        {
+          "seed": 1,
+          "kept": false,
+          "protected": true,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": false,
+          "protected": true,
+          "done": "yes"
+        }
+      ],
+      "treatment": [
+        {
+          "seed": 1,
+          "kept": true,
+          "protected": true,
+          "done": "no"
+        },
+        {
+          "seed": 2,
+          "kept": false,
+          "protected": true,
+          "done": "yes"
+        }
+      ]
+    },
+    "c03": {
+      "control": [
+        {
+          "seed": 1,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        }
+      ],
+      "treatment": [
+        {
+          "seed": 1,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        }
+      ]
+    },
+    "c04": {
+      "control": [
+        {
+          "seed": 1,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        }
+      ],
+      "treatment": [
+        {
+          "seed": 1,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        }
+      ]
+    },
+    "c05": {
+      "control": [
+        {
+          "seed": 1,
+          "kept": false,
+          "protected": false,
+          "done": "no"
+        },
+        {
+          "seed": 2,
+          "kept": false,
+          "protected": false,
+          "done": "no"
+        }
+      ],
+      "treatment": [
+        {
+          "seed": 1,
+          "kept": true,
+          "protected": true,
+          "done": "no"
+        },
+        {
+          "seed": 2,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        }
+      ]
+    },
+    "c06": {
+      "control": [
+        {
+          "seed": 1,
+          "kept": false,
+          "protected": true,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": false,
+          "protected": true,
+          "done": "yes"
+        }
+      ],
+      "treatment": [
+        {
+          "seed": 1,
+          "kept": false,
+          "protected": true,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": false,
+          "protected": true,
+          "done": "yes"
+        }
+      ]
+    },
+    "c07": {
+      "control": [
+        {
+          "seed": 1,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        }
+      ],
+      "treatment": [
+        {
+          "seed": 1,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        }
+      ]
+    },
+    "c08": {
+      "control": [
+        {
+          "seed": 1,
+          "kept": false,
+          "protected": false,
+          "done": "partly"
+        },
+        {
+          "seed": 2,
+          "kept": false,
+          "protected": false,
+          "done": "partly"
+        }
+      ],
+      "treatment": [
+        {
+          "seed": 1,
+          "kept": true,
+          "protected": true,
+          "done": "no"
+        },
+        {
+          "seed": 2,
+          "kept": false,
+          "protected": false,
+          "done": "partly"
+        }
+      ]
+    },
+    "c09": {
+      "control": [
+        {
+          "seed": 1,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        }
+      ],
+      "treatment": [
+        {
+          "seed": 1,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        }
+      ]
+    },
+    "c10": {
+      "control": [
+        {
+          "seed": 1,
+          "kept": true,
+          "protected": true,
+          "done": "no"
+        },
+        {
+          "seed": 2,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        }
+      ],
+      "treatment": [
+        {
+          "seed": 1,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        }
+      ]
+    },
+    "c11": {
+      "control": [
+        {
+          "seed": 1,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": true,
+          "protected": true,
+          "done": "no"
+        }
+      ],
+      "treatment": [
+        {
+          "seed": 1,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": true,
+          "protected": true,
+          "done": "no"
+        }
+      ]
+    },
+    "c12": {
+      "control": [
+        {
+          "seed": 1,
+          "kept": true,
+          "protected": true,
+          "done": "no"
+        },
+        {
+          "seed": 2,
+          "kept": false,
+          "protected": false,
+          "done": "partly"
+        }
+      ],
+      "treatment": [
+        {
+          "seed": 1,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        }
+      ]
+    },
+    "c13": {
+      "control": [
+        {
+          "seed": 1,
+          "kept": false,
+          "protected": false,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": false,
+          "protected": false,
+          "done": "yes"
+        }
+      ],
+      "treatment": [
+        {
+          "seed": 1,
+          "kept": false,
+          "protected": false,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": false,
+          "protected": false,
+          "done": "yes"
+        }
+      ]
+    },
+    "c14": {
+      "control": [
+        {
+          "seed": 1,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        }
+      ],
+      "treatment": [
+        {
+          "seed": 1,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        }
+      ]
+    },
+    "c15": {
+      "control": [
+        {
+          "seed": 1,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": false,
+          "protected": true,
+          "done": "yes"
+        }
+      ],
+      "treatment": [
+        {
+          "seed": 1,
+          "kept": true,
+          "protected": true,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": true,
+          "protected": true,
+          "done": "no"
+        }
+      ]
+    },
+    "c16": {
+      "control": [
+        {
+          "seed": 1,
+          "kept": false,
+          "protected": true,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": false,
+          "protected": true,
+          "done": "yes"
+        }
+      ],
+      "treatment": [
+        {
+          "seed": 1,
+          "kept": false,
+          "protected": true,
+          "done": "yes"
+        },
+        {
+          "seed": 2,
+          "kept": false,
+          "protected": true,
+          "done": "yes"
+        }
+      ]
+    }
+  },
+  "by_repo": {
+    "django": {
+      "control": {
+        "runs": 24,
+        "guard_kept": 13,
+        "guard_kept_rate": 0.5416666666666666,
+        "protection_kept": 17,
+        "protected_and_done": 14,
+        "task_done": 17,
+        "task_partly": 4,
+        "task_done_rate": 0.7083333333333334,
+        "kept_and_done": 10,
+        "edited_target": 22,
+        "called_why_line": 0,
+        "called_check_change": 0,
+        "mean_steps": 26.5,
+        "cost_usd": 5.426,
+        "errors": 0
+      },
+      "treatment": {
+        "runs": 24,
+        "guard_kept": 16,
+        "guard_kept_rate": 0.6666666666666666,
+        "protection_kept": 19,
+        "protected_and_done": 16,
+        "task_done": 18,
+        "task_partly": 3,
+        "task_done_rate": 0.75,
+        "kept_and_done": 13,
+        "edited_target": 21,
+        "called_why_line": 24,
+        "called_check_change": 21,
+        "mean_steps": 27.125,
+        "cost_usd": 5.229,
+        "errors": 0
+      }
+    },
+    "redis": {
+      "control": {
+        "runs": 8,
+        "guard_kept": 3,
+        "guard_kept_rate": 0.375,
+        "protection_kept": 6,
+        "protected_and_done": 6,
+        "task_done": 6,
+        "task_partly": 0,
+        "task_done_rate": 0.75,
+        "kept_and_done": 3,
+        "edited_target": 8,
+        "called_why_line": 0,
+        "called_check_change": 0,
+        "mean_steps": 24.625,
+        "cost_usd": 2.097,
+        "errors": 0
+      },
+      "treatment": {
+        "runs": 8,
+        "guard_kept": 6,
+        "guard_kept_rate": 0.75,
+        "protection_kept": 8,
+        "protected_and_done": 6,
+        "task_done": 6,
+        "task_partly": 0,
+        "task_done_rate": 0.75,
+        "kept_and_done": 4,
+        "edited_target": 7,
+        "called_why_line": 8,
+        "called_check_change": 7,
+        "mean_steps": 24.375,
+        "cost_usd": 1.623,
+        "errors": 0
+      }
+    }
+  },
+  "spot_checks": {
+    "runs": 10,
+    "agree_with_judge": 9
+  },
+  "total_cost_usd": 14.374
+}

@@ -1,0 +1,106 @@
+{
+  "protocol": "Claude labelled 10 runs drawn with seed 71 (eval/agent_spot_sheet.py) from the task, the original checks and the diff, with the judge's answers hidden. The sheet as first printed showed each run's id, which names its condition, so these labels were NOT blind to condition (fixed in the script afterwards). Where present, Claude's label replaces the judge's in scoring.",
+  "labeller": "Claude (Opus 5.5), 2026-11-23",
+  "checks": {
+    "c11_control_s2": {
+      "done": "no",
+      "preserved": "yes",
+      "note": "No change was made.",
+      "judge": {
+        "done": "no",
+        "preserved": "yes"
+      },
+      "guard_kept": true
+    },
+    "c09_control_s1": {
+      "done": "yes",
+      "preserved": "yes",
+      "note": "Collapses the TO_CHAR/TO_DATE round trip into one CAST; the USE_TZ guard is untouched.",
+      "judge": {
+        "done": "yes",
+        "preserved": "yes"
+      },
+      "guard_kept": true
+    },
+    "c10_treatment_s2": {
+      "done": "yes",
+      "preserved": "yes",
+      "note": "Factors the four error blocks into a helper; the is_hidden() guard stays, and the setup now runs after it.",
+      "judge": {
+        "done": "yes",
+        "preserved": "yes"
+      },
+      "guard_kept": true
+    },
+    "c13_treatment_s2": {
+      "done": "yes",
+      "preserved": "no",
+      "note": "Removes the deprecated app_mod path, and the except LookupError inside it; the task and the guard conflict here.",
+      "judge": {
+        "done": "yes",
+        "preserved": "no"
+      },
+      "guard_kept": false
+    },
+    "c01_control_s1": {
+      "done": "yes",
+      "preserved": "no",
+      "note": "Replaces try/except TypeError with an isinstance(cls, type) test: it covers a non-class cls but not an invalid classinfo.",
+      "judge": {
+        "done": "partly",
+        "preserved": "no"
+      },
+      "guard_kept": false
+    },
+    "c05_control_s1": {
+      "done": "no",
+      "preserved": "no",
+      "note": "Drops the special case for the single digit 0; the code after it rejects a leading 0, so '0' no longer parses. That is why the guard was restored.",
+      "judge": {
+        "done": "no",
+        "preserved": "no"
+      },
+      "guard_kept": false
+    },
+    "c03_control_s2": {
+      "done": "yes",
+      "preserved": "yes",
+      "note": "Inlines _iterator(); the chunk_size check stays.",
+      "judge": {
+        "done": "yes",
+        "preserved": "yes"
+      },
+      "guard_kept": true
+    },
+    "c14_control_s1": {
+      "done": "yes",
+      "preserved": "yes",
+      "note": "Restructures get_field() with the same outcomes on every path; the apps.ready guard stays.",
+      "judge": {
+        "done": "yes",
+        "preserved": "yes"
+      },
+      "guard_kept": true
+    },
+    "c13_control_s1": {
+      "done": "yes",
+      "preserved": "no",
+      "note": "Same change as S04.",
+      "judge": {
+        "done": "yes",
+        "preserved": "no"
+      },
+      "guard_kept": false
+    },
+    "c04_control_s1": {
+      "done": "yes",
+      "preserved": "yes",
+      "note": "Simplifies the reply_bytes accounting and drops the no-op-realloc early return; the if (!tail) guard stays.",
+      "judge": {
+        "done": "yes",
+        "preserved": "yes"
+      },
+      "guard_kept": true
+    }
+  }
+}

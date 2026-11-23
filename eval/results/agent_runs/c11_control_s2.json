@@ -1,0 +1,618 @@
+{
+  "run": "c11_control_s2",
+  "case": "c11",
+  "repo": "django",
+  "commit": "18f3e79b13947de0bda7c985916d5a04e28936dc",
+  "path": "django/db/backends/base/base.py",
+  "condition": "control",
+  "seed": 2,
+  "model": "gemini-3.8-flash",
+  "task": "Clean up the imports at the top of django/db/backends/base/base.py. Keep the code correct. When you're done, call finish.",
+  "guards": [
+    [
+      "",
+      "8c700ea26a0cee22"
+    ]
+  ],
+  "guard_kept": true,
+  "edited_target": false,
+  "files_changed": [],
+  "finished": false,
+  "summary": null,
+  "steps": 30,
+  "tool_calls": {
+    "read_file": 27,
+    "list_files": 3
+  },
+  "tokens": {
+    "input": 449925,
+    "output": 10220
+  },
+  "cost_usd": 0.1605,
+  "seconds": 135.7,
+  "error": null,
+  "diff": "",
+  "transcript": [
+    {
+      "role": "user",
+      "text": "Clean up the imports at the top of django/db/backends/base/base.py. Keep the code correct. When you're done, call finish."
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "start_line": 1,
+            "path": "django/db/backends/base/base.py",
+            "end_line": 100
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/db/backends/base/base.py\", \"lines\": \"1-100 of 507\", \"content\": \"1: from collections import deque\\n2: from contextlib import contextmanager\\n3: import time\\n4: import warnings\\n5: \\n6: from django.conf import settings\\n7: from django.db import DEFAULT_DB_ALIAS\\n8: from django.db.backends.signals import connection_created\\n9: from django.db.backends import utils\\n10: from django.db.transaction import TransactionManagementError\\n11: from django.db.utils import DatabaseError, DatabaseErrorWrapper\\n12: from django.utils.functional import cached_property\\n13: try:\\n14:     from django.utils.six.moves import _thread as thread\\n15: except ImportError:\\n16:     from django.utils.six.moves import _dummy_thread as thread\\n17: \\n18: \\n19: NO_DB_ALIAS = '__no_db__'\\n20: \\n21: \\n22: class BaseDatabaseWrapper(object):\\n23:     \\\"\\\"\\\"\\n24:     Represents a database connection.\\n25:     \\\"\\\"\\\"\\n26:     # Mapping of Field objects to their column types.\\n27:     data_types = {}\\n28:     # Mapping of Field objects to their SQL suffix such as AUTOINCREMENT.\\n29:     data_types_suffix = {}\\n30:     # Mapping of Field objects to their SQL for CHECK constraints.\\n31:     data_type_check_constraints = {}\\n32:     ops = None\\n33:     vendor = 'unknown'\\n34:     SchemaEditorClass = None\\n35: \\n36:     queries_limit = 9000\\n37: \\n38:     def __init__(self, settings_dict, alias=DEFAULT_DB_ALIAS,\\n39:                  allow_thread_sharing=False):\\n40:         # Connection related attributes.\\n41:         # The underlying database connection.\\n42:         self.connection = None\\n43:         # `settings_dict` should be a dictionary containing keys such as\\n44:         # NAME, USER, etc. It's called `settings_dict` instead of `settings`\\n45:         # to disambiguate it from Django settings modules.\\n46:         self.settings_dict = settings_dict\\n47:         self.alias = alias\\n48:         # Query logging in debug mode or when explicitly enabled.\\n49:         self.queries_log = deque(maxlen=self.queries_limit)\\n50:         self.force_debug_cursor = False\\n51: \\n52:         # Transaction related attributes.\\n53:         # Tracks if the connection is in autocommit mode. Per PEP 249, by\\n54:         # default, it isn't.\\n55:         self.autocommit = False\\n56:         # Tracks if the connection is in a transaction managed by 'atomic'.\\n57:         self.in_atomic_block = False\\n58:         # Increment to generate unique savepoint ids.\\n59:         self.savepoint_state = 0\\n60:         # List of savepoints created by 'atomic'.\\n61:         self.savepoint_ids = []\\n62:         # Tracks if the outermost 'atomic' block should commit on exit,\\n63:         # ie. if autocommit was active on entry.\\n64:         self.commit_on_exit = True\\n65:         # Tracks if the transaction should be rolled back to the next\\n66:         # available savepoint because of an exception in an inner block.\\n67:         self.needs_rollback = False\\n68: \\n69:         # Connection termination related attributes.\\n70:         self.close_at = None\\n71:         self.closed_in_transaction = False\\n72:         self.errors_occurred = False\\n73: \\n74:         # Thread-safety related attributes.\\n75:         self.allow_thread_sharing = allow_thread_sharing\\n76:         self._thread_ident = thread.get_ident()\\n77: \\n78:     @property\\n79:     def queries_logged(self):\\n80:         return self.force_debug_cursor or settings.DEBUG\\n81: \\n82:     @property\\n83:     def queries(self):\\n84:         if len(self.queries_log) == self.queries_log.maxlen:\\n85:             warnings.warn(\\n86:                 \\\"Limit for query logging exceeded, only the last {} queries \\\"\\n87:                 \\\"will be returned.\\\".format(self.queries_log.maxlen))\\n88:         return list(self.queries_log)\\n89: \\n90:     ##### Backend-specific methods for creating connections and cursors #####\\n91: \\n92:     def get_connection_params(self):\\n93:         \\\"\\\"\\\"Returns a dict of parameters suitable for get_new_connection.\\\"\\\"\\\"\\n94:         raise NotImplementedError('subclasses of BaseDatabaseWrapper may require a get_connection_params() method')\\n95: \\n96:     def get_new_connection(self, conn_params):\\n97:         \\\"\\\"\\\"Opens a connection to the database.\\\"\\\"\\\"\\n98:         raise NotImplementedError('subclasses of BaseDatabaseWrapper may require a get_new_connection() method')\\n99: \\n100:     def init_connection_state(self):\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "start_line": 101,
+            "path": "django/db/backends/base/base.py",
+            "end_line": 300
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/db/backends/base/base.py\", \"lines\": \"101-300 of 507\", \"content\": \"101:         \\\"\\\"\\\"Initializes the database connection settings.\\\"\\\"\\\"\\n102:         raise NotImplementedError('subclasses of BaseDatabaseWrapper may require an init_connection_state() method')\\n103: \\n104:     def create_cursor(self):\\n105:         \\\"\\\"\\\"Creates a cursor. Assumes that a connection is established.\\\"\\\"\\\"\\n106:         raise NotImplementedError('subclasses of BaseDatabaseWrapper may require a create_cursor() method')\\n107: \\n108:     ##### Backend-specific methods for creating connections #####\\n109: \\n110:     def connect(self):\\n111:         \\\"\\\"\\\"Connects to the database. Assumes that the connection is closed.\\\"\\\"\\\"\\n112:         # In case the previous connection was closed while in an atomic block\\n113:         self.in_atomic_block = False\\n114:         self.savepoint_ids = []\\n115:         self.needs_rollback = False\\n116:         # Reset parameters defining when to close the connection\\n117:         max_age = self.settings_dict['CONN_MAX_AGE']\\n118:         self.close_at = None if max_age is None else time.time() + max_age\\n119:         self.closed_in_transaction = False\\n120:         self.errors_occurred = False\\n121:         # Establish the connection\\n122:         conn_params = self.get_connection_params()\\n123:         self.connection = self.get_new_connection(conn_params)\\n124:         self.set_autocommit(self.settings_dict['AUTOCOMMIT'])\\n125:         self.init_connection_state()\\n126:         connection_created.send(sender=self.__class__, connection=self)\\n127: \\n128:     def ensure_connection(self):\\n129:         \\\"\\\"\\\"\\n130:         Guarantees that a connection to the database is established.\\n131:         \\\"\\\"\\\"\\n132:         if self.connection is None:\\n133:             with self.wrap_database_errors:\\n134:                 self.connect()\\n135: \\n136:     ##### Backend-specific wrappers for PEP-249 connection methods #####\\n137: \\n138:     def _cursor(self):\\n139:         self.ensure_connection()\\n140:         with self.wrap_database_errors:\\n141:             return self.create_cursor()\\n142: \\n143:     def _commit(self):\\n144:         if self.connection is not None:\\n145:             with self.wrap_database_errors:\\n146:                 return self.connection.commit()\\n147: \\n148:     def _rollback(self):\\n149:         if self.connection is not None:\\n150:             with self.wrap_database_errors:\\n151:                 return self.connection.rollback()\\n152: \\n153:     def _close(self):\\n154:         if self.connection is not None:\\n155:             with self.wrap_database_errors:\\n156:                 return self.connection.close()\\n157: \\n158:     ##### Generic wrappers for PEP-249 connection methods #####\\n159: \\n160:     def cursor(self):\\n161:         \\\"\\\"\\\"\\n162:         Creates a cursor, opening a connection if necessary.\\n163:         \\\"\\\"\\\"\\n164:         self.validate_thread_sharing()\\n165:         if self.queries_logged:\\n166:             cursor = self.make_debug_cursor(self._cursor())\\n167:         else:\\n168:             cursor = self.make_cursor(self._cursor())\\n169:         return cursor\\n170: \\n171:     def commit(self):\\n172:         \\\"\\\"\\\"\\n173:         Commits a transaction and resets the dirty flag.\\n174:         \\\"\\\"\\\"\\n175:         self.validate_thread_sharing()\\n176:         self.validate_no_atomic_block()\\n177:         self._commit()\\n178:         # A successful commit means that the database connection works.\\n179:         self.errors_occurred = False\\n180: \\n181:     def rollback(self):\\n182:         \\\"\\\"\\\"\\n183:         Rolls back a transaction and resets the dirty flag.\\n184:         \\\"\\\"\\\"\\n185:         self.validate_thread_sharing()\\n186:         self.validate_no_atomic_block()\\n187:         self._rollback()\\n188:         # A successful rollback means that the database connection works.\\n189:         self.errors_occurred = False\\n190: \\n191:     def close(self):\\n192:         \\\"\\\"\\\"\\n193:         Closes the connection to the database.\\n194:         \\\"\\\"\\\"\\n195:         self.validate_thread_sharing()\\n196:         # Don't call validate_no_atomic_block() to avoid making it difficult\\n197:         # to get rid of a connection in an invalid state. The next connect()\\n198:         # will reset the transaction state anyway.\\n199:         if self.closed_in_transaction or self.connection is None:\\n200:             return\\n201:         try:\\n202:             self._close()\\n203:         finally:\\n204:             if self.in_atomic_block:\\n205:                 self.closed_in_transaction = True\\n206:                 self.needs_rollback = True\\n207:             else:\\n208:                 self.connection = None\\n209: \\n210:     ##### Backend-specific savepoint management methods #####\\n211: \\n212:     def _savepoint(self, sid):\\n213:         with self.cursor() as cursor:\\n214:             cursor.execute(self.ops.savepoint_create_sql(sid))\\n215: \\n216:     def _savepoint_rollback(self, sid):\\n217:         with self.cursor() as cursor:\\n218:             cursor.execute(self.ops.savepoint_rollback_sql(sid))\\n219: \\n220:     def _savepoint_commit(self, sid):\\n221:         with self.cursor() as cursor:\\n222:             cursor.execute(self.ops.savepoint_commit_sql(sid))\\n223: \\n224:     def _savepoint_allowed(self):\\n225:         # Savepoints cannot be created outside a transaction\\n226:         return self.features.uses_savepoints and not self.get_autocommit()\\n227: \\n228:     ##### Generic savepoint management methods #####\\n229: \\n230:     def savepoint(self):\\n231:         \\\"\\\"\\\"\\n232:         Creates a savepoint inside the current transaction. Returns an\\n233:         identifier for the savepoint that will be used for the subsequent\\n234:         rollback or commit. Does nothing if savepoints are not supported.\\n235:         \\\"\\\"\\\"\\n236:         if not self._savepoint_allowed():\\n237:             return\\n238: \\n239:         thread_ident = thread.get_ident()\\n240:         tid = str(thread_ident).replace('-', '')\\n241: \\n242:         self.savepoint_state += 1\\n243:         sid = \\\"s%s_x%d\\\" % (tid, self.savepoint_state)\\n244: \\n245:         self.validate_thread_sharing()\\n246:         self._savepoint(sid)\\n247: \\n248:         return sid\\n249: \\n250:     def savepoint_rollback(self, sid):\\n251:         \\\"\\\"\\\"\\n252:         Rolls back to a savepoint. Does nothing if savepoints are not supported.\\n253:         \\\"\\\"\\\"\\n254:         if not self._savepoint_allowed():\\n255:             return\\n256: \\n257:         self.validate_thread_sharing()\\n258:         self._savepoint_rollback(sid)\\n259: \\n260:     def savepoint_commit(self, sid):\\n261:         \\\"\\\"\\\"\\n262:         Releases a savepoint. Does nothing if savepoints are not supported.\\n263:         \\\"\\\"\\\"\\n264:         if not self._savepoint_allowed():\\n265:             return\\n266: \\n267:         self.validate_thread_sharing()\\n268:         self._savepoint_commit(sid)\\n269: \\n270:     def clean_savepoints(self):\\n271:         \\\"\\\"\\\"\\n272:         Resets the counter used to generate unique savepoint ids in this thread.\\n273:         \\\"\\\"\\\"\\n274:         self.savepoint_state = 0\\n275: \\n276:     ##### Backend-specific transaction management methods #####\\n277: \\n278:     def _set_autocommit(self, autocommit):\\n279:         \\\"\\\"\\\"\\n280:         Backend-specific implementation to enable or disable autocommit.\\n281:         \\\"\\\"\\\"\\n282:         raise NotImplementedError('subclasses of BaseDatabaseWrapper may require a _set_autocommit() method')\\n283: \\n284:     ##### Generic transaction management methods #####\\n285: \\n286:     def get_autocommit(self):\\n287:         \\\"\\\"\\\"\\n288:         Check the autocommit state.\\n289:         \\\"\\\"\\\"\\n290:         self.ensure_connection()\\n291:         return self.autocommit\\n292: \\n293:     def set_autocommit(self, autocommit):\\n294:         \\\"\\\"\\\"\\n295:         Enable or disable autocommit.\\n296:         \\\"\\\"\\\"\\n297:         self.validate_no_atomic_block()\\n298:         self.ensure_connection()\\n299:         self._set_autocommit(autocommit)\\n300:         self.autocommit = autocommit\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "end_line": 507,
+            "path": "django/db/backends/base/base.py",
+            "start_line": 301
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/db/backends/base/base.py\", \"lines\": \"301-507 of 507\", \"content\": \"301: \\n302:     def get_rollback(self):\\n303:         \\\"\\\"\\\"\\n304:         Get the \\\"needs rollback\\\" flag -- for *advanced use* only.\\n305:         \\\"\\\"\\\"\\n306:         if not self.in_atomic_block:\\n307:             raise TransactionManagementError(\\n308:                 \\\"The rollback flag doesn't work outside of an 'atomic' block.\\\")\\n309:         return self.needs_rollback\\n310: \\n311:     def set_rollback(self, rollback):\\n312:         \\\"\\\"\\\"\\n313:         Set or unset the \\\"needs rollback\\\" flag -- for *advanced use* only.\\n314:         \\\"\\\"\\\"\\n315:         if not self.in_atomic_block:\\n316:             raise TransactionManagementError(\\n317:                 \\\"The rollback flag doesn't work outside of an 'atomic' block.\\\")\\n318:         self.needs_rollback = rollback\\n319: \\n320:     def validate_no_atomic_block(self):\\n321:         \\\"\\\"\\\"\\n322:         Raise an error if an atomic block is active.\\n323:         \\\"\\\"\\\"\\n324:         if self.in_atomic_block:\\n325:             raise TransactionManagementError(\\n326:                 \\\"This is forbidden when an 'atomic' block is active.\\\")\\n327: \\n328:     def validate_no_broken_transaction(self):\\n329:         if self.needs_rollback:\\n330:             raise TransactionManagementError(\\n331:                 \\\"An error occurred in the current transaction. You can't \\\"\\n332:                 \\\"execute queries until the end of the 'atomic' block.\\\")\\n333: \\n334:     ##### Foreign key constraints checks handling #####\\n335: \\n336:     @contextmanager\\n337:     def constraint_checks_disabled(self):\\n338:         \\\"\\\"\\\"\\n339:         Context manager that disables foreign key constraint checking.\\n340:         \\\"\\\"\\\"\\n341:         disabled = self.disable_constraint_checking()\\n342:         try:\\n343:             yield\\n344:         finally:\\n345:             if disabled:\\n346:                 self.enable_constraint_checking()\\n347: \\n348:     def disable_constraint_checking(self):\\n349:         \\\"\\\"\\\"\\n350:         Backends can implement as needed to temporarily disable foreign key\\n351:         constraint checking. Should return True if the constraints were\\n352:         disabled and will need to be reenabled.\\n353:         \\\"\\\"\\\"\\n354:         return False\\n355: \\n356:     def enable_constraint_checking(self):\\n357:         \\\"\\\"\\\"\\n358:         Backends can implement as needed to re-enable foreign key constraint\\n359:         checking.\\n360:         \\\"\\\"\\\"\\n361:         pass\\n362: \\n363:     def check_constraints(self, table_names=None):\\n364:         \\\"\\\"\\\"\\n365:         Backends can override this method if they can apply constraint\\n366:         checking (e.g. via \\\"SET CONSTRAINTS ALL IMMEDIATE\\\"). Should raise an\\n367:         IntegrityError if any invalid foreign key references are encountered.\\n368:         \\\"\\\"\\\"\\n369:         pass\\n370: \\n371:     ##### Connection termination handling #####\\n372: \\n373:     def is_usable(self):\\n374:         \\\"\\\"\\\"\\n375:         Tests if the database connection is usable.\\n376: \\n377:         This function may assume that self.connection is not None.\\n378: \\n379:         Actual implementations should take care not to raise exceptions\\n380:         as that may prevent Django from recycling unusable connections.\\n381:         \\\"\\\"\\\"\\n382:         raise NotImplementedError(\\n383:             \\\"subclasses of BaseDatabaseWrapper may require an is_usable() method\\\")\\n384: \\n385:     def close_if_unusable_or_obsolete(self):\\n386:         \\\"\\\"\\\"\\n387:         Closes the current connection if unrecoverable errors have occurred,\\n388:         or if it outlived its maximum age.\\n389:         \\\"\\\"\\\"\\n390:         if self.connection is not None:\\n391:             # If the application didn't restore the original autocommit setting,\\n392:             # don't take chances, drop the connection.\\n393:             if self.get_autocommit() != self.settings_dict['AUTOCOMMIT']:\\n394:                 self.close()\\n395:                 return\\n396: \\n397:             # If an exception other than DataError or IntegrityError occurred\\n398:             # since the last commit / rollback, check if the connection works.\\n399:             if self.errors_occurred:\\n400:                 if self.is_usable():\\n401:                     self.errors_occurred = False\\n402:                 else:\\n403:                     self.close()\\n404:                     return\\n405: \\n406:             if self.close_at is not None and time.time() >= self.close_at:\\n407:                 self.close()\\n408:                 return\\n409: \\n410:     ##### Thread safety handling #####\\n411: \\n412:     def validate_thread_sharing(self):\\n413:         \\\"\\\"\\\"\\n414:         Validates that the connection isn't accessed by another thread than the\\n415:         one which originally created it, unless the connection was explicitly\\n416:         authorized to be shared between threads (via the `allow_thread_sharing`\\n417:         property). Raises an exception if the validation fails.\\n418:         \\\"\\\"\\\"\\n419:         if not (self.allow_thread_sharing\\n420:                 or self._thread_ident == thread.get_ident()):\\n421:             raise DatabaseError(\\\"DatabaseWrapper objects created in a \\\"\\n422:                 \\\"thread can only be used in that same thread. The object \\\"\\n423:                 \\\"with alias '%s' was created in thread id %s and this is \\\"\\n424:                 \\\"thread id %s.\\\"\\n425:                 % (self.alias, self._thread_ident, thread.get_ident()))\\n426: \\n427:     ##### Miscellaneous #####\\n428: \\n429:     def prepare_database(self):\\n430:         \\\"\\\"\\\"\\n431:         Hook to do any database check or preparation, generally called before\\n432:         migrating a project or an app.\\n433:         \\\"\\\"\\\"\\n434:         pass\\n435: \\n436:     @cached_property\\n437:     def wrap_database_errors(self):\\n438:         \\\"\\\"\\\"\\n439:         Context manager and decorator that re-throws backend-specific database\\n440:         exceptions using Django's common wrappers.\\n441:         \\\"\\\"\\\"\\n442:         return DatabaseErrorWrapper(self)\\n443: \\n444:     def make_debug_cursor(self, cursor):\\n445:         \\\"\\\"\\\"\\n446:         Creates a cursor that logs all queries in self.queries_log.\\n447:         \\\"\\\"\\\"\\n448:         return utils.CursorDebugWrapper(cursor, self)\\n449: \\n450:     def make_cursor(self, cursor):\\n451:         \\\"\\\"\\\"\\n452:         Creates a cursor without debug logging.\\n453:         \\\"\\\"\\\"\\n454:         return utils.CursorWrapper(cursor, self)\\n455: \\n456:     @contextmanager\\n457:     def temporary_connection(self):\\n458:         \\\"\\\"\\\"\\n459:         Context manager that ensures that a connection is established, and\\n460:         if it opened one, closes it to avoid leaving a dangling connection.\\n461:         This is useful for operations outside of the request-response cycle.\\n462: \\n463:         Provides a cursor: with self.temporary_connection() as cursor: ...\\n464:         \\\"\\\"\\\"\\n465:         must_close = self.connection is None\\n466:         cursor = self.cursor()\\n467:         try:\\n468:             yield cursor\\n469:         finally:\\n470:             cursor.close()\\n471:             if must_close:\\n472:                 self.close()\\n473: \\n474:     @cached_property\\n475:     def _nodb_connection(self):\\n476:         \\\"\\\"\\\"\\n477:         Alternative connection to be used when there is no need to access\\n478:         the main database, specifically for test db creation/deletion.\\n479:         This also prevents the production database from being exposed to\\n480:         potential child threads while (or after) the test database is destroyed.\\n481:         Refs #10868, #17786, #16969.\\n482:         \\\"\\\"\\\"\\n483:         settings_dict = self.settings_dict.copy()\\n484:         settings_dict['NAME'] = None\\n485:         nodb_connection = self.__class__(\\n486:             settings_dict,\\n487:             alias=NO_DB_ALIAS,\\n488:             allow_thread_sharing=False)\\n489:         return nodb_connection\\n490: \\n491:     def _start_transaction_under_autocommit(self):\\n492:         \\\"\\\"\\\"\\n493:         Only required when autocommits_when_autocommit_is_off = True.\\n494:         \\\"\\\"\\\"\\n495:         raise NotImplementedError(\\n496:             'subclasses of BaseDatabaseWrapper may require a '\\n497:             '_start_transaction_under_autocommit() method'\\n498:         )\\n499: \\n500:     def schema_editor(self, *args, **kwargs):\\n501:         \\\"\\\"\\\"\\n502:         Returns a new instance of this backend's SchemaEditor.\\n503:         \\\"\\\"\\\"\\n504:         if self.SchemaEditorClass is None:\\n505:             raise NotImplementedError(\\n506:                 'The SchemaEditorClass attribute of this database wrapper is still None')\\n507:         return self.SchemaEditorClass(self, *args, **kwargs)\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "end_line": 30,
+            "path": "django/db/backends/base/operations.py",
+            "start_line": 1
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/db/backends/base/operations.py\", \"lines\": \"1-30 of 563\", \"content\": \"1: import datetime\\n2: import decimal\\n3: from importlib import import_module\\n4: import warnings\\n5: \\n6: from django.conf import settings\\n7: from django.core.exceptions import ImproperlyConfigured\\n8: from django.db.backends import utils\\n9: from django.utils import six, timezone\\n10: from django.utils.dateparse import parse_duration\\n11: from django.utils.deprecation import RemovedInDjango21Warning\\n12: from django.utils.encoding import force_text\\n13: \\n14: \\n15: class BaseDatabaseOperations(object):\\n16:     \\\"\\\"\\\"\\n17:     This class encapsulates all backend-specific differences, such as the way\\n18:     a backend performs ordering or calculates the ID of a recently-inserted\\n19:     row.\\n20:     \\\"\\\"\\\"\\n21:     compiler_module = \\\"django.db.models.sql.compiler\\\"\\n22: \\n23:     # Integer field safe ranges by `internal_type` as documented\\n24:     # in docs/ref/models/fields.txt.\\n25:     integer_field_ranges = {\\n26:         'SmallIntegerField': (-32768, 32767),\\n27:         'IntegerField': (-2147483648, 2147483647),\\n28:         'BigIntegerField': (-9223372036854775808, 9223372036854775807),\\n29:         'PositiveSmallIntegerField': (0, 32767),\\n30:         'PositiveIntegerField': (0, 2147483647),\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "end_line": 30,
+            "start_line": 1,
+            "path": "django/db/backends/base/creation.py"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/db/backends/base/creation.py\", \"lines\": \"1-30 of 245\", \"content\": \"1: import sys\\n2: import time\\n3: \\n4: from django.apps import apps\\n5: from django.conf import settings\\n6: from django.core import serializers\\n7: from django.db import router\\n8: from django.utils.six import StringIO\\n9: from django.utils.six.moves import input\\n10: \\n11: \\n12: # The prefix to put on the default database name when creating\\n13: # the test database.\\n14: TEST_DATABASE_PREFIX = 'test_'\\n15: \\n16: \\n17: class BaseDatabaseCreation(object):\\n18:     \\\"\\\"\\\"\\n19:     This class encapsulates all backend-specific differences that pertain to\\n20:     creation and destruction of the test database.\\n21:     \\\"\\\"\\\"\\n22:     def __init__(self, connection):\\n23:         self.connection = connection\\n24: \\n25:     @property\\n26:     def _nodb_connection(self):\\n27:         \\\"\\\"\\\"\\n28:         Used to be defined here, now moved to DatabaseWrapper.\\n29:         \\\"\\\"\\\"\\n30:         return self.connection._nodb_connection\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "path": "django/db/transaction.py",
+            "end_line": 50,
+            "start_line": 1
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/db/transaction.py\", \"lines\": \"1-50 of 311\", \"content\": \"1: from django.db import (\\n2:     connections, DEFAULT_DB_ALIAS,\\n3:     DatabaseError, Error, ProgrammingError)\\n4: from django.utils.decorators import ContextDecorator\\n5: \\n6: \\n7: class TransactionManagementError(ProgrammingError):\\n8:     \\\"\\\"\\\"\\n9:     This exception is thrown when transaction management is used improperly.\\n10:     \\\"\\\"\\\"\\n11:     pass\\n12: \\n13: \\n14: def get_connection(using=None):\\n15:     \\\"\\\"\\\"\\n16:     Get a database connection by name, or the default database connection\\n17:     if no name is provided. This is a private API.\\n18:     \\\"\\\"\\\"\\n19:     if using is None:\\n20:         using = DEFAULT_DB_ALIAS\\n21:     return connections[using]\\n22: \\n23: \\n24: def get_autocommit(using=None):\\n25:     \\\"\\\"\\\"\\n26:     Get the autocommit status of the connection.\\n27:     \\\"\\\"\\\"\\n28:     return get_connection(using).get_autocommit()\\n29: \\n30: \\n31: def set_autocommit(autocommit, using=None):\\n32:     \\\"\\\"\\\"\\n33:     Set the autocommit status of the connection.\\n34:     \\\"\\\"\\\"\\n35:     return get_connection(using).set_autocommit(autocommit)\\n36: \\n37: \\n38: def commit(using=None):\\n39:     \\\"\\\"\\\"\\n40:     Commits a transaction.\\n41:     \\\"\\\"\\\"\\n42:     get_connection(using).commit()\\n43: \\n44: \\n45: def rollback(using=None):\\n46:     \\\"\\\"\\\"\\n47:     Rolls back a transaction.\\n48:     \\\"\\\"\\\"\\n49:     get_connection(using).rollback()\\n50: \"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "start_line": 1,
+            "path": "django/db/__init__.py",
+            "end_line": 50
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/db/__init__.py\", \"lines\": \"1-50 of 66\", \"content\": \"1: from django.core import signals\\n2: from django.db.utils import (DEFAULT_DB_ALIAS, DJANGO_VERSION_PICKLE_KEY,\\n3:     DataError, OperationalError, IntegrityError, InternalError, ProgrammingError,\\n4:     NotSupportedError, DatabaseError, InterfaceError, Error, ConnectionHandler,\\n5:     ConnectionRouter)\\n6: \\n7: \\n8: __all__ = [\\n9:     'backend', 'connection', 'connections', 'router', 'DatabaseError',\\n10:     'IntegrityError', 'InternalError', 'ProgrammingError', 'DataError',\\n11:     'NotSupportedError', 'Error', 'InterfaceError', 'OperationalError',\\n12:     'DEFAULT_DB_ALIAS', 'DJANGO_VERSION_PICKLE_KEY'\\n13: ]\\n14: \\n15: connections = ConnectionHandler()\\n16: \\n17: router = ConnectionRouter()\\n18: \\n19: \\n20: # `connection`, `DatabaseError` and `IntegrityError` are convenient aliases\\n21: # for backend bits.\\n22: \\n23: # DatabaseWrapper.__init__() takes a dictionary, not a settings module, so\\n24: # we manually create the dictionary from the settings, passing only the\\n25: # settings that the database backends care about. Note that TIME_ZONE is used\\n26: # by the PostgreSQL backends.\\n27: # We load all these up for backwards compatibility, you should use\\n28: # connections['default'] instead.\\n29: class DefaultConnectionProxy(object):\\n30:     \\\"\\\"\\\"\\n31:     Proxy for accessing the default DatabaseWrapper object's attributes. If you\\n32:     need to access the DatabaseWrapper object itself, use\\n33:     connections[DEFAULT_DB_ALIAS] instead.\\n34:     \\\"\\\"\\\"\\n35:     def __getattr__(self, item):\\n36:         return getattr(connections[DEFAULT_DB_ALIAS], item)\\n37: \\n38:     def __setattr__(self, name, value):\\n39:         return setattr(connections[DEFAULT_DB_ALIAS], name, value)\\n40: \\n41:     def __delattr__(self, name):\\n42:         return delattr(connections[DEFAULT_DB_ALIAS], name)\\n43: \\n44:     def __eq__(self, other):\\n45:         return connections[DEFAULT_DB_ALIAS] == other\\n46: \\n47:     def __ne__(self, other):\\n48:         return connections[DEFAULT_DB_ALIAS] != other\\n49: \\n50: connection = DefaultConnectionProxy()\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "path": "django/utils/six.py",
+            "end_line": 120,
+            "start_line": 80
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/utils/six.py\", \"lines\": \"80-120 of 854\", \"content\": \"80:     __import__(name)\\n81:     return sys.modules[name]\\n82: \\n83: \\n84: class _LazyDescr(object):\\n85: \\n86:     def __init__(self, name):\\n87:         self.name = name\\n88: \\n89:     def __get__(self, obj, tp):\\n90:         result = self._resolve()\\n91:         setattr(obj, self.name, result) # Invokes __set__.\\n92:         try:\\n93:             # This is a bit ugly, but it avoids running this again by\\n94:             # removing this descriptor.\\n95:             delattr(obj.__class__, self.name)\\n96:         except AttributeError:\\n97:             pass\\n98:         return result\\n99: \\n100: \\n101: class MovedModule(_LazyDescr):\\n102: \\n103:     def __init__(self, name, old, new=None):\\n104:         super(MovedModule, self).__init__(name)\\n105:         if PY3:\\n106:             if new is None:\\n107:                 new = name\\n108:             self.mod = new\\n109:         else:\\n110:             self.mod = old\\n111: \\n112:     def _resolve(self):\\n113:         return _import_module(self.mod)\\n114: \\n115:     def __getattr__(self, attr):\\n116:         _module = self._resolve()\\n117:         value = getattr(_module, attr)\\n118:         setattr(self, attr, value)\\n119:         return value\\n120: \"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "start_line": 200,
+            "path": "django/utils/six.py",
+            "end_line": 250
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/utils/six.py\", \"lines\": \"200-250 of 854\", \"content\": \"200:         else:\\n201:             mod.__loader__ = self\\n202:         sys.modules[fullname] = mod\\n203:         return mod\\n204: \\n205:     def is_package(self, fullname):\\n206:         \\\"\\\"\\\"\\n207:         Return true, if the named module is a package.\\n208: \\n209:         We need this method to get correct spec objects with\\n210:         Python 3.4 (see PEP451)\\n211:         \\\"\\\"\\\"\\n212:         return hasattr(self.__get_module(fullname), \\\"__path__\\\")\\n213: \\n214:     def get_code(self, fullname):\\n215:         \\\"\\\"\\\"Return None\\n216: \\n217:         Required, if is_package is implemented\\\"\\\"\\\"\\n218:         self.__get_module(fullname)  # eventually raises ImportError\\n219:         return None\\n220:     get_source = get_code  # same as get_code\\n221: \\n222: _importer = _SixMetaPathImporter(__name__)\\n223: \\n224: \\n225: class _MovedItems(_LazyModule):\\n226:     \\\"\\\"\\\"Lazy loading of moved objects\\\"\\\"\\\"\\n227:     __path__ = []  # mark as package\\n228: \\n229: \\n230: _moved_attributes = [\\n231:     MovedAttribute(\\\"cStringIO\\\", \\\"cStringIO\\\", \\\"io\\\", \\\"StringIO\\\"),\\n232:     MovedAttribute(\\\"filter\\\", \\\"itertools\\\", \\\"builtins\\\", \\\"ifilter\\\", \\\"filter\\\"),\\n233:     MovedAttribute(\\\"filterfalse\\\", \\\"itertools\\\", \\\"itertools\\\", \\\"ifilterfalse\\\", \\\"filterfalse\\\"),\\n234:     MovedAttribute(\\\"input\\\", \\\"__builtin__\\\", \\\"builtins\\\", \\\"raw_input\\\", \\\"input\\\"),\\n235:     MovedAttribute(\\\"intern\\\", \\\"__builtin__\\\", \\\"sys\\\"),\\n236:     MovedAttribute(\\\"map\\\", \\\"itertools\\\", \\\"builtins\\\", \\\"imap\\\", \\\"map\\\"),\\n237:     MovedAttribute(\\\"range\\\", \\\"__builtin__\\\", \\\"builtins\\\", \\\"xrange\\\", \\\"range\\\"),\\n238:     MovedAttribute(\\\"reload_module\\\", \\\"__builtin__\\\", \\\"imp\\\", \\\"reload\\\"),\\n239:     MovedAttribute(\\\"reduce\\\", \\\"__builtin__\\\", \\\"functools\\\"),\\n240:     MovedAttribute(\\\"shlex_quote\\\", \\\"pipes\\\", \\\"shlex\\\", \\\"quote\\\"),\\n241:     MovedAttribute(\\\"StringIO\\\", \\\"StringIO\\\", \\\"io\\\"),\\n242:     MovedAttribute(\\\"UserDict\\\", \\\"UserDict\\\", \\\"collections\\\"),\\n243:     MovedAttribute(\\\"UserList\\\", \\\"UserList\\\", \\\"collections\\\"),\\n244:     MovedAttribute(\\\"UserString\\\", \\\"UserString\\\", \\\"collections\\\"),\\n245:     MovedAttribute(\\\"xrange\\\", \\\"__builtin__\\\", \\\"builtins\\\", \\\"xrange\\\", \\\"range\\\"),\\n246:     MovedAttribute(\\\"zip\\\", \\\"itertools\\\", \\\"builtins\\\", \\\"izip\\\", \\\"zip\\\"),\\n247:     MovedAttribute(\\\"zip_longest\\\", \\\"itertools\\\", \\\"itertools\\\", \\\"izip_longest\\\", \\\"zip_longest\\\"),\\n248: \\n249:     MovedModule(\\\"builtins\\\", \\\"__builtin__\\\"),\\n250:     MovedModule(\\\"configparser\\\", \\\"ConfigParser\\\"),\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "path": "django/utils/six.py",
+            "end_line": 300,
+            "start_line": 251
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/utils/six.py\", \"lines\": \"251-300 of 854\", \"content\": \"251:     MovedModule(\\\"copyreg\\\", \\\"copy_reg\\\"),\\n252:     MovedModule(\\\"dbm_gnu\\\", \\\"gdbm\\\", \\\"dbm.gnu\\\"),\\n253:     MovedModule(\\\"_dummy_thread\\\", \\\"dummy_thread\\\", \\\"_dummy_thread\\\"),\\n254:     MovedModule(\\\"http_cookiejar\\\", \\\"cookielib\\\", \\\"http.cookiejar\\\"),\\n255:     MovedModule(\\\"http_cookies\\\", \\\"Cookie\\\", \\\"http.cookies\\\"),\\n256:     MovedModule(\\\"html_entities\\\", \\\"htmlentitydefs\\\", \\\"html.entities\\\"),\\n257:     MovedModule(\\\"html_parser\\\", \\\"HTMLParser\\\", \\\"html.parser\\\"),\\n258:     MovedModule(\\\"http_client\\\", \\\"httplib\\\", \\\"http.client\\\"),\\n259:     MovedModule(\\\"email_mime_multipart\\\", \\\"email.MIMEMultipart\\\", \\\"email.mime.multipart\\\"),\\n260:     MovedModule(\\\"email_mime_nonmultipart\\\", \\\"email.MIMENonMultipart\\\", \\\"email.mime.nonmultipart\\\"),\\n261:     MovedModule(\\\"email_mime_text\\\", \\\"email.MIMEText\\\", \\\"email.mime.text\\\"),\\n262:     MovedModule(\\\"email_mime_base\\\", \\\"email.MIMEBase\\\", \\\"email.mime.base\\\"),\\n263:     MovedModule(\\\"BaseHTTPServer\\\", \\\"BaseHTTPServer\\\", \\\"http.server\\\"),\\n264:     MovedModule(\\\"CGIHTTPServer\\\", \\\"CGIHTTPServer\\\", \\\"http.server\\\"),\\n265:     MovedModule(\\\"SimpleHTTPServer\\\", \\\"SimpleHTTPServer\\\", \\\"http.server\\\"),\\n266:     MovedModule(\\\"cPickle\\\", \\\"cPickle\\\", \\\"pickle\\\"),\\n267:     MovedModule(\\\"queue\\\", \\\"Queue\\\"),\\n268:     MovedModule(\\\"reprlib\\\", \\\"repr\\\"),\\n269:     MovedModule(\\\"socketserver\\\", \\\"SocketServer\\\"),\\n270:     MovedModule(\\\"_thread\\\", \\\"thread\\\", \\\"_thread\\\"),\\n271:     MovedModule(\\\"tkinter\\\", \\\"Tkinter\\\"),\\n272:     MovedModule(\\\"tkinter_dialog\\\", \\\"Dialog\\\", \\\"tkinter.dialog\\\"),\\n273:     MovedModule(\\\"tkinter_filedialog\\\", \\\"FileDialog\\\", \\\"tkinter.filedialog\\\"),\\n274:     MovedModule(\\\"tkinter_scrolledtext\\\", \\\"ScrolledText\\\", \\\"tkinter.scrolledtext\\\"),\\n275:     MovedModule(\\\"tkinter_simpledialog\\\", \\\"SimpleDialog\\\", \\\"tkinter.simpledialog\\\"),\\n276:     MovedModule(\\\"tkinter_tix\\\", \\\"Tix\\\", \\\"tkinter.tix\\\"),\\n277:     MovedModule(\\\"tkinter_ttk\\\", \\\"ttk\\\", \\\"tkinter.ttk\\\"),\\n278:     MovedModule(\\\"tkinter_constants\\\", \\\"Tkconstants\\\", \\\"tkinter.constants\\\"),\\n279:     MovedModule(\\\"tkinter_dnd\\\", \\\"Tkdnd\\\", \\\"tkinter.dnd\\\"),\\n280:     MovedModule(\\\"tkinter_colorchooser\\\", \\\"tkColorChooser\\\",\\n281:                 \\\"tkinter.colorchooser\\\"),\\n282:     MovedModule(\\\"tkinter_commondialog\\\", \\\"tkCommonDialog\\\",\\n283:                 \\\"tkinter.commondialog\\\"),\\n284:     MovedModule(\\\"tkinter_tkfiledialog\\\", \\\"tkFileDialog\\\", \\\"tkinter.filedialog\\\"),\\n285:     MovedModule(\\\"tkinter_font\\\", \\\"tkFont\\\", \\\"tkinter.font\\\"),\\n286:     MovedModule(\\\"tkinter_messagebox\\\", \\\"tkMessageBox\\\", \\\"tkinter.messagebox\\\"),\\n287:     MovedModule(\\\"tkinter_tksimpledialog\\\", \\\"tkSimpleDialog\\\",\\n288:                 \\\"tkinter.simpledialog\\\"),\\n289:     MovedModule(\\\"urllib_parse\\\", __name__ + \\\".moves.urllib_parse\\\", \\\"urllib.parse\\\"),\\n290:     MovedModule(\\\"urllib_error\\\", __name__ + \\\".moves.urllib_error\\\", \\\"urllib.error\\\"),\\n291:     MovedModule(\\\"urllib\\\", __name__ + \\\".moves.urllib\\\", __name__ + \\\".moves.urllib\\\"),\\n292:     MovedModule(\\\"urllib_robotparser\\\", \\\"robotparser\\\", \\\"urllib.robotparser\\\"),\\n293:     MovedModule(\\\"xmlrpc_client\\\", \\\"xmlrpclib\\\", \\\"xmlrpc.client\\\"),\\n294:     MovedModule(\\\"xmlrpc_server\\\", \\\"SimpleXMLRPCServer\\\", \\\"xmlrpc.server\\\"),\\n295:     MovedModule(\\\"winreg\\\", \\\"_winreg\\\"),\\n296: ]\\n297: for attr in _moved_attributes:\\n298:     setattr(_MovedItems, attr.name, attr)\\n299:     if isinstance(attr, MovedModule):\\n300:         _importer._add_module(attr, \\\"moves.\\\" + attr.name)\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "end_line": 40,
+            "path": "django/db/backends/utils.py",
+            "start_line": 1
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/db/backends/utils.py\", \"lines\": \"1-40 of 208\", \"content\": \"1: from __future__ import unicode_literals\\n2: \\n3: import datetime\\n4: import decimal\\n5: import hashlib\\n6: import logging\\n7: from time import time\\n8: \\n9: from django.conf import settings\\n10: from django.utils.encoding import force_bytes\\n11: from django.utils.timezone import utc\\n12: \\n13: \\n14: logger = logging.getLogger('django.db.backends')\\n15: \\n16: \\n17: class CursorWrapper(object):\\n18:     def __init__(self, cursor, db):\\n19:         self.cursor = cursor\\n20:         self.db = db\\n21: \\n22:     WRAP_ERROR_ATTRS = frozenset(['fetchone', 'fetchmany', 'fetchall', 'nextset'])\\n23: \\n24:     def __getattr__(self, attr):\\n25:         cursor_attr = getattr(self.cursor, attr)\\n26:         if attr in CursorWrapper.WRAP_ERROR_ATTRS:\\n27:             return self.db.wrap_database_errors(cursor_attr)\\n28:         else:\\n29:             return cursor_attr\\n30: \\n31:     def __iter__(self):\\n32:         with self.db.wrap_database_errors:\\n33:             for item in self.cursor:\\n34:                 yield item\\n35: \\n36:     def __enter__(self):\\n37:         return self\\n38: \\n39:     def __exit__(self, type, value, traceback):\\n40:         # Ticket #17671 - Close instead of passing thru to avoid backend\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "end_line": 50,
+            "path": "setup.cfg",
+            "start_line": 1
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"setup.cfg\", \"lines\": \"1-14 of 14\", \"content\": \"1: [bdist_rpm]\\n2: doc_files = docs extras AUTHORS INSTALL LICENSE README.rst\\n3: install-script = scripts/rpm-install.sh\\n4: \\n5: [flake8]\\n6: exclude=build,.git,./django/utils/lru_cache.py,./django/utils/six.py,./django/conf/app_template/*,./django/dispatch/weakref_backports.py,./tests/.env,./xmlrunner\\n7: ignore=E123,E128,E265,E501,W601\\n8: max-line-length = 119\\n9: \\n10: [metadata]\\n11: license-file = LICENSE\\n12: \\n13: [wheel]\\n14: universal = 1\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "start_line": 1,
+            "path": "django/db/models/query.py",
+            "end_line": 50
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/db/models/query.py\", \"lines\": \"1-50 of 1768\", \"content\": \"1: \\\"\\\"\\\"\\n2: The main QuerySet implementation. This provides the public API for the ORM.\\n3: \\\"\\\"\\\"\\n4: \\n5: from collections import deque, OrderedDict\\n6: import copy\\n7: import sys\\n8: import warnings\\n9: \\n10: from django.conf import settings\\n11: from django.core import exceptions\\n12: from django.db import (connections, router, transaction, IntegrityError,\\n13:     DJANGO_VERSION_PICKLE_KEY)\\n14: from django.db.models.constants import LOOKUP_SEP\\n15: from django.db.models.fields import AutoField, Empty\\n16: from django.db.models.query_utils import Q, deferred_class_factory, InvalidQuery\\n17: from django.db.models.deletion import Collector\\n18: from django.db.models.sql.constants import CURSOR\\n19: from django.db.models import sql\\n20: from django.db.models.expressions import Date, DateTime, F\\n21: from django.utils.functional import partition\\n22: from django.utils import six\\n23: from django.utils import timezone\\n24: from django.utils.version import get_version\\n25: \\n26: # The maximum number (one less than the max to be precise) of results to fetch\\n27: # in a get() query\\n28: MAX_GET_RESULTS = 20\\n29: \\n30: # The maximum number of items to display in a QuerySet.__repr__\\n31: REPR_OUTPUT_SIZE = 20\\n32: \\n33: # Pull into this namespace for backwards compatibility.\\n34: EmptyResultSet = sql.EmptyResultSet\\n35: \\n36: \\n37: def _pickle_queryset(class_bases, class_dict):\\n38:     \\\"\\\"\\\"\\n39:     Used by `__reduce__` to create the initial version of the `QuerySet` class\\n40:     onto which the output of `__getstate__` will be applied.\\n41: \\n42:     See `__reduce__` for more details.\\n43:     \\\"\\\"\\\"\\n44:     new = Empty()\\n45:     new.__class__ = type(class_bases[0].__name__, class_bases, class_dict)\\n46:     return new\\n47: \\n48: \\n49: class QuerySet(object):\\n50:     \\\"\\\"\\\"\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "list_files",
+          "args": {
+            "path": "."
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "list_files",
+      "result": "{\"path\": \".\", \"entries\": [\".gitattributes\", \".gitignore\", \".hgignore\", \".tx/\", \"AUTHORS\", \"CONTRIBUTING.rst\", \"INSTALL\", \"LICENSE\", \"MANIFEST.in\", \"README.rst\", \"django/\", \"docs/\", \"extras/\", \"scripts/\", \"setup.cfg\", \"setup.py\", \"tests/\"], \"truncated\": false}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "list_files",
+          "args": {
+            "path": "django/db/backends/base"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "list_files",
+      "result": "{\"path\": \"django/db/backends/base\", \"entries\": [\"__init__.py\", \"base.py\", \"client.py\", \"creation.py\", \"features.py\", \"introspection.py\", \"operations.py\", \"schema.py\", \"validation.py\"], \"truncated\": false}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "path": "django/db/utils.py",
+            "end_line": 50,
+            "start_line": 1
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/db/utils.py\", \"lines\": \"1-50 of 298\", \"content\": \"1: from importlib import import_module\\n2: import os\\n3: import pkgutil\\n4: from threading import local\\n5: \\n6: from django.conf import settings\\n7: from django.core.exceptions import ImproperlyConfigured\\n8: from django.utils.functional import cached_property\\n9: from django.utils.module_loading import import_string\\n10: from django.utils._os import upath\\n11: from django.utils import six\\n12: \\n13: \\n14: DEFAULT_DB_ALIAS = 'default'\\n15: DJANGO_VERSION_PICKLE_KEY = '_django_version'\\n16: \\n17: \\n18: class Error(Exception if six.PY3 else StandardError):\\n19:     pass\\n20: \\n21: \\n22: class InterfaceError(Error):\\n23:     pass\\n24: \\n25: \\n26: class DatabaseError(Error):\\n27:     pass\\n28: \\n29: \\n30: class DataError(DatabaseError):\\n31:     pass\\n32: \\n33: \\n34: class OperationalError(DatabaseError):\\n35:     pass\\n36: \\n37: \\n38: class IntegrityError(DatabaseError):\\n39:     pass\\n40: \\n41: \\n42: class InternalError(DatabaseError):\\n43:     pass\\n44: \\n45: \\n46: class ProgrammingError(DatabaseError):\\n47:     pass\\n48: \\n49: \\n50: class NotSupportedError(DatabaseError):\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "list_files",
+          "args": {
+            "path": "django/db/backends"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "list_files",
+      "result": "{\"path\": \"django/db/backends\", \"entries\": [\"__init__.py\", \"base/\", \"dummy/\", \"mysql/\", \"oracle/\", \"postgresql_psycopg2/\", \"signals.py\", \"sqlite3/\", \"utils.py\"], \"truncated\": false}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "start_line": 1,
+            "end_line": 50,
+            "path": "django/db/backends/sqlite3/base.py"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/db/backends/sqlite3/base.py\", \"lines\": \"1-50 of 424\", \"content\": \"1: \\\"\\\"\\\"\\n2: SQLite3 backend for django.\\n3: \\n4: Works with either the pysqlite2 module or the sqlite3 module in the\\n5: standard library.\\n6: \\\"\\\"\\\"\\n7: from __future__ import unicode_literals\\n8: \\n9: import datetime\\n10: import decimal\\n11: import re\\n12: import warnings\\n13: \\n14: from django.conf import settings\\n15: from django.db import utils\\n16: from django.db.backends import utils as backend_utils\\n17: from django.db.backends.base.base import BaseDatabaseWrapper\\n18: from django.db.backends.base.validation import BaseDatabaseValidation\\n19: from django.utils import six, timezone\\n20: from django.utils.dateparse import parse_date, parse_duration, parse_time\\n21: from django.utils.encoding import force_text\\n22: from django.utils.safestring import SafeBytes\\n23: \\n24: try:\\n25:     import pytz\\n26: except ImportError:\\n27:     pytz = None\\n28: \\n29: try:\\n30:     try:\\n31:         from pysqlite2 import dbapi2 as Database\\n32:     except ImportError:\\n33:         from sqlite3 import dbapi2 as Database\\n34: except ImportError as exc:\\n35:     from django.core.exceptions import ImproperlyConfigured\\n36:     raise ImproperlyConfigured(\\\"Error loading either pysqlite2 or sqlite3 modules (tried in that order): %s\\\" % exc)\\n37: \\n38: # Some of these import sqlite3, so import them after checking if it's installed.\\n39: from .client import DatabaseClient\\n40: from .creation import DatabaseCreation\\n41: from .features import DatabaseFeatures\\n42: from .introspection import DatabaseIntrospection\\n43: from .operations import DatabaseOperations\\n44: from .schema import DatabaseSchemaEditor\\n45: from .utils import parse_datetime_with_timezone_support\\n46: \\n47: DatabaseError = Database.DatabaseError\\n48: IntegrityError = Database.IntegrityError\\n49: \\n50: \"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "path": "django/db/backends/base/client.py",
+            "end_line": 20,
+            "start_line": 1
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/db/backends/base/client.py\", \"lines\": \"1-15 of 15\", \"content\": \"1: class BaseDatabaseClient(object):\\n2:     \\\"\\\"\\\"\\n3:     This class encapsulates all backend-specific methods for opening a\\n4:     client shell.\\n5:     \\\"\\\"\\\"\\n6:     # This should be a string representing the name of the executable\\n7:     # (e.g., \\\"psql\\\"). Subclasses must override this.\\n8:     executable_name = None\\n9: \\n10:     def __init__(self, connection):\\n11:         # connection is an instance of BaseDatabaseWrapper.\\n12:         self.connection = connection\\n13: \\n14:     def runshell(self):\\n15:         raise NotImplementedError('subclasses of BaseDatabaseClient must provide a runshell() method')\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "path": "django/db/backends/base/features.py",
+            "end_line": 20,
+            "start_line": 1
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/db/backends/base/features.py\", \"lines\": \"1-20 of 252\", \"content\": \"1: from django.db.models.aggregates import StdDev\\n2: from django.db.models.expressions import Value\\n3: from django.db.utils import ProgrammingError\\n4: from django.utils.functional import cached_property\\n5: \\n6: \\n7: class BaseDatabaseFeatures(object):\\n8:     gis_enabled = False\\n9:     allows_group_by_pk = False\\n10:     # True if django.db.backends.utils.typecast_timestamp is used on values\\n11:     # returned from dates() calls.\\n12:     needs_datetime_string_cast = True\\n13:     empty_fetchmany_value = []\\n14:     update_can_self_select = True\\n15: \\n16:     # Does the backend distinguish between '' and None?\\n17:     interprets_empty_strings_as_nulls = False\\n18: \\n19:     # Does the backend allow inserting duplicate NULL rows in a nullable\\n20:     # unique field? All core backends implement this correctly, but other\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "start_line": 1,
+            "end_line": 20,
+            "path": "django/db/backends/base/introspection.py"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/db/backends/base/introspection.py\", \"lines\": \"1-20 of 178\", \"content\": \"1: from collections import namedtuple\\n2: \\n3: from django.utils import six\\n4: \\n5: \\n6: # Structure returned by DatabaseIntrospection.get_table_list()\\n7: TableInfo = namedtuple('TableInfo', ['name', 'type'])\\n8: \\n9: # Structure returned by the DB-API cursor.description interface (PEP 249)\\n10: FieldInfo = namedtuple('FieldInfo',\\n11:     'name type_code display_size internal_size precision scale null_ok')\\n12: \\n13: \\n14: class BaseDatabaseIntrospection(object):\\n15:     \\\"\\\"\\\"\\n16:     This class encapsulates all backend-specific introspection utilities\\n17:     \\\"\\\"\\\"\\n18:     data_types_reverse = {}\\n19: \\n20:     def __init__(self, connection):\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "path": "django/db/backends/base/schema.py",
+            "start_line": 1,
+            "end_line": 20
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/db/backends/base/schema.py\", \"lines\": \"1-20 of 912\", \"content\": \"1: import hashlib\\n2: \\n3: from django.db.backends.utils import truncate_name\\n4: from django.db.transaction import atomic\\n5: from django.utils import six\\n6: from django.utils.encoding import force_bytes\\n7: from django.utils.log import getLogger\\n8: \\n9: logger = getLogger('django.db.backends.schema')\\n10: \\n11: \\n12: def _related_non_m2m_objects(opts):\\n13:     # filters out m2m objects from reverse relations.\\n14:     return (obj for obj in opts.related_objects if not obj.field.many_to_many)\\n15: \\n16: \\n17: class BaseDatabaseSchemaEditor(object):\\n18:     \\\"\\\"\\\"\\n19:     This class (and its subclasses) are responsible for emitting schema-changing\\n20:     statements to the databases - model creation/removal/alteration, field\"}"
+    },
+    {
+      "role": "user",
+      "text": "(turn-budget reminder)"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "path": "django/db/backends/dummy/base.py",
+            "end_line": 40,
+            "start_line": 1
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/db/backends/dummy/base.py\", \"lines\": \"1-40 of 86\", \"content\": \"1: \\\"\\\"\\\"\\n2: Dummy database backend for Django.\\n3: \\n4: Django uses this if the database ENGINE setting is empty (None or empty string).\\n5: \\n6: Each of these API functions, except connection.close(), raises\\n7: ImproperlyConfigured.\\n8: \\\"\\\"\\\"\\n9: \\n10: from django.core.exceptions import ImproperlyConfigured\\n11: from django.db.backends.base.base import BaseDatabaseWrapper\\n12: from django.db.backends.base.client import BaseDatabaseClient\\n13: from django.db.backends.base.creation import BaseDatabaseCreation\\n14: from django.db.backends.base.features import BaseDatabaseFeatures\\n15: from django.db.backends.base.operations import BaseDatabaseOperations\\n16: from django.db.backends.base.introspection import BaseDatabaseIntrospection\\n17: from django.db.backends.base.validation import BaseDatabaseValidation\\n18: \\n19: \\n20: def complain(*args, **kwargs):\\n21:     raise ImproperlyConfigured(\\\"settings.DATABASES is improperly configured. \\\"\\n22:                                \\\"Please supply the ENGINE value. Check \\\"\\n23:                                \\\"settings documentation for more details.\\\")\\n24: \\n25: \\n26: def ignore(*args, **kwargs):\\n27:     pass\\n28: \\n29: \\n30: class DatabaseError(Exception):\\n31:     pass\\n32: \\n33: \\n34: class IntegrityError(DatabaseError):\\n35:     pass\\n36: \\n37: \\n38: class DatabaseOperations(BaseDatabaseOperations):\\n39:     quote_name = complain\\n40: \"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "path": "django/db/backends/postgresql_psycopg2/base.py",
+            "start_line": 1,
+            "end_line": 40
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/db/backends/postgresql_psycopg2/base.py\", \"lines\": \"1-40 of 241\", \"content\": \"1: \\\"\\\"\\\"\\n2: PostgreSQL database backend for Django.\\n3: \\n4: Requires psycopg 2: http://initd.org/projects/psycopg2\\n5: \\\"\\\"\\\"\\n6: \\n7: from django.conf import settings\\n8: from django.db.backends.base.base import BaseDatabaseWrapper\\n9: from django.db.backends.base.validation import BaseDatabaseValidation\\n10: from django.utils.encoding import force_str\\n11: from django.utils.functional import cached_property\\n12: from django.utils.safestring import SafeText, SafeBytes\\n13: \\n14: try:\\n15:     import psycopg2 as Database\\n16:     import psycopg2.extensions\\n17:     import psycopg2.extras\\n18: except ImportError as e:\\n19:     from django.core.exceptions import ImproperlyConfigured\\n20:     raise ImproperlyConfigured(\\\"Error loading psycopg2 module: %s\\\" % e)\\n21: \\n22: # Some of these import psycopg2, so import them after checking if it's installed.\\n23: from .client import DatabaseClient\\n24: from .creation import DatabaseCreation\\n25: from .features import DatabaseFeatures\\n26: from .introspection import DatabaseIntrospection\\n27: from .operations import DatabaseOperations\\n28: from .schema import DatabaseSchemaEditor\\n29: from .utils import utc_tzinfo_factory\\n30: from .version import get_version\\n31: \\n32: DatabaseError = Database.DatabaseError\\n33: IntegrityError = Database.IntegrityError\\n34: \\n35: psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)\\n36: psycopg2.extensions.register_type(psycopg2.extensions.UNICODEARRAY)\\n37: psycopg2.extensions.register_adapter(SafeBytes, psycopg2.extensions.QuotedString)\\n38: psycopg2.extensions.register_adapter(SafeText, psycopg2.extensions.QuotedString)\\n39: psycopg2.extras.register_uuid()\\n40: \"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "end_line": 40,
+            "path": "django/db/backends/mysql/base.py",
+            "start_line": 1
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/db/backends/mysql/base.py\", \"lines\": \"1-40 of 376\", \"content\": \"1: \\\"\\\"\\\"\\n2: MySQL database backend for Django.\\n3: \\n4: Requires mysqlclient: https://pypi.python.org/pypi/mysqlclient/\\n5: MySQLdb is supported for Python 2 only: http://sourceforge.net/projects/mysql-python\\n6: \\\"\\\"\\\"\\n7: from __future__ import unicode_literals\\n8: \\n9: import datetime\\n10: import re\\n11: import sys\\n12: import warnings\\n13: \\n14: from django.conf import settings\\n15: from django.db import utils\\n16: from django.db.backends import utils as backend_utils\\n17: from django.db.backends.base.base import BaseDatabaseWrapper\\n18: from django.utils.encoding import force_str\\n19: from django.db.backends.mysql.schema import DatabaseSchemaEditor\\n20: from django.utils import six, timezone\\n21: from django.utils.functional import cached_property\\n22: from django.utils.safestring import SafeBytes, SafeText\\n23: \\n24: try:\\n25:     import MySQLdb as Database\\n26: except ImportError as e:\\n27:     from django.core.exceptions import ImproperlyConfigured\\n28:     raise ImproperlyConfigured(\\\"Error loading MySQLdb module: %s\\\" % e)\\n29: \\n30: from MySQLdb.converters import conversions, Thing2Literal\\n31: from MySQLdb.constants import FIELD_TYPE, CLIENT\\n32: \\n33: # Some of these import MySQLdb, so import them after checking if it's installed.\\n34: from .client import DatabaseClient\\n35: from .creation import DatabaseCreation\\n36: from .features import DatabaseFeatures\\n37: from .introspection import DatabaseIntrospection\\n38: from .operations import DatabaseOperations\\n39: from .validation import DatabaseValidation\\n40: \"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "path": "django/core/management/base.py",
+            "end_line": 40,
+            "start_line": 1
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/core/management/base.py\", \"lines\": \"1-40 of 597\", \"content\": \"1: # -*- coding: utf-8 -*-\\n2: \\n3: from __future__ import unicode_literals\\n4: \\n5: \\\"\\\"\\\"\\n6: Base classes for writing management commands (named commands which can\\n7: be executed through ``django-admin`` or ``manage.py``).\\n8: \\\"\\\"\\\"\\n9: \\n10: import os\\n11: import sys\\n12: import warnings\\n13: \\n14: from argparse import ArgumentParser\\n15: from optparse import OptionParser\\n16: \\n17: import django\\n18: from django.core import checks\\n19: from django.core.management.color import color_style, no_style\\n20: from django.db import connections\\n21: from django.utils.deprecation import RemovedInDjango20Warning\\n22: from django.utils.encoding import force_str\\n23: \\n24: \\n25: class CommandError(Exception):\\n26:     \\\"\\\"\\\"\\n27:     Exception class indicating a problem while executing a management\\n28:     command.\\n29: \\n30:     If this exception is raised during the execution of a management\\n31:     command, it will be caught and turned into a nicely-printed error\\n32:     message to the appropriate output stream (i.e., stderr); as a\\n33:     result, raising this exception (with a sensible description of the\\n34:     error) is the preferred way to indicate that something has gone\\n35:     wrong in the execution of a command.\\n36: \\n37:     \\\"\\\"\\\"\\n38:     pass\\n39: \\n40: \"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "path": "docs/internals/contributing/writing-code/coding-style.txt",
+            "start_line": 50,
+            "end_line": 100
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"docs/internals/contributing/writing-code/coding-style.txt\", \"lines\": \"50-100 of 226\", \"content\": \"50: \\n51:   Here's an example of what not to do::\\n52: \\n53:       def foo():\\n54:           \\\"\\\"\\\"\\n55:           Calculate something and return the result.\\n56:           \\\"\\\"\\\"\\n57:           pass\\n58: \\n59: Template style\\n60: --------------\\n61: \\n62: * In Django template code, put one (and only one) space between the curly\\n63:   brackets and the tag contents.\\n64: \\n65:   Do this:\\n66: \\n67:   .. code-block:: html+django\\n68: \\n69:       {{ foo }}\\n70: \\n71:   Don't do this:\\n72: \\n73:   .. code-block:: html+django\\n74: \\n75:       {{foo}}\\n76: \\n77: View style\\n78: ----------\\n79: \\n80: * In Django views, the first parameter in a view function should be called\\n81:   ``request``.\\n82: \\n83:   Do this::\\n84: \\n85:       def my_view(request, foo):\\n86:           # ...\\n87: \\n88:   Don't do this::\\n89: \\n90:       def my_view(req, foo):\\n91:           # ...\\n92: \\n93: Model style\\n94: -----------\\n95: \\n96: * Field names should be all lowercase, using underscores instead of\\n97:   camelCase.\\n98: \\n99:   Do this::\\n100: \"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "end_line": 226,
+            "path": "docs/internals/contributing/writing-code/coding-style.txt",
+            "start_line": 101
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"docs/internals/contributing/writing-code/coding-style.txt\", \"lines\": \"101-226 of 226\", \"content\": \"101:       class Person(models.Model):\\n102:           first_name = models.CharField(max_length=20)\\n103:           last_name = models.CharField(max_length=40)\\n104: \\n105:   Don't do this::\\n106: \\n107:       class Person(models.Model):\\n108:           FirstName = models.CharField(max_length=20)\\n109:           Last_Name = models.CharField(max_length=40)\\n110: \\n111: * The ``class Meta`` should appear *after* the fields are defined, with\\n112:   a single blank line separating the fields and the class definition.\\n113: \\n114:   Do this::\\n115: \\n116:       class Person(models.Model):\\n117:           first_name = models.CharField(max_length=20)\\n118:           last_name = models.CharField(max_length=40)\\n119: \\n120:           class Meta:\\n121:               verbose_name_plural = 'people'\\n122: \\n123:   Don't do this::\\n124: \\n125:       class Person(models.Model):\\n126:           first_name = models.CharField(max_length=20)\\n127:           last_name = models.CharField(max_length=40)\\n128:           class Meta:\\n129:               verbose_name_plural = 'people'\\n130: \\n131:   Don't do this, either::\\n132: \\n133:       class Person(models.Model):\\n134:           class Meta:\\n135:               verbose_name_plural = 'people'\\n136: \\n137:           first_name = models.CharField(max_length=20)\\n138:           last_name = models.CharField(max_length=40)\\n139: \\n140: * If you define a ``__str__`` method (previously ``__unicode__`` before Python 3\\n141:   was supported), decorate the model class with\\n142:   :func:`~django.utils.encoding.python_2_unicode_compatible`.\\n143: \\n144: * The order of model inner classes and standard methods should be as\\n145:   follows (noting that these are not all required):\\n146: \\n147:   * All database fields\\n148:   * Custom manager attributes\\n149:   * ``class Meta``\\n150:   * ``def __str__()``\\n151:   * ``def save()``\\n152:   * ``def get_absolute_url()``\\n153:   * Any custom methods\\n154: \\n155: * If ``choices`` is defined for a given model field, define each choice as\\n156:   a tuple of tuples, with an all-uppercase name as a class attribute on the\\n157:   model. Example::\\n158: \\n159:     class MyModel(models.Model):\\n160:         DIRECTION_UP = 'U'\\n161:         DIRECTION_DOWN = 'D'\\n162:         DIRECTION_CHOICES = (\\n163:             (DIRECTION_UP, 'Up'),\\n164:             (DIRECTION_DOWN, 'Down'),\\n165:         )\\n166: \\n167: Use of ``django.conf.settings``\\n168: -------------------------------\\n169: \\n170: Modules should not in general use settings stored in ``django.conf.settings``\\n171: at the top level (i.e. evaluated when the module is imported). The explanation\\n172: for this is as follows:\\n173: \\n174: Manual configuration of settings (i.e. not relying on the\\n175: ``DJANGO_SETTINGS_MODULE`` environment variable) is allowed and possible as\\n176: follows::\\n177: \\n178:     from django.conf import settings\\n179: \\n180:     settings.configure({}, SOME_SETTING='foo')\\n181: \\n182: However, if any setting is accessed before the ``settings.configure`` line,\\n183: this will not work. (Internally, ``settings`` is a ``LazyObject`` which\\n184: configures itself automatically when the settings are accessed if it has not\\n185: already been configured).\\n186: \\n187: So, if there is a module containing some code as follows::\\n188: \\n189:     from django.conf import settings\\n190:     from django.core.urlresolvers import get_callable\\n191: \\n192:     default_foo_view = get_callable(settings.FOO_VIEW)\\n193: \\n194: ...then importing this module will cause the settings object to be configured.\\n195: That means that the ability for third parties to import the module at the top\\n196: level is incompatible with the ability to configure the settings object\\n197: manually, or makes it very difficult in some circumstances.\\n198: \\n199: Instead of the above code, a level of laziness or indirection must be used,\\n200: such as ``django.utils.functional.LazyObject``,\\n201: ``django.utils.functional.lazy()`` or ``lambda``.\\n202: \\n203: Miscellaneous\\n204: -------------\\n205: \\n206: * Mark all strings for internationalization; see the :doc:`i18n\\n207:   documentation </topics/i18n/index>` for details.\\n208: \\n209: * Remove ``import`` statements that are no longer used when you change code.\\n210:   `flake8`_ will identify these imports for you. If an unused import needs to\\n211:   remain for backwards-compatibility, mark the end of with ``# NOQA`` to\\n212:   silence the flake8 warning.\\n213: \\n214: * Systematically remove all trailing whitespaces from your code as those\\n215:   add unnecessary bytes, add visual clutter to the patches and can also\\n216:   occasionally cause unnecessary merge conflicts. Some IDE's can be\\n217:   configured to automatically remove them and most VCS tools can be set to\\n218:   highlight them in diff outputs.\\n219: \\n220: * Please don't put your name in the code you contribute. Our policy is to\\n221:   keep contributors' names in the ``AUTHORS`` file distributed with Django\\n222:   -- not scattered throughout the codebase itself. Feel free to include a\\n223:   change to the ``AUTHORS`` file in your patch if you make more than a\\n224:   single trivial change.\\n225: \\n226: .. _flake8: https://pypi.python.org/pypi/flake8\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "path": "docs/internals/contributing/writing-code/coding-style.txt",
+            "end_line": 50,
+            "start_line": 1
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"docs/internals/contributing/writing-code/coding-style.txt\", \"lines\": \"1-50 of 226\", \"content\": \"1: ============\\n2: Coding style\\n3: ============\\n4: \\n5: Please follow these coding standards when writing code for inclusion in Django.\\n6: \\n7: Python style\\n8: ------------\\n9: \\n10: * Unless otherwise specified, follow :pep:`8`.\\n11: \\n12:   Use `flake8`_ to check for problems in this area. Note that our ``setup.cfg``\\n13:   file contains some excluded files (deprecated modules we don't care about\\n14:   cleaning up and some third-party code that Django vendors) as well as some\\n15:   excluded errors that we don't consider as gross violations. Remember that\\n16:   :pep:`8` is only a guide, so respect the style of the surrounding code as a\\n17:   primary goal.\\n18: \\n19:   An exception to :pep:`8` is our rules on line lengths. Don't limit lines of\\n20:   code to 79 characters if it means the code looks significantly uglier or is\\n21:   harder to read. We allow up to 119 characters as this is the width of GitHub\\n22:   code review; anything longer requires horizontal scrolling which makes review\\n23:   more difficult. This check is included when you run ``flake8``. Documentation,\\n24:   comments, and docstrings should be wrapped at 79 characters, even though\\n25:   :pep:`8` suggests 72.\\n26: \\n27: * Use four spaces for indentation.\\n28: \\n29: * Use underscores, not camelCase, for variable, function and method names\\n30:   (i.e. ``poll.get_unique_voters()``, not ``poll.getUniqueVoters``).\\n31: \\n32: * Use ``InitialCaps`` for class names (or for factory functions that\\n33:   return classes).\\n34: \\n35: * Use convenience imports whenever available. For example, do this::\\n36: \\n37:       from django.views.generic import View\\n38: \\n39:   Don't do this::\\n40: \\n41:       from django.views.generic.base import View\\n42: \\n43: * In docstrings, use \\\"action words\\\" such as::\\n44: \\n45:       def foo():\\n46:           \\\"\\\"\\\"\\n47:           Calculates something and returns the result.\\n48:           \\\"\\\"\\\"\\n49:           pass\\n50: \"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "path": "django/views/generic/base.py",
+            "start_line": 1,
+            "end_line": 25
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/views/generic/base.py\", \"lines\": \"1-25 of 220\", \"content\": \"1: from __future__ import unicode_literals\\n2: \\n3: import logging\\n4: from functools import update_wrapper\\n5: \\n6: from django import http\\n7: from django.core.exceptions import ImproperlyConfigured\\n8: from django.core.urlresolvers import reverse, NoReverseMatch\\n9: from django.template.response import TemplateResponse\\n10: from django.utils.decorators import classonlymethod\\n11: from django.utils import six\\n12: \\n13: logger = logging.getLogger('django.request')\\n14: \\n15: \\n16: class ContextMixin(object):\\n17:     \\\"\\\"\\\"\\n18:     A default context mixin that passes the keyword arguments received by\\n19:     get_context_data as the template context.\\n20:     \\\"\\\"\\\"\\n21: \\n22:     def get_context_data(self, **kwargs):\\n23:         if 'view' not in kwargs:\\n24:             kwargs['view'] = self\\n25:         return kwargs\"}"
+    }
+  ],
+  "guard_code": [
+    "except ImportError:"
+  ],
+  "judge": {
+    "done": "no",
+    "preserved": "yes",
+    "note": "no change was made",
+    "model": null
+  }
+}

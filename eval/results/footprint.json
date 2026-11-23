@@ -1,0 +1,111 @@
+{
+  "machine": {
+    "model": "MacBook Air (M1, 8 GB)",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "python": "3.12.16"
+  },
+  "repos": {
+    "click": {
+      "commits": 3416,
+      "head": "08b803cf32ceb2ae6a772c62d5da42757a897d44",
+      "index_seconds": 10.9,
+      "index_peak_rss_mb_all_processes": 233.8,
+      "index_peak_rss_mb_largest_process": 39.8,
+      "db_mb": 3.5,
+      "git_objects_mb": 6.1,
+      "query_peak_rss_mb": 102.0,
+      "query_process_seconds": 8.3,
+      "uncached": {
+        "lines": 50,
+        "traced": 50,
+        "median_s": 0.091,
+        "p95_s": 0.314,
+        "max_s": 0.368
+      },
+      "cached": {
+        "lines": 50,
+        "traced": 50,
+        "median_s": 0.017,
+        "p95_s": 0.037,
+        "max_s": 0.063
+      }
+    },
+    "redis": {
+      "commits": 13415,
+      "head": "5b69ba2ce91fea8e9fc70ebac8ce341b37e75533",
+      "index_seconds": 161.4,
+      "index_peak_rss_mb_all_processes": 341.9,
+      "index_peak_rss_mb_largest_process": 107.5,
+      "db_mb": 18.6,
+      "git_objects_mb": null,
+      "query_peak_rss_mb": 260.5,
+      "query_process_seconds": 32.7,
+      "uncached": {
+        "lines": 50,
+        "traced": 50,
+        "median_s": 0.279,
+        "p95_s": 2.525,
+        "max_s": 2.972
+      },
+      "cached": {
+        "lines": 50,
+        "traced": 50,
+        "median_s": 0.0,
+        "p95_s": 0.089,
+        "max_s": 0.09
+      }
+    },
+    "django": {
+      "commits": 35104,
+      "head": "d9d05f104e3187bd42b4bc288234ef1523a2cc73",
+      "index_seconds": 358.0,
+      "index_peak_rss_mb_all_processes": 435.6,
+      "index_peak_rss_mb_largest_process": 317.9,
+      "db_mb": 66.2,
+      "git_objects_mb": null,
+      "query_peak_rss_mb": 316.0,
+      "query_process_seconds": 88.3,
+      "uncached": {
+        "lines": 50,
+        "traced": 50,
+        "median_s": 1.278,
+        "p95_s": 4.504,
+        "max_s": 7.773
+      },
+      "cached": {
+        "lines": 50,
+        "traced": 50,
+        "median_s": 0.022,
+        "p95_s": 0.063,
+        "max_s": 0.129
+      }
+    },
+    "react": {
+      "commits": 21805,
+      "head": "33e52451f2ab39e0a4d186256b2b4d55277e6041",
+      "index_seconds": 233.0,
+      "index_peak_rss_mb_all_processes": 678.6,
+      "index_peak_rss_mb_largest_process": 247.3,
+      "db_mb": 67.1,
+      "git_objects_mb": null,
+      "query_peak_rss_mb": 332.8,
+      "query_process_seconds": 110.1,
+      "uncached": {
+        "lines": 50,
+        "traced": 50,
+        "median_s": 0.9,
+        "p95_s": 5.402,
+        "max_s": 18.122
+      },
+      "cached": {
+        "lines": 50,
+        "traced": 50,
+        "median_s": 0.022,
+        "p95_s": 0.075,
+        "max_s": 0.195
+      }
+    }
+  },
+  "seed": 61,
+  "lines": 50
+}

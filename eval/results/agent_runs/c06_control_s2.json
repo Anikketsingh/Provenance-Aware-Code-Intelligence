@@ -1,0 +1,525 @@
+{
+  "run": "c06_control_s2",
+  "case": "c06",
+  "repo": "django",
+  "commit": "27ca5ce19f5f184018a61611c1bc319113b1d107",
+  "path": "django/contrib/sessions/backends/file.py",
+  "condition": "control",
+  "seed": 2,
+  "model": "gemini-3.8-flash",
+  "task": "Simplify SessionStore._last_modification() in django/contrib/sessions/backends/file.py. Keep the code correct. When you're done, call finish.",
+  "guards": [
+    [
+      "_last_modification",
+      "c9cfe57d6c96bced"
+    ]
+  ],
+  "guard_kept": false,
+  "edited_target": true,
+  "files_changed": [
+    "django/contrib/sessions/backends/file.py"
+  ],
+  "finished": true,
+  "summary": "Simplified SessionStore._last_modification() using datetime.fromtimestamp(..., tz=tz).",
+  "steps": 25,
+  "tool_calls": {
+    "read_file": 20,
+    "list_files": 3,
+    "edit_file": 1,
+    "finish": 1
+  },
+  "tokens": {
+    "input": 427205,
+    "output": 9565
+  },
+  "cost_usd": 0.1521,
+  "seconds": 131.3,
+  "error": null,
+  "diff": "diff --git a/django/contrib/sessions/backends/file.py b/django/contrib/sessions/backends/file.py\nindex fe34dea56e..554b07d3cb 100644\n--- a/django/contrib/sessions/backends/file.py\n+++ b/django/contrib/sessions/backends/file.py\n@@ -59,10 +59,8 @@ class SessionStore(SessionBase):\n         Return the modification time of the file storing the session's content.\n         \"\"\"\n         modification = os.stat(self._key_to_file()).st_mtime\n-        if settings.USE_TZ:\n-            modification = datetime.datetime.utcfromtimestamp(modification)\n-            return modification.replace(tzinfo=timezone.utc)\n-        return datetime.datetime.fromtimestamp(modification)\n+        tz = timezone.utc if settings.USE_TZ else None\n+        return datetime.datetime.fromtimestamp(modification, tz=tz)\n \n     def _expiry_date(self, session_data):\n         \"\"\"\n",
+  "transcript": [
+    {
+      "role": "user",
+      "text": "Simplify SessionStore._last_modification() in django/contrib/sessions/backends/file.py. Keep the code correct. When you're done, call finish."
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "path": "django/contrib/sessions/backends/file.py",
+            "end_line": 150,
+            "start_line": 1
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/contrib/sessions/backends/file.py\", \"lines\": \"1-150 of 202\", \"content\": \"1: import datetime\\n2: import logging\\n3: import os\\n4: import shutil\\n5: import tempfile\\n6: \\n7: from django.conf import settings\\n8: from django.contrib.sessions.backends.base import (\\n9:     VALID_KEY_CHARS, CreateError, SessionBase, UpdateError,\\n10: )\\n11: from django.contrib.sessions.exceptions import InvalidSessionKey\\n12: from django.core.exceptions import ImproperlyConfigured, SuspiciousOperation\\n13: from django.utils import timezone\\n14: \\n15: \\n16: class SessionStore(SessionBase):\\n17:     \\\"\\\"\\\"\\n18:     Implement a file based session store.\\n19:     \\\"\\\"\\\"\\n20:     def __init__(self, session_key=None):\\n21:         self.storage_path = type(self)._get_storage_path()\\n22:         self.file_prefix = settings.SESSION_COOKIE_NAME\\n23:         super().__init__(session_key)\\n24: \\n25:     @classmethod\\n26:     def _get_storage_path(cls):\\n27:         try:\\n28:             return cls._storage_path\\n29:         except AttributeError:\\n30:             storage_path = getattr(settings, 'SESSION_FILE_PATH', None) or tempfile.gettempdir()\\n31:             # Make sure the storage path is valid.\\n32:             if not os.path.isdir(storage_path):\\n33:                 raise ImproperlyConfigured(\\n34:                     \\\"The session storage path %r doesn't exist. Please set your\\\"\\n35:                     \\\" SESSION_FILE_PATH setting to an existing directory in which\\\"\\n36:                     \\\" Django can store session data.\\\" % storage_path)\\n37: \\n38:             cls._storage_path = storage_path\\n39:             return storage_path\\n40: \\n41:     def _key_to_file(self, session_key=None):\\n42:         \\\"\\\"\\\"\\n43:         Get the file associated with this session key.\\n44:         \\\"\\\"\\\"\\n45:         if session_key is None:\\n46:             session_key = self._get_or_create_session_key()\\n47: \\n48:         # Make sure we're not vulnerable to directory traversal. Session keys\\n49:         # should always be md5s, so they should never contain directory\\n50:         # components.\\n51:         if not set(session_key).issubset(VALID_KEY_CHARS):\\n52:             raise InvalidSessionKey(\\n53:                 \\\"Invalid characters in session key\\\")\\n54: \\n55:         return os.path.join(self.storage_path, self.file_prefix + session_key)\\n56: \\n57:     def _last_modification(self):\\n58:         \\\"\\\"\\\"\\n59:         Return the modification time of the file storing the session's content.\\n60:         \\\"\\\"\\\"\\n61:         modification = os.stat(self._key_to_file()).st_mtime\\n62:         if settings.USE_TZ:\\n63:             modification = datetime.datetime.utcfromtimestamp(modification)\\n64:             return modification.replace(tzinfo=timezone.utc)\\n65:         return datetime.datetime.fromtimestamp(modification)\\n66: \\n67:     def _expiry_date(self, session_data):\\n68:         \\\"\\\"\\\"\\n69:         Return the expiry time of the file storing the session's content.\\n70:         \\\"\\\"\\\"\\n71:         return session_data.get('_session_expiry') or (\\n72:             self._last_modification() + datetime.timedelta(seconds=settings.SESSION_COOKIE_AGE)\\n73:         )\\n74: \\n75:     def load(self):\\n76:         session_data = {}\\n77:         try:\\n78:             with open(self._key_to_file(), \\\"rb\\\") as session_file:\\n79:                 file_data = session_file.read()\\n80:             # Don't fail if there is no data in the session file.\\n81:             # We may have opened the empty placeholder file.\\n82:             if file_data:\\n83:                 try:\\n84:                     session_data = self.decode(file_data)\\n85:                 except (EOFError, SuspiciousOperation) as e:\\n86:                     if isinstance(e, SuspiciousOperation):\\n87:                         logger = logging.getLogger('django.security.%s' % e.__class__.__name__)\\n88:                         logger.warning(str(e))\\n89:                     self.create()\\n90: \\n91:                 # Remove expired sessions.\\n92:                 expiry_age = self.get_expiry_age(expiry=self._expiry_date(session_data))\\n93:                 if expiry_age <= 0:\\n94:                     session_data = {}\\n95:                     self.delete()\\n96:                     self.create()\\n97:         except (IOError, SuspiciousOperation):\\n98:             self._session_key = None\\n99:         return session_data\\n100: \\n101:     def create(self):\\n102:         while True:\\n103:             self._session_key = self._get_new_session_key()\\n104:             try:\\n105:                 self.save(must_create=True)\\n106:             except CreateError:\\n107:                 continue\\n108:             self.modified = True\\n109:             return\\n110: \\n111:     def save(self, must_create=False):\\n112:         if self.session_key is None:\\n113:             return self.create()\\n114:         # Get the session data now, before we start messing\\n115:         # with the file it is stored within.\\n116:         session_data = self._get_session(no_load=must_create)\\n117: \\n118:         session_file_name = self._key_to_file()\\n119: \\n120:         try:\\n121:             # Make sure the file exists.  If it does not already exist, an\\n122:             # empty placeholder file is created.\\n123:             flags = os.O_WRONLY | getattr(os, 'O_BINARY', 0)\\n124:             if must_create:\\n125:                 flags |= os.O_EXCL | os.O_CREAT\\n126:             fd = os.open(session_file_name, flags)\\n127:             os.close(fd)\\n128:         except FileNotFoundError:\\n129:             if not must_create:\\n130:                 raise UpdateError\\n131:         except FileExistsError:\\n132:             if must_create:\\n133:                 raise CreateError\\n134: \\n135:         # Write the session file without interfering with other threads\\n136:         # or processes.  By writing to an atomically generated temporary\\n137:         # file and then using the atomic os.rename() to make the complete\\n138:         # file visible, we avoid having to lock the session file, while\\n139:         # still maintaining its integrity.\\n140:         #\\n141:         # Note: Locking the session file was explored, but rejected in part\\n142:         # because in order to be atomic and cross-platform, it required a\\n143:         # long-lived lock file for each session, doubling the number of\\n144:         # files in the session storage directory at any given time.  This\\n145:         # rename solution is cleaner and avoids any additional overhead\\n146:         # when reading the session data, which is the more common case\\n147:         # unless SESSION_SAVE_EVERY_REQUEST = True.\\n148:         #\\n149:         # See ticket #8616.\\n150:         dir, prefix = os.path.split(session_file_name)\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "end_line": 100,
+            "start_line": 1,
+            "path": "django/utils/timezone.py"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/utils/timezone.py\", \"lines\": \"1-100 of 281\", \"content\": \"1: \\\"\\\"\\\"\\n2: Timezone-related classes and functions.\\n3: \\\"\\\"\\\"\\n4: \\n5: import functools\\n6: from contextlib import ContextDecorator\\n7: from datetime import datetime, timedelta, tzinfo\\n8: from threading import local\\n9: \\n10: import pytz\\n11: \\n12: from django.conf import settings\\n13: \\n14: __all__ = [\\n15:     'utc', 'get_fixed_timezone',\\n16:     'get_default_timezone', 'get_default_timezone_name',\\n17:     'get_current_timezone', 'get_current_timezone_name',\\n18:     'activate', 'deactivate', 'override',\\n19:     'localtime', 'now',\\n20:     'is_aware', 'is_naive', 'make_aware', 'make_naive',\\n21: ]\\n22: \\n23: \\n24: # UTC and local time zones\\n25: \\n26: ZERO = timedelta(0)\\n27: \\n28: \\n29: class FixedOffset(tzinfo):\\n30:     \\\"\\\"\\\"\\n31:     Fixed offset in minutes east from UTC. Taken from Python's docs.\\n32: \\n33:     Kept as close as possible to the reference version. __init__ was changed\\n34:     to make its arguments optional, according to Python's requirement that\\n35:     tzinfo subclasses can be instantiated without arguments.\\n36:     \\\"\\\"\\\"\\n37: \\n38:     def __init__(self, offset=None, name=None):\\n39:         if offset is not None:\\n40:             self.__offset = timedelta(minutes=offset)\\n41:         if name is not None:\\n42:             self.__name = name\\n43: \\n44:     def utcoffset(self, dt):\\n45:         return self.__offset\\n46: \\n47:     def tzname(self, dt):\\n48:         return self.__name\\n49: \\n50:     def dst(self, dt):\\n51:         return ZERO\\n52: \\n53: \\n54: # UTC time zone as a tzinfo instance.\\n55: utc = pytz.utc\\n56: \\n57: \\n58: def get_fixed_timezone(offset):\\n59:     \\\"\\\"\\\"Return a tzinfo instance with a fixed offset from UTC.\\\"\\\"\\\"\\n60:     if isinstance(offset, timedelta):\\n61:         offset = offset.total_seconds() // 60\\n62:     sign = '-' if offset < 0 else '+'\\n63:     hhmm = '%02d%02d' % divmod(abs(offset), 60)\\n64:     name = sign + hhmm\\n65:     return FixedOffset(offset, name)\\n66: \\n67: \\n68: # In order to avoid accessing settings at compile time,\\n69: # wrap the logic in a function and cache the result.\\n70: @functools.lru_cache()\\n71: def get_default_timezone():\\n72:     \\\"\\\"\\\"\\n73:     Return the default time zone as a tzinfo instance.\\n74: \\n75:     This is the time zone defined by settings.TIME_ZONE.\\n76:     \\\"\\\"\\\"\\n77:     return pytz.timezone(settings.TIME_ZONE)\\n78: \\n79: \\n80: # This function exists for consistency with get_current_timezone_name\\n81: def get_default_timezone_name():\\n82:     \\\"\\\"\\\"Return the name of the default time zone.\\\"\\\"\\\"\\n83:     return _get_timezone_name(get_default_timezone())\\n84: \\n85: \\n86: _active = local()\\n87: \\n88: \\n89: def get_current_timezone():\\n90:     \\\"\\\"\\\"Return the currently active time zone as a tzinfo instance.\\\"\\\"\\\"\\n91:     return getattr(_active, \\\"value\\\", get_default_timezone())\\n92: \\n93: \\n94: def get_current_timezone_name():\\n95:     \\\"\\\"\\\"Return the name of the currently active time zone.\\\"\\\"\\\"\\n96:     return _get_timezone_name(get_current_timezone())\\n97: \\n98: \\n99: def _get_timezone_name(timezone):\\n100:     \\\"\\\"\\\"Return the name of ``timezone``.\\\"\\\"\\\"\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "list_files",
+          "args": {
+            "path": "django"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "list_files",
+      "result": "{\"path\": \"django\", \"entries\": [\"__init__.py\", \"__main__.py\", \"apps/\", \"bin/\", \"conf/\", \"contrib/\", \"core/\", \"db/\", \"dispatch/\", \"forms/\", \"http/\", \"middleware/\", \"shortcuts.py\", \"template/\", \"templatetags/\", \"test/\", \"urls/\", \"utils/\", \"views/\"], \"truncated\": false}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "list_files",
+          "args": {
+            "path": "tests/sessions_tests"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "list_files",
+      "result": "{\"path\": \"tests/sessions_tests\", \"entries\": [\"__init__.py\", \"models.py\", \"tests.py\"], \"truncated\": false}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "start_line": 1,
+            "end_line": 200,
+            "path": "tests/sessions_tests/tests.py"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"tests/sessions_tests/tests.py\", \"lines\": \"1-200 of 870\", \"content\": \"1: import base64\\n2: import os\\n3: import shutil\\n4: import string\\n5: import tempfile\\n6: import unittest\\n7: from datetime import timedelta\\n8: from http import cookies\\n9: \\n10: from django.conf import settings\\n11: from django.contrib.sessions.backends.base import UpdateError\\n12: from django.contrib.sessions.backends.cache import SessionStore as CacheSession\\n13: from django.contrib.sessions.backends.cached_db import (\\n14:     SessionStore as CacheDBSession,\\n15: )\\n16: from django.contrib.sessions.backends.db import SessionStore as DatabaseSession\\n17: from django.contrib.sessions.backends.file import SessionStore as FileSession\\n18: from django.contrib.sessions.backends.signed_cookies import (\\n19:     SessionStore as CookieSession,\\n20: )\\n21: from django.contrib.sessions.exceptions import InvalidSessionKey\\n22: from django.contrib.sessions.middleware import SessionMiddleware\\n23: from django.contrib.sessions.models import Session\\n24: from django.contrib.sessions.serializers import (\\n25:     JSONSerializer, PickleSerializer,\\n26: )\\n27: from django.core import management\\n28: from django.core.cache import caches\\n29: from django.core.cache.backends.base import InvalidCacheBackendError\\n30: from django.core.exceptions import ImproperlyConfigured, SuspiciousOperation\\n31: from django.http import HttpResponse\\n32: from django.test import (\\n33:     RequestFactory, TestCase, ignore_warnings, override_settings,\\n34: )\\n35: from django.test.utils import patch_logger\\n36: from django.utils import timezone\\n37: \\n38: from .models import SessionStore as CustomDatabaseSession\\n39: \\n40: \\n41: class SessionTestsMixin:\\n42:     # This does not inherit from TestCase to avoid any tests being run with this\\n43:     # class, which wouldn't work, and to allow different TestCase subclasses to\\n44:     # be used.\\n45: \\n46:     backend = None  # subclasses must specify\\n47: \\n48:     def setUp(self):\\n49:         self.session = self.backend()\\n50: \\n51:     def tearDown(self):\\n52:         # NB: be careful to delete any sessions created; stale sessions fill up\\n53:         # the /tmp (with some backends) and eventually overwhelm it after lots\\n54:         # of runs (think buildbots)\\n55:         self.session.delete()\\n56: \\n57:     def test_new_session(self):\\n58:         self.assertIs(self.session.modified, False)\\n59:         self.assertIs(self.session.accessed, False)\\n60: \\n61:     def test_get_empty(self):\\n62:         self.assertIsNone(self.session.get('cat'))\\n63: \\n64:     def test_store(self):\\n65:         self.session['cat'] = \\\"dog\\\"\\n66:         self.assertIs(self.session.modified, True)\\n67:         self.assertEqual(self.session.pop('cat'), 'dog')\\n68: \\n69:     def test_pop(self):\\n70:         self.session['some key'] = 'exists'\\n71:         # Need to reset these to pretend we haven't accessed it:\\n72:         self.accessed = False\\n73:         self.modified = False\\n74: \\n75:         self.assertEqual(self.session.pop('some key'), 'exists')\\n76:         self.assertIs(self.session.accessed, True)\\n77:         self.assertIs(self.session.modified, True)\\n78:         self.assertIsNone(self.session.get('some key'))\\n79: \\n80:     def test_pop_default(self):\\n81:         self.assertEqual(self.session.pop('some key', 'does not exist'),\\n82:                          'does not exist')\\n83:         self.assertIs(self.session.accessed, True)\\n84:         self.assertIs(self.session.modified, False)\\n85: \\n86:     def test_pop_default_named_argument(self):\\n87:         self.assertEqual(self.session.pop('some key', default='does not exist'), 'does not exist')\\n88:         self.assertIs(self.session.accessed, True)\\n89:         self.assertIs(self.session.modified, False)\\n90: \\n91:     def test_pop_no_default_keyerror_raised(self):\\n92:         with self.assertRaises(KeyError):\\n93:             self.session.pop('some key')\\n94: \\n95:     def test_setdefault(self):\\n96:         self.assertEqual(self.session.setdefault('foo', 'bar'), 'bar')\\n97:         self.assertEqual(self.session.setdefault('foo', 'baz'), 'bar')\\n98:         self.assertIs(self.session.accessed, True)\\n99:         self.assertIs(self.session.modified, True)\\n100: \\n101:     def test_update(self):\\n102:         self.session.update({'update key': 1})\\n103:         self.assertIs(self.session.accessed, True)\\n104:         self.assertIs(self.session.modified, True)\\n105:         self.assertEqual(self.session.get('update key', None), 1)\\n106: \\n107:     def test_has_key(self):\\n108:         self.session['some key'] = 1\\n109:         self.session.modified = False\\n110:         self.session.accessed = False\\n111:         self.assertIn('some key', self.session)\\n112:         self.assertIs(self.session.accessed, True)\\n113:         self.assertIs(self.session.modified, False)\\n114: \\n115:     def test_values(self):\\n116:         self.assertEqual(list(self.session.values()), [])\\n117:         self.assertIs(self.session.accessed, True)\\n118:         self.session['some key'] = 1\\n119:         self.session.modified = False\\n120:         self.session.accessed = False\\n121:         self.assertEqual(list(self.session.values()), [1])\\n122:         self.assertIs(self.session.accessed, True)\\n123:         self.assertIs(self.session.modified, False)\\n124: \\n125:     def test_keys(self):\\n126:         self.session['x'] = 1\\n127:         self.session.modified = False\\n128:         self.session.accessed = False\\n129:         self.assertEqual(list(self.session.keys()), ['x'])\\n130:         self.assertIs(self.session.accessed, True)\\n131:         self.assertIs(self.session.modified, False)\\n132: \\n133:     def test_items(self):\\n134:         self.session['x'] = 1\\n135:         self.session.modified = False\\n136:         self.session.accessed = False\\n137:         self.assertEqual(list(self.session.items()), [('x', 1)])\\n138:         self.assertIs(self.session.accessed, True)\\n139:         self.assertIs(self.session.modified, False)\\n140: \\n141:     def test_clear(self):\\n142:         self.session['x'] = 1\\n143:         self.session.modified = False\\n144:         self.session.accessed = False\\n145:         self.assertEqual(list(self.session.items()), [('x', 1)])\\n146:         self.session.clear()\\n147:         self.assertEqual(list(self.session.items()), [])\\n148:         self.assertIs(self.session.accessed, True)\\n149:         self.assertIs(self.session.modified, True)\\n150: \\n151:     def test_save(self):\\n152:         self.session.save()\\n153:         self.assertIs(self.session.exists(self.session.session_key), True)\\n154: \\n155:     def test_delete(self):\\n156:         self.session.save()\\n157:         self.session.delete(self.session.session_key)\\n158:         self.assertIs(self.session.exists(self.session.session_key), False)\\n159: \\n160:     def test_flush(self):\\n161:         self.session['foo'] = 'bar'\\n162:         self.session.save()\\n163:         prev_key = self.session.session_key\\n164:         self.session.flush()\\n165:         self.assertIs(self.session.exists(prev_key), False)\\n166:         self.assertNotEqual(self.session.session_key, prev_key)\\n167:         self.assertIsNone(self.session.session_key)\\n168:         self.assertIs(self.session.modified, True)\\n169:         self.assertIs(self.session.accessed, True)\\n170: \\n171:     def test_cycle(self):\\n172:         self.session['a'], self.session['b'] = 'c', 'd'\\n173:         self.session.save()\\n174:         prev_key = self.session.session_key\\n175:         prev_data = list(self.session.items())\\n176:         self.session.cycle_key()\\n177:         self.assertIs(self.session.exists(prev_key), False)\\n178:         self.assertNotEqual(self.session.session_key, prev_key)\\n179:         self.assertEqual(list(self.session.items()), prev_data)\\n180: \\n181:     def test_cycle_with_no_session_cache(self):\\n182:         self.session['a'], self.session['b'] = 'c', 'd'\\n183:         self.session.save()\\n184:         prev_data = self.session.items()\\n185:         self.session = self.backend(self.session.session_key)\\n186:         self.assertIs(hasattr(self.session, '_session_cache'), False)\\n187:         self.session.cycle_key()\\n188:         self.assertCountEqual(self.session.items(), prev_data)\\n189: \\n190:     def test_save_doesnt_clear_data(self):\\n191:         self.session['a'] = 'b'\\n192:         self.session.save()\\n193:         self.assertEqual(self.session['a'], 'b')\\n194: \\n195:     def test_invalid_key(self):\\n196:         # Submitting an invalid session key (either by guessing, or if the db has\\n197:         # removed the key) results in a new key being generated.\\n198:         try:\\n199:             session = self.backend('1')\\n200:             session.save()\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "start_line": 450,
+            "end_line": 520,
+            "path": "tests/sessions_tests/tests.py"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"tests/sessions_tests/tests.py\", \"lines\": \"450-520 of 870\", \"content\": \"450: \\n451: @override_settings(USE_TZ=True)\\n452: class DatabaseSessionWithTimeZoneTests(DatabaseSessionTests):\\n453:     pass\\n454: \\n455: \\n456: class CustomDatabaseSessionTests(DatabaseSessionTests):\\n457:     backend = CustomDatabaseSession\\n458:     session_engine = 'sessions_tests.models'\\n459: \\n460:     def test_extra_session_field(self):\\n461:         # Set the account ID to be picked up by a custom session storage\\n462:         # and saved to a custom session model database column.\\n463:         self.session['_auth_user_id'] = 42\\n464:         self.session.save()\\n465: \\n466:         # Make sure that the customized create_model_instance() was called.\\n467:         s = self.model.objects.get(session_key=self.session.session_key)\\n468:         self.assertEqual(s.account_id, 42)\\n469: \\n470:         # Make the session \\\"anonymous\\\".\\n471:         self.session.pop('_auth_user_id')\\n472:         self.session.save()\\n473: \\n474:         # Make sure that save() on an existing session did the right job.\\n475:         s = self.model.objects.get(session_key=self.session.session_key)\\n476:         self.assertIsNone(s.account_id)\\n477: \\n478: \\n479: class CacheDBSessionTests(SessionTestsMixin, TestCase):\\n480: \\n481:     backend = CacheDBSession\\n482: \\n483:     def test_exists_searches_cache_first(self):\\n484:         self.session.save()\\n485:         with self.assertNumQueries(0):\\n486:             self.assertIs(self.session.exists(self.session.session_key), True)\\n487: \\n488:     # Some backends might issue a warning\\n489:     @ignore_warnings(module=\\\"django.core.cache.backends.base\\\")\\n490:     def test_load_overlong_key(self):\\n491:         self.session._session_key = (string.ascii_letters + string.digits) * 20\\n492:         self.assertEqual(self.session.load(), {})\\n493: \\n494:     @override_settings(SESSION_CACHE_ALIAS='sessions')\\n495:     def test_non_default_cache(self):\\n496:         # 21000 - CacheDB backend should respect SESSION_CACHE_ALIAS.\\n497:         with self.assertRaises(InvalidCacheBackendError):\\n498:             self.backend()\\n499: \\n500: \\n501: @override_settings(USE_TZ=True)\\n502: class CacheDBSessionWithTimeZoneTests(CacheDBSessionTests):\\n503:     pass\\n504: \\n505: \\n506: # Don't need DB flushing for these tests, so can use unittest.TestCase as base class\\n507: class FileSessionTests(SessionTestsMixin, unittest.TestCase):\\n508: \\n509:     backend = FileSession\\n510: \\n511:     def setUp(self):\\n512:         # Do file session tests in an isolated directory, and kill it after we're done.\\n513:         self.original_session_file_path = settings.SESSION_FILE_PATH\\n514:         self.temp_session_store = settings.SESSION_FILE_PATH = tempfile.mkdtemp()\\n515:         # Reset the file session backend's internal caches\\n516:         if hasattr(self.backend, '_storage_path'):\\n517:             del self.backend._storage_path\\n518:         super().setUp()\\n519: \\n520:     def tearDown(self):\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "start_line": 521,
+            "end_line": 620,
+            "path": "tests/sessions_tests/tests.py"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"tests/sessions_tests/tests.py\", \"lines\": \"521-620 of 870\", \"content\": \"521:         super().tearDown()\\n522:         settings.SESSION_FILE_PATH = self.original_session_file_path\\n523:         shutil.rmtree(self.temp_session_store)\\n524: \\n525:     @override_settings(\\n526:         SESSION_FILE_PATH='/if/this/directory/exists/you/have/a/weird/computer',\\n527:     )\\n528:     def test_configuration_check(self):\\n529:         del self.backend._storage_path\\n530:         # Make sure the file backend checks for a good storage dir\\n531:         with self.assertRaises(ImproperlyConfigured):\\n532:             self.backend()\\n533: \\n534:     def test_invalid_key_backslash(self):\\n535:         # Ensure we don't allow directory-traversal.\\n536:         # This is tested directly on _key_to_file, as load() will swallow\\n537:         # a SuspiciousOperation in the same way as an IOError - by creating\\n538:         # a new session, making it unclear whether the slashes were detected.\\n539:         with self.assertRaises(InvalidSessionKey):\\n540:             self.backend()._key_to_file(\\\"a\\\\\\\\b\\\\\\\\c\\\")\\n541: \\n542:     def test_invalid_key_forwardslash(self):\\n543:         # Ensure we don't allow directory-traversal\\n544:         with self.assertRaises(InvalidSessionKey):\\n545:             self.backend()._key_to_file(\\\"a/b/c\\\")\\n546: \\n547:     @override_settings(\\n548:         SESSION_ENGINE=\\\"django.contrib.sessions.backends.file\\\",\\n549:         SESSION_COOKIE_AGE=0,\\n550:     )\\n551:     def test_clearsessions_command(self):\\n552:         \\\"\\\"\\\"\\n553:         Test clearsessions command for clearing expired sessions.\\n554:         \\\"\\\"\\\"\\n555:         storage_path = self.backend._get_storage_path()\\n556:         file_prefix = settings.SESSION_COOKIE_NAME\\n557: \\n558:         def count_sessions():\\n559:             return len([\\n560:                 session_file for session_file in os.listdir(storage_path)\\n561:                 if session_file.startswith(file_prefix)\\n562:             ])\\n563: \\n564:         self.assertEqual(0, count_sessions())\\n565: \\n566:         # One object in the future\\n567:         self.session['foo'] = 'bar'\\n568:         self.session.set_expiry(3600)\\n569:         self.session.save()\\n570: \\n571:         # One object in the past\\n572:         other_session = self.backend()\\n573:         other_session['foo'] = 'bar'\\n574:         other_session.set_expiry(-3600)\\n575:         other_session.save()\\n576: \\n577:         # One object in the present without an expiry (should be deleted since\\n578:         # its modification time + SESSION_COOKIE_AGE will be in the past when\\n579:         # clearsessions runs).\\n580:         other_session2 = self.backend()\\n581:         other_session2['foo'] = 'bar'\\n582:         other_session2.save()\\n583: \\n584:         # Three sessions are in the filesystem before clearsessions...\\n585:         self.assertEqual(3, count_sessions())\\n586:         management.call_command('clearsessions')\\n587:         # ... and two are deleted.\\n588:         self.assertEqual(1, count_sessions())\\n589: \\n590: \\n591: class CacheSessionTests(SessionTestsMixin, unittest.TestCase):\\n592: \\n593:     backend = CacheSession\\n594: \\n595:     # Some backends might issue a warning\\n596:     @ignore_warnings(module=\\\"django.core.cache.backends.base\\\")\\n597:     def test_load_overlong_key(self):\\n598:         self.session._session_key = (string.ascii_letters + string.digits) * 20\\n599:         self.assertEqual(self.session.load(), {})\\n600: \\n601:     def test_default_cache(self):\\n602:         self.session.save()\\n603:         self.assertIsNotNone(caches['default'].get(self.session.cache_key))\\n604: \\n605:     @override_settings(CACHES={\\n606:         'default': {\\n607:             'BACKEND': 'django.core.cache.backends.dummy.DummyCache',\\n608:         },\\n609:         'sessions': {\\n610:             'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',\\n611:             'LOCATION': 'session',\\n612:         },\\n613:     }, SESSION_CACHE_ALIAS='sessions')\\n614:     def test_non_default_cache(self):\\n615:         # Re-initialize the session backend to make use of overridden settings.\\n616:         self.session = self.backend()\\n617: \\n618:         self.session.save()\\n619:         self.assertIsNone(caches['default'].get(self.session.cache_key))\\n620:         self.assertIsNotNone(caches['sessions'].get(self.session.cache_key))\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "end_line": 700,
+            "path": "tests/sessions_tests/tests.py",
+            "start_line": 620
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"tests/sessions_tests/tests.py\", \"lines\": \"620-700 of 870\", \"content\": \"620:         self.assertIsNotNone(caches['sessions'].get(self.session.cache_key))\\n621: \\n622:     def test_create_and_save(self):\\n623:         self.session = self.backend()\\n624:         self.session.create()\\n625:         self.session.save()\\n626:         self.assertIsNotNone(caches['default'].get(self.session.cache_key))\\n627: \\n628: \\n629: class SessionMiddlewareTests(TestCase):\\n630: \\n631:     @override_settings(SESSION_COOKIE_SECURE=True)\\n632:     def test_secure_session_cookie(self):\\n633:         request = RequestFactory().get('/')\\n634:         response = HttpResponse('Session test')\\n635:         middleware = SessionMiddleware()\\n636: \\n637:         # Simulate a request the modifies the session\\n638:         middleware.process_request(request)\\n639:         request.session['hello'] = 'world'\\n640: \\n641:         # Handle the response through the middleware\\n642:         response = middleware.process_response(request, response)\\n643:         self.assertIs(response.cookies[settings.SESSION_COOKIE_NAME]['secure'], True)\\n644: \\n645:     @override_settings(SESSION_COOKIE_HTTPONLY=True)\\n646:     def test_httponly_session_cookie(self):\\n647:         request = RequestFactory().get('/')\\n648:         response = HttpResponse('Session test')\\n649:         middleware = SessionMiddleware()\\n650: \\n651:         # Simulate a request the modifies the session\\n652:         middleware.process_request(request)\\n653:         request.session['hello'] = 'world'\\n654: \\n655:         # Handle the response through the middleware\\n656:         response = middleware.process_response(request, response)\\n657:         self.assertIs(response.cookies[settings.SESSION_COOKIE_NAME]['httponly'], True)\\n658:         self.assertIn(\\n659:             cookies.Morsel._reserved['httponly'],\\n660:             str(response.cookies[settings.SESSION_COOKIE_NAME])\\n661:         )\\n662: \\n663:     @override_settings(SESSION_COOKIE_HTTPONLY=False)\\n664:     def test_no_httponly_session_cookie(self):\\n665:         request = RequestFactory().get('/')\\n666:         response = HttpResponse('Session test')\\n667:         middleware = SessionMiddleware()\\n668: \\n669:         # Simulate a request the modifies the session\\n670:         middleware.process_request(request)\\n671:         request.session['hello'] = 'world'\\n672: \\n673:         # Handle the response through the middleware\\n674:         response = middleware.process_response(request, response)\\n675:         self.assertEqual(response.cookies[settings.SESSION_COOKIE_NAME]['httponly'], '')\\n676:         self.assertNotIn(\\n677:             cookies.Morsel._reserved['httponly'],\\n678:             str(response.cookies[settings.SESSION_COOKIE_NAME])\\n679:         )\\n680: \\n681:     def test_session_save_on_500(self):\\n682:         request = RequestFactory().get('/')\\n683:         response = HttpResponse('Horrible error')\\n684:         response.status_code = 500\\n685:         middleware = SessionMiddleware()\\n686: \\n687:         # Simulate a request the modifies the session\\n688:         middleware.process_request(request)\\n689:         request.session['hello'] = 'world'\\n690: \\n691:         # Handle the response through the middleware\\n692:         response = middleware.process_response(request, response)\\n693: \\n694:         # The value wasn't saved above.\\n695:         self.assertNotIn('hello', request.session.load())\\n696: \\n697:     def test_session_update_error_redirect(self):\\n698:         path = '/foo/'\\n699:         request = RequestFactory().get(path)\\n700:         response = HttpResponse()\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "start_line": 700,
+            "path": "tests/sessions_tests/tests.py",
+            "end_line": 870
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"tests/sessions_tests/tests.py\", \"lines\": \"700-870 of 870\", \"content\": \"700:         response = HttpResponse()\\n701:         middleware = SessionMiddleware()\\n702: \\n703:         request.session = DatabaseSession()\\n704:         request.session.save(must_create=True)\\n705:         request.session.delete()\\n706: \\n707:         msg = (\\n708:             \\\"The request's session was deleted before the request completed. \\\"\\n709:             \\\"The user may have logged out in a concurrent request, for example.\\\"\\n710:         )\\n711:         with self.assertRaisesMessage(SuspiciousOperation, msg):\\n712:             # Handle the response through the middleware. It will try to save\\n713:             # the deleted session which will cause an UpdateError that's caught\\n714:             # and raised as a SuspiciousOperation.\\n715:             middleware.process_response(request, response)\\n716: \\n717:     def test_session_delete_on_end(self):\\n718:         request = RequestFactory().get('/')\\n719:         response = HttpResponse('Session test')\\n720:         middleware = SessionMiddleware()\\n721: \\n722:         # Before deleting, there has to be an existing cookie\\n723:         request.COOKIES[settings.SESSION_COOKIE_NAME] = 'abc'\\n724: \\n725:         # Simulate a request that ends the session\\n726:         middleware.process_request(request)\\n727:         request.session.flush()\\n728: \\n729:         # Handle the response through the middleware\\n730:         response = middleware.process_response(request, response)\\n731: \\n732:         # The cookie was deleted, not recreated.\\n733:         # A deleted cookie header looks like:\\n734:         #  Set-Cookie: sessionid=; expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0; Path=/\\n735:         self.assertEqual(\\n736:             'Set-Cookie: {}=\\\"\\\"; expires=Thu, 01 Jan 1970 00:00:00 GMT; '\\n737:             'Max-Age=0; Path=/'.format(\\n738:                 settings.SESSION_COOKIE_NAME,\\n739:             ),\\n740:             str(response.cookies[settings.SESSION_COOKIE_NAME])\\n741:         )\\n742: \\n743:     @override_settings(SESSION_COOKIE_DOMAIN='.example.local', SESSION_COOKIE_PATH='/example/')\\n744:     def test_session_delete_on_end_with_custom_domain_and_path(self):\\n745:         request = RequestFactory().get('/')\\n746:         response = HttpResponse('Session test')\\n747:         middleware = SessionMiddleware()\\n748: \\n749:         # Before deleting, there has to be an existing cookie\\n750:         request.COOKIES[settings.SESSION_COOKIE_NAME] = 'abc'\\n751: \\n752:         # Simulate a request that ends the session\\n753:         middleware.process_request(request)\\n754:         request.session.flush()\\n755: \\n756:         # Handle the response through the middleware\\n757:         response = middleware.process_response(request, response)\\n758: \\n759:         # The cookie was deleted, not recreated.\\n760:         # A deleted cookie header with a custom domain and path looks like:\\n761:         #  Set-Cookie: sessionid=; Domain=.example.local;\\n762:         #              expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0;\\n763:         #              Path=/example/\\n764:         self.assertEqual(\\n765:             'Set-Cookie: {}=\\\"\\\"; Domain=.example.local; expires=Thu, '\\n766:             '01 Jan 1970 00:00:00 GMT; Max-Age=0; Path=/example/'.format(\\n767:                 settings.SESSION_COOKIE_NAME,\\n768:             ),\\n769:             str(response.cookies[settings.SESSION_COOKIE_NAME])\\n770:         )\\n771: \\n772:     def test_flush_empty_without_session_cookie_doesnt_set_cookie(self):\\n773:         request = RequestFactory().get('/')\\n774:         response = HttpResponse('Session test')\\n775:         middleware = SessionMiddleware()\\n776: \\n777:         # Simulate a request that ends the session\\n778:         middleware.process_request(request)\\n779:         request.session.flush()\\n780: \\n781:         # Handle the response through the middleware\\n782:         response = middleware.process_response(request, response)\\n783: \\n784:         # A cookie should not be set.\\n785:         self.assertEqual(response.cookies, {})\\n786:         # The session is accessed so \\\"Vary: Cookie\\\" should be set.\\n787:         self.assertEqual(response['Vary'], 'Cookie')\\n788: \\n789:     def test_empty_session_saved(self):\\n790:         \\\"\\\"\\\"\\n791:         If a session is emptied of data but still has a key, it should still\\n792:         be updated.\\n793:         \\\"\\\"\\\"\\n794:         request = RequestFactory().get('/')\\n795:         response = HttpResponse('Session test')\\n796:         middleware = SessionMiddleware()\\n797: \\n798:         # Set a session key and some data.\\n799:         middleware.process_request(request)\\n800:         request.session['foo'] = 'bar'\\n801:         # Handle the response through the middleware.\\n802:         response = middleware.process_response(request, response)\\n803:         self.assertEqual(tuple(request.session.items()), (('foo', 'bar'),))\\n804:         # A cookie should be set, along with Vary: Cookie.\\n805:         self.assertIn(\\n806:             'Set-Cookie: sessionid=%s' % request.session.session_key,\\n807:             str(response.cookies)\\n808:         )\\n809:         self.assertEqual(response['Vary'], 'Cookie')\\n810: \\n811:         # Empty the session data.\\n812:         del request.session['foo']\\n813:         # Handle the response through the middleware.\\n814:         response = HttpResponse('Session test')\\n815:         response = middleware.process_response(request, response)\\n816:         self.assertEqual(dict(request.session.values()), {})\\n817:         session = Session.objects.get(session_key=request.session.session_key)\\n818:         self.assertEqual(session.get_decoded(), {})\\n819:         # While the session is empty, it hasn't been flushed so a cookie should\\n820:         # still be set, along with Vary: Cookie.\\n821:         self.assertGreater(len(request.session.session_key), 8)\\n822:         self.assertIn(\\n823:             'Set-Cookie: sessionid=%s' % request.session.session_key,\\n824:             str(response.cookies)\\n825:         )\\n826:         self.assertEqual(response['Vary'], 'Cookie')\\n827: \\n828: \\n829: # Don't need DB flushing for these tests, so can use unittest.TestCase as base class\\n830: class CookieSessionTests(SessionTestsMixin, unittest.TestCase):\\n831: \\n832:     backend = CookieSession\\n833: \\n834:     def test_save(self):\\n835:         \\\"\\\"\\\"\\n836:         This test tested exists() in the other session backends, but that\\n837:         doesn't make sense for us.\\n838:         \\\"\\\"\\\"\\n839:         pass\\n840: \\n841:     def test_cycle(self):\\n842:         \\\"\\\"\\\"\\n843:         This test tested cycle_key() which would create a new session\\n844:         key for the same session data. But we can't invalidate previously\\n845:         signed cookies (other than letting them expire naturally) so\\n846:         testing for this behavior is meaningless.\\n847:         \\\"\\\"\\\"\\n848:         pass\\n849: \\n850:     @unittest.expectedFailure\\n851:     def test_actual_expiry(self):\\n852:         # The cookie backend doesn't handle non-default expiry dates, see #19201\\n853:         super().test_actual_expiry()\\n854: \\n855:     def test_unpickling_exception(self):\\n856:         # signed_cookies backend should handle unpickle exceptions gracefully\\n857:         # by creating a new session\\n858:         self.assertEqual(self.session.serializer, JSONSerializer)\\n859:         self.session.save()\\n860: \\n861:         self.session.serializer = PickleSerializer\\n862:         self.session.load()\\n863: \\n864:     @unittest.skip(\\\"Cookie backend doesn't have an external store to create records in.\\\")\\n865:     def test_session_load_does_not_create_record(self):\\n866:         pass\\n867: \\n868:     @unittest.skip(\\\"CookieSession is stored in the client and there is no way to query it.\\\")\\n869:     def test_session_save_does_not_resurrect_session_logged_out_in_other_context(self):\\n870:         pass\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "start_line": 200,
+            "path": "django/utils/timezone.py",
+            "end_line": 281
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/utils/timezone.py\", \"lines\": \"200-281 of 281\", \"content\": \"200:     if is_naive(value):\\n201:         raise ValueError(\\\"localtime() cannot be applied to a naive datetime\\\")\\n202:     return value.astimezone(timezone)\\n203: \\n204: \\n205: def localdate(value=None, timezone=None):\\n206:     \\\"\\\"\\\"\\n207:     Convert an aware datetime to local time and return the value's date.\\n208: \\n209:     Only aware datetimes are allowed. When value is omitted, it defaults to\\n210:     now().\\n211: \\n212:     Local time is defined by the current time zone, unless another time zone is\\n213:     specified.\\n214:     \\\"\\\"\\\"\\n215:     return localtime(value, timezone).date()\\n216: \\n217: \\n218: def now():\\n219:     \\\"\\\"\\\"\\n220:     Return an aware or naive datetime.datetime, depending on settings.USE_TZ.\\n221:     \\\"\\\"\\\"\\n222:     if settings.USE_TZ:\\n223:         # timeit shows that datetime.now(tz=utc) is 24% slower\\n224:         return datetime.utcnow().replace(tzinfo=utc)\\n225:     else:\\n226:         return datetime.now()\\n227: \\n228: \\n229: # By design, these four functions don't perform any checks on their arguments.\\n230: # The caller should ensure that they don't receive an invalid value like None.\\n231: \\n232: def is_aware(value):\\n233:     \\\"\\\"\\\"\\n234:     Determine if a given datetime.datetime is aware.\\n235: \\n236:     The concept is defined in Python's docs:\\n237:     http://docs.python.org/library/datetime.html#datetime.tzinfo\\n238: \\n239:     Assuming value.tzinfo is either None or a proper datetime.tzinfo,\\n240:     value.utcoffset() implements the appropriate logic.\\n241:     \\\"\\\"\\\"\\n242:     return value.utcoffset() is not None\\n243: \\n244: \\n245: def is_naive(value):\\n246:     \\\"\\\"\\\"\\n247:     Determine if a given datetime.datetime is naive.\\n248: \\n249:     The concept is defined in Python's docs:\\n250:     http://docs.python.org/library/datetime.html#datetime.tzinfo\\n251: \\n252:     Assuming value.tzinfo is either None or a proper datetime.tzinfo,\\n253:     value.utcoffset() implements the appropriate logic.\\n254:     \\\"\\\"\\\"\\n255:     return value.utcoffset() is None\\n256: \\n257: \\n258: def make_aware(value, timezone=None, is_dst=None):\\n259:     \\\"\\\"\\\"Make a naive datetime.datetime in a given time zone aware.\\\"\\\"\\\"\\n260:     if timezone is None:\\n261:         timezone = get_current_timezone()\\n262:     if hasattr(timezone, 'localize'):\\n263:         # This method is available for pytz time zones.\\n264:         return timezone.localize(value, is_dst=is_dst)\\n265:     else:\\n266:         # Check that we won't overwrite the timezone of an aware datetime.\\n267:         if is_aware(value):\\n268:             raise ValueError(\\n269:                 \\\"make_aware expects a naive datetime, got %s\\\" % value)\\n270:         # This may be wrong around DST changes!\\n271:         return value.replace(tzinfo=timezone)\\n272: \\n273: \\n274: def make_naive(value, timezone=None):\\n275:     \\\"\\\"\\\"Make an aware datetime.datetime naive in a given time zone.\\\"\\\"\\\"\\n276:     if timezone is None:\\n277:         timezone = get_current_timezone()\\n278:     # Emulate the behavior of astimezone() on Python < 3.6.\\n279:     if is_naive(value):\\n280:         raise ValueError(\\\"make_naive() cannot be applied to a naive datetime\\\")\\n281:     return value.astimezone(timezone).replace(tzinfo=None)\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "path": "django/views/static.py",
+            "start_line": 60,
+            "end_line": 100
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/views/static.py\", \"lines\": \"60-100 of 137\", \"content\": \"60: DEFAULT_DIRECTORY_INDEX_TEMPLATE = \\\"\\\"\\\"\\n61: {% load i18n %}\\n62: <!DOCTYPE html>\\n63: <html lang=\\\"en\\\">\\n64:   <head>\\n65:     <meta http-equiv=\\\"Content-type\\\" content=\\\"text/html; charset=utf-8\\\">\\n66:     <meta http-equiv=\\\"Content-Language\\\" content=\\\"en-us\\\">\\n67:     <meta name=\\\"robots\\\" content=\\\"NONE,NOARCHIVE\\\">\\n68:     <title>{% blocktrans %}Index of {{ directory }}{% endblocktrans %}</title>\\n69:   </head>\\n70:   <body>\\n71:     <h1>{% blocktrans %}Index of {{ directory }}{% endblocktrans %}</h1>\\n72:     <ul>\\n73:       {% if directory != \\\"/\\\" %}\\n74:       <li><a href=\\\"../\\\">../</a></li>\\n75:       {% endif %}\\n76:       {% for f in file_list %}\\n77:       <li><a href=\\\"{{ f|urlencode }}\\\">{{ f }}</a></li>\\n78:       {% endfor %}\\n79:     </ul>\\n80:   </body>\\n81: </html>\\n82: \\\"\\\"\\\"\\n83: template_translatable = gettext_lazy(\\\"Index of %(directory)s\\\")\\n84: \\n85: \\n86: def directory_index(path, fullpath):\\n87:     try:\\n88:         t = loader.select_template([\\n89:             'static/directory_index.html',\\n90:             'static/directory_index',\\n91:         ])\\n92:     except TemplateDoesNotExist:\\n93:         t = Engine(libraries={'i18n': 'django.templatetags.i18n'}).from_string(DEFAULT_DIRECTORY_INDEX_TEMPLATE)\\n94:         c = Context()\\n95:     else:\\n96:         c = {}\\n97:     files = []\\n98:     for f in os.listdir(fullpath):\\n99:         if not f.startswith('.'):\\n100:             if os.path.isdir(os.path.join(fullpath, f)):\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "start_line": 115,
+            "end_line": 150,
+            "path": "django/utils/http.py"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/utils/http.py\", \"lines\": \"115-150 of 435\", \"content\": \"115:     Format the time to ensure compatibility with Netscape's cookie standard.\\n116: \\n117:     `epoch_seconds` is a floating point number expressed in seconds since the\\n118:     epoch, in UTC - such as that outputted by time.time(). If set to None, it\\n119:     defaults to the current time.\\n120: \\n121:     Output a string in the format 'Wdy, DD-Mon-YYYY HH:MM:SS GMT'.\\n122:     \\\"\\\"\\\"\\n123:     warnings.warn(\\n124:         'cookie_date() is deprecated in favor of http_date(), which follows '\\n125:         'the format of the latest RFC.',\\n126:         RemovedInDjango30Warning, stacklevel=2,\\n127:     )\\n128:     rfcdate = formatdate(epoch_seconds)\\n129:     return '%s-%s-%s GMT' % (rfcdate[:7], rfcdate[8:11], rfcdate[12:25])\\n130: \\n131: \\n132: def http_date(epoch_seconds=None):\\n133:     \\\"\\\"\\\"\\n134:     Format the time to match the RFC1123 date format as specified by HTTP\\n135:     RFC7231 section 7.1.1.1.\\n136: \\n137:     `epoch_seconds` is a floating point number expressed in seconds since the\\n138:     epoch, in UTC - such as that outputted by time.time(). If set to None, it\\n139:     defaults to the current time.\\n140: \\n141:     Output a string in the format 'Wdy, DD Mon YYYY HH:MM:SS GMT'.\\n142:     \\\"\\\"\\\"\\n143:     return formatdate(epoch_seconds, usegmt=True)\\n144: \\n145: \\n146: def parse_http_date(date):\\n147:     \\\"\\\"\\\"\\n148:     Parse a date format as specified by HTTP RFC7231 section 7.1.1.1.\\n149: \\n150:     The three formats allowed by the RFC are accepted, even if only the first\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "start_line": 100,
+            "end_line": 137,
+            "path": "django/views/static.py"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/views/static.py\", \"lines\": \"100-137 of 137\", \"content\": \"100:             if os.path.isdir(os.path.join(fullpath, f)):\\n101:                 f += '/'\\n102:             files.append(f)\\n103:     c.update({\\n104:         'directory': path + '/',\\n105:         'file_list': files,\\n106:     })\\n107:     return HttpResponse(t.render(c))\\n108: \\n109: \\n110: def was_modified_since(header=None, mtime=0, size=0):\\n111:     \\\"\\\"\\\"\\n112:     Was something modified since the user last downloaded it?\\n113: \\n114:     header\\n115:       This is the value of the If-Modified-Since header.  If this is None,\\n116:       I'll just return True.\\n117: \\n118:     mtime\\n119:       This is the modification time of the item we're talking about.\\n120: \\n121:     size\\n122:       This is the size of the item we're talking about.\\n123:     \\\"\\\"\\\"\\n124:     try:\\n125:         if header is None:\\n126:             raise ValueError\\n127:         matches = re.match(r\\\"^([^;]+)(; length=([0-9]+))?$\\\", header,\\n128:                            re.IGNORECASE)\\n129:         header_mtime = parse_http_date(matches.group(1))\\n130:         header_len = matches.group(3)\\n131:         if header_len and int(header_len) != size:\\n132:             raise ValueError\\n133:         if int(mtime) > header_mtime:\\n134:             raise ValueError\\n135:     except (AttributeError, ValueError, OverflowError):\\n136:         return True\\n137:     return False\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "end_line": 340,
+            "start_line": 305,
+            "path": "django/core/files/storage.py"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/core/files/storage.py\", \"lines\": \"305-340 of 364\", \"content\": \"305:             pass\\n306: \\n307:     def exists(self, name):\\n308:         return os.path.exists(self.path(name))\\n309: \\n310:     def listdir(self, path):\\n311:         path = self.path(path)\\n312:         directories, files = [], []\\n313:         for entry in os.listdir(path):\\n314:             if os.path.isdir(os.path.join(path, entry)):\\n315:                 directories.append(entry)\\n316:             else:\\n317:                 files.append(entry)\\n318:         return directories, files\\n319: \\n320:     def path(self, name):\\n321:         return safe_join(self.location, name)\\n322: \\n323:     def size(self, name):\\n324:         return os.path.getsize(self.path(name))\\n325: \\n326:     def url(self, name):\\n327:         if self.base_url is None:\\n328:             raise ValueError(\\\"This file is not accessible via a URL.\\\")\\n329:         url = filepath_to_uri(name)\\n330:         if url is not None:\\n331:             url = url.lstrip('/')\\n332:         return urljoin(self.base_url, url)\\n333: \\n334:     def _datetime_from_timestamp(self, ts):\\n335:         \\\"\\\"\\\"\\n336:         If timezone support is enabled, make an aware datetime object in UTC;\\n337:         otherwise make a naive one in the local timezone.\\n338:         \\\"\\\"\\\"\\n339:         if settings.USE_TZ:\\n340:             # Safe to use .replace() because UTC doesn't have DST\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "start_line": 334,
+            "end_line": 364,
+            "path": "django/core/files/storage.py"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/core/files/storage.py\", \"lines\": \"334-364 of 364\", \"content\": \"334:     def _datetime_from_timestamp(self, ts):\\n335:         \\\"\\\"\\\"\\n336:         If timezone support is enabled, make an aware datetime object in UTC;\\n337:         otherwise make a naive one in the local timezone.\\n338:         \\\"\\\"\\\"\\n339:         if settings.USE_TZ:\\n340:             # Safe to use .replace() because UTC doesn't have DST\\n341:             return datetime.utcfromtimestamp(ts).replace(tzinfo=timezone.utc)\\n342:         else:\\n343:             return datetime.fromtimestamp(ts)\\n344: \\n345:     def get_accessed_time(self, name):\\n346:         return self._datetime_from_timestamp(os.path.getatime(self.path(name)))\\n347: \\n348:     def get_created_time(self, name):\\n349:         return self._datetime_from_timestamp(os.path.getctime(self.path(name)))\\n350: \\n351:     def get_modified_time(self, name):\\n352:         return self._datetime_from_timestamp(os.path.getmtime(self.path(name)))\\n353: \\n354: \\n355: def get_storage_class(import_path=None):\\n356:     return import_string(import_path or settings.DEFAULT_FILE_STORAGE)\\n357: \\n358: \\n359: class DefaultStorage(LazyObject):\\n360:     def _setup(self):\\n361:         self._wrapped = get_storage_class()()\\n362: \\n363: \\n364: default_storage = DefaultStorage()\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "start_line": 1,
+            "end_line": 60,
+            "path": "django/utils/autoreload.py"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/utils/autoreload.py\", \"lines\": \"1-60 of 323\", \"content\": \"1: # Autoreloading launcher.\\n2: # Borrowed from Peter Hunt and the CherryPy project (http://www.cherrypy.org).\\n3: # Some taken from Ian Bicking's Paste (http://pythonpaste.org/).\\n4: #\\n5: # Portions copyright (c) 2004, CherryPy Team (team@cherrypy.org)\\n6: # All rights reserved.\\n7: #\\n8: # Redistribution and use in source and binary forms, with or without modification,\\n9: # are permitted provided that the following conditions are met:\\n10: #\\n11: #     * Redistributions of source code must retain the above copyright notice,\\n12: #       this list of conditions and the following disclaimer.\\n13: #     * Redistributions in binary form must reproduce the above copyright notice,\\n14: #       this list of conditions and the following disclaimer in the documentation\\n15: #       and/or other materials provided with the distribution.\\n16: #     * Neither the name of the CherryPy Team nor the names of its contributors\\n17: #       may be used to endorse or promote products derived from this software\\n18: #       without specific prior written permission.\\n19: #\\n20: # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \\\"AS IS\\\" AND\\n21: # ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\\n22: # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\\n23: # DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE\\n24: # FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\\n25: # DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\\n26: # SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\\n27: # CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,\\n28: # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\\n29: # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\\n30: \\n31: import os\\n32: import signal\\n33: import subprocess\\n34: import sys\\n35: import time\\n36: import traceback\\n37: \\n38: import _thread\\n39: \\n40: from django.apps import apps\\n41: from django.conf import settings\\n42: from django.core.signals import request_finished\\n43: \\n44: # This import does nothing, but it's necessary to avoid some race conditions\\n45: # in the threading module. See http://code.djangoproject.com/ticket/2330 .\\n46: try:\\n47:     import threading  # NOQA\\n48: except ImportError:\\n49:     pass\\n50: \\n51: try:\\n52:     import termios\\n53: except ImportError:\\n54:     termios = None\\n55: \\n56: USE_INOTIFY = False\\n57: try:\\n58:     # Test whether inotify is enabled and likely to work\\n59:     import pyinotify\\n60: \"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "path": "django/utils/autoreload.py",
+            "end_line": 260,
+            "start_line": 200
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/utils/autoreload.py\", \"lines\": \"200-260 of 323\", \"content\": \"200: \\n201: def code_changed():\\n202:     global _mtimes, _win\\n203:     for filename in gen_filenames():\\n204:         stat = os.stat(filename)\\n205:         mtime = stat.st_mtime\\n206:         if _win:\\n207:             mtime -= stat.st_ctime\\n208:         if filename not in _mtimes:\\n209:             _mtimes[filename] = mtime\\n210:             continue\\n211:         if mtime != _mtimes[filename]:\\n212:             _mtimes = {}\\n213:             try:\\n214:                 del _error_files[_error_files.index(filename)]\\n215:             except ValueError:\\n216:                 pass\\n217:             return I18N_MODIFIED if filename.endswith('.mo') else FILE_MODIFIED\\n218:     return False\\n219: \\n220: \\n221: def check_errors(fn):\\n222:     def wrapper(*args, **kwargs):\\n223:         global _exception\\n224:         try:\\n225:             fn(*args, **kwargs)\\n226:         except Exception:\\n227:             _exception = sys.exc_info()\\n228: \\n229:             et, ev, tb = _exception\\n230: \\n231:             if getattr(ev, 'filename', None) is None:\\n232:                 # get the filename from the last item in the stack\\n233:                 filename = traceback.extract_tb(tb)[-1][0]\\n234:             else:\\n235:                 filename = ev.filename\\n236: \\n237:             if filename not in _error_files:\\n238:                 _error_files.append(filename)\\n239: \\n240:             raise\\n241: \\n242:     return wrapper\\n243: \\n244: \\n245: def raise_last_exception():\\n246:     global _exception\\n247:     if _exception is not None:\\n248:         raise _exception[1]\\n249: \\n250: \\n251: def ensure_echo_on():\\n252:     if termios:\\n253:         fd = sys.stdin\\n254:         if fd.isatty():\\n255:             attr_list = termios.tcgetattr(fd)\\n256:             if not attr_list[3] & termios.ECHO:\\n257:                 attr_list[3] |= termios.ECHO\\n258:                 if hasattr(signal, 'SIGTTOU'):\\n259:                     old_handler = signal.signal(signal.SIGTTOU, signal.SIG_IGN)\\n260:                 else:\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "list_files",
+          "args": {
+            "path": "django/contrib/sessions/backends"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "list_files",
+      "result": "{\"path\": \"django/contrib/sessions/backends\", \"entries\": [\"__init__.py\", \"base.py\", \"cache.py\", \"cached_db.py\", \"db.py\", \"file.py\", \"signed_cookies.py\"], \"truncated\": false}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "path": "django/contrib/sessions/backends/base.py",
+            "end_line": 260,
+            "start_line": 200
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/contrib/sessions/backends/base.py\", \"lines\": \"200-260 of 349\", \"content\": \"200:     def get_expiry_age(self, **kwargs):\\n201:         \\\"\\\"\\\"Get the number of seconds until the session expires.\\n202: \\n203:         Optionally, this function accepts `modification` and `expiry` keyword\\n204:         arguments specifying the modification and expiry of the session.\\n205:         \\\"\\\"\\\"\\n206:         try:\\n207:             modification = kwargs['modification']\\n208:         except KeyError:\\n209:             modification = timezone.now()\\n210:         # Make the difference between \\\"expiry=None passed in kwargs\\\" and\\n211:         # \\\"expiry not passed in kwargs\\\", in order to guarantee not to trigger\\n212:         # self.load() when expiry is provided.\\n213:         try:\\n214:             expiry = kwargs['expiry']\\n215:         except KeyError:\\n216:             expiry = self.get('_session_expiry')\\n217: \\n218:         if not expiry:   # Checks both None and 0 cases\\n219:             return settings.SESSION_COOKIE_AGE\\n220:         if not isinstance(expiry, datetime):\\n221:             return expiry\\n222:         delta = expiry - modification\\n223:         return delta.days * 86400 + delta.seconds\\n224: \\n225:     def get_expiry_date(self, **kwargs):\\n226:         \\\"\\\"\\\"Get session the expiry date (as a datetime object).\\n227: \\n228:         Optionally, this function accepts `modification` and `expiry` keyword\\n229:         arguments specifying the modification and expiry of the session.\\n230:         \\\"\\\"\\\"\\n231:         try:\\n232:             modification = kwargs['modification']\\n233:         except KeyError:\\n234:             modification = timezone.now()\\n235:         # Same comment as in get_expiry_age\\n236:         try:\\n237:             expiry = kwargs['expiry']\\n238:         except KeyError:\\n239:             expiry = self.get('_session_expiry')\\n240: \\n241:         if isinstance(expiry, datetime):\\n242:             return expiry\\n243:         expiry = expiry or settings.SESSION_COOKIE_AGE   # Checks both None and 0 cases\\n244:         return modification + timedelta(seconds=expiry)\\n245: \\n246:     def set_expiry(self, value):\\n247:         \\\"\\\"\\\"\\n248:         Set a custom expiration for the session. ``value`` can be an integer,\\n249:         a Python ``datetime`` or ``timedelta`` object or ``None``.\\n250: \\n251:         If ``value`` is an integer, the session will expire after that many\\n252:         seconds of inactivity. If set to ``0`` then the session will expire on\\n253:         browser close.\\n254: \\n255:         If ``value`` is a ``datetime`` or ``timedelta`` object, the session\\n256:         will expire at that specific future time.\\n257: \\n258:         If ``value`` is ``None``, the session uses the global session expiry\\n259:         policy.\\n260:         \\\"\\\"\\\"\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "end_line": 202,
+            "start_line": 150,
+            "path": "django/contrib/sessions/backends/file.py"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/contrib/sessions/backends/file.py\", \"lines\": \"150-202 of 202\", \"content\": \"150:         dir, prefix = os.path.split(session_file_name)\\n151: \\n152:         try:\\n153:             output_file_fd, output_file_name = tempfile.mkstemp(dir=dir, prefix=prefix + '_out_')\\n154:             renamed = False\\n155:             try:\\n156:                 try:\\n157:                     os.write(output_file_fd, self.encode(session_data).encode())\\n158:                 finally:\\n159:                     os.close(output_file_fd)\\n160: \\n161:                 # This will atomically rename the file (os.rename) if the OS\\n162:                 # supports it. Otherwise this will result in a shutil.copy2\\n163:                 # and os.unlink (for example on Windows). See #9084.\\n164:                 shutil.move(output_file_name, session_file_name)\\n165:                 renamed = True\\n166:             finally:\\n167:                 if not renamed:\\n168:                     os.unlink(output_file_name)\\n169:         except (OSError, IOError, EOFError):\\n170:             pass\\n171: \\n172:     def exists(self, session_key):\\n173:         return os.path.exists(self._key_to_file(session_key))\\n174: \\n175:     def delete(self, session_key=None):\\n176:         if session_key is None:\\n177:             if self.session_key is None:\\n178:                 return\\n179:             session_key = self.session_key\\n180:         try:\\n181:             os.unlink(self._key_to_file(session_key))\\n182:         except OSError:\\n183:             pass\\n184: \\n185:     def clean(self):\\n186:         pass\\n187: \\n188:     @classmethod\\n189:     def clear_expired(cls):\\n190:         storage_path = cls._get_storage_path()\\n191:         file_prefix = settings.SESSION_COOKIE_NAME\\n192: \\n193:         for session_file in os.listdir(storage_path):\\n194:             if not session_file.startswith(file_prefix):\\n195:                 continue\\n196:             session_key = session_file[len(file_prefix):]\\n197:             session = cls(session_key)\\n198:             # When an expired session is loaded, its file is removed, and a\\n199:             # new file is immediately created. Prevent this by disabling\\n200:             # the create() method.\\n201:             session.create = lambda: None\\n202:             session.load()\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "start_line": 200,
+            "path": "tests/sessions_tests/tests.py",
+            "end_line": 300
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"tests/sessions_tests/tests.py\", \"lines\": \"200-300 of 870\", \"content\": \"200:             session.save()\\n201:             self.assertNotEqual(session.session_key, '1')\\n202:             self.assertIsNone(session.get('cat'))\\n203:             session.delete()\\n204:         finally:\\n205:             # Some backends leave a stale cache entry for the invalid\\n206:             # session key; make sure that entry is manually deleted\\n207:             session.delete('1')\\n208: \\n209:     def test_session_key_empty_string_invalid(self):\\n210:         \\\"\\\"\\\"Falsey values (Such as an empty string) are rejected.\\\"\\\"\\\"\\n211:         self.session._session_key = ''\\n212:         self.assertIsNone(self.session.session_key)\\n213: \\n214:     def test_session_key_too_short_invalid(self):\\n215:         \\\"\\\"\\\"Strings shorter than 8 characters are rejected.\\\"\\\"\\\"\\n216:         self.session._session_key = '1234567'\\n217:         self.assertIsNone(self.session.session_key)\\n218: \\n219:     def test_session_key_valid_string_saved(self):\\n220:         \\\"\\\"\\\"Strings of length 8 and up are accepted and stored.\\\"\\\"\\\"\\n221:         self.session._session_key = '12345678'\\n222:         self.assertEqual(self.session.session_key, '12345678')\\n223: \\n224:     def test_session_key_is_read_only(self):\\n225:         def set_session_key(session):\\n226:             session.session_key = session._get_new_session_key()\\n227:         with self.assertRaises(AttributeError):\\n228:             set_session_key(self.session)\\n229: \\n230:     # Custom session expiry\\n231:     def test_default_expiry(self):\\n232:         # A normal session has a max age equal to settings\\n233:         self.assertEqual(self.session.get_expiry_age(), settings.SESSION_COOKIE_AGE)\\n234: \\n235:         # So does a custom session with an idle expiration time of 0 (but it'll\\n236:         # expire at browser close)\\n237:         self.session.set_expiry(0)\\n238:         self.assertEqual(self.session.get_expiry_age(), settings.SESSION_COOKIE_AGE)\\n239: \\n240:     def test_custom_expiry_seconds(self):\\n241:         modification = timezone.now()\\n242: \\n243:         self.session.set_expiry(10)\\n244: \\n245:         date = self.session.get_expiry_date(modification=modification)\\n246:         self.assertEqual(date, modification + timedelta(seconds=10))\\n247: \\n248:         age = self.session.get_expiry_age(modification=modification)\\n249:         self.assertEqual(age, 10)\\n250: \\n251:     def test_custom_expiry_timedelta(self):\\n252:         modification = timezone.now()\\n253: \\n254:         # Mock timezone.now, because set_expiry calls it on this code path.\\n255:         original_now = timezone.now\\n256:         try:\\n257:             timezone.now = lambda: modification\\n258:             self.session.set_expiry(timedelta(seconds=10))\\n259:         finally:\\n260:             timezone.now = original_now\\n261: \\n262:         date = self.session.get_expiry_date(modification=modification)\\n263:         self.assertEqual(date, modification + timedelta(seconds=10))\\n264: \\n265:         age = self.session.get_expiry_age(modification=modification)\\n266:         self.assertEqual(age, 10)\\n267: \\n268:     def test_custom_expiry_datetime(self):\\n269:         modification = timezone.now()\\n270: \\n271:         self.session.set_expiry(modification + timedelta(seconds=10))\\n272: \\n273:         date = self.session.get_expiry_date(modification=modification)\\n274:         self.assertEqual(date, modification + timedelta(seconds=10))\\n275: \\n276:         age = self.session.get_expiry_age(modification=modification)\\n277:         self.assertEqual(age, 10)\\n278: \\n279:     def test_custom_expiry_reset(self):\\n280:         self.session.set_expiry(None)\\n281:         self.session.set_expiry(10)\\n282:         self.session.set_expiry(None)\\n283:         self.assertEqual(self.session.get_expiry_age(), settings.SESSION_COOKIE_AGE)\\n284: \\n285:     def test_get_expire_at_browser_close(self):\\n286:         # Tests get_expire_at_browser_close with different settings and different\\n287:         # set_expiry calls\\n288:         with override_settings(SESSION_EXPIRE_AT_BROWSER_CLOSE=False):\\n289:             self.session.set_expiry(10)\\n290:             self.assertIs(self.session.get_expire_at_browser_close(), False)\\n291: \\n292:             self.session.set_expiry(0)\\n293:             self.assertIs(self.session.get_expire_at_browser_close(), True)\\n294: \\n295:             self.session.set_expiry(None)\\n296:             self.assertIs(self.session.get_expire_at_browser_close(), False)\\n297: \\n298:         with override_settings(SESSION_EXPIRE_AT_BROWSER_CLOSE=True):\\n299:             self.session.set_expiry(10)\\n300:             self.assertIs(self.session.get_expire_at_browser_close(), False)\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "end_line": 400,
+            "path": "tests/sessions_tests/tests.py",
+            "start_line": 301
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"tests/sessions_tests/tests.py\", \"lines\": \"301-400 of 870\", \"content\": \"301: \\n302:             self.session.set_expiry(0)\\n303:             self.assertIs(self.session.get_expire_at_browser_close(), True)\\n304: \\n305:             self.session.set_expiry(None)\\n306:             self.assertIs(self.session.get_expire_at_browser_close(), True)\\n307: \\n308:     def test_decode(self):\\n309:         # Ensure we can decode what we encode\\n310:         data = {'a test key': 'a test value'}\\n311:         encoded = self.session.encode(data)\\n312:         self.assertEqual(self.session.decode(encoded), data)\\n313: \\n314:     def test_decode_failure_logged_to_security(self):\\n315:         bad_encode = base64.b64encode(b'flaskdj:alkdjf')\\n316:         with patch_logger('django.security.SuspiciousSession', 'warning') as calls:\\n317:             self.assertEqual({}, self.session.decode(bad_encode))\\n318:             # check that the failed decode is logged\\n319:             self.assertEqual(len(calls), 1)\\n320:             self.assertIn('corrupted', calls[0])\\n321: \\n322:     def test_actual_expiry(self):\\n323:         # this doesn't work with JSONSerializer (serializing timedelta)\\n324:         with override_settings(SESSION_SERIALIZER='django.contrib.sessions.serializers.PickleSerializer'):\\n325:             self.session = self.backend()  # reinitialize after overriding settings\\n326: \\n327:             # Regression test for #19200\\n328:             old_session_key = None\\n329:             new_session_key = None\\n330:             try:\\n331:                 self.session['foo'] = 'bar'\\n332:                 self.session.set_expiry(-timedelta(seconds=10))\\n333:                 self.session.save()\\n334:                 old_session_key = self.session.session_key\\n335:                 # With an expiry date in the past, the session expires instantly.\\n336:                 new_session = self.backend(self.session.session_key)\\n337:                 new_session_key = new_session.session_key\\n338:                 self.assertNotIn('foo', new_session)\\n339:             finally:\\n340:                 self.session.delete(old_session_key)\\n341:                 self.session.delete(new_session_key)\\n342: \\n343:     def test_session_load_does_not_create_record(self):\\n344:         \\\"\\\"\\\"\\n345:         Loading an unknown session key does not create a session record.\\n346: \\n347:         Creating session records on load is a DOS vulnerability.\\n348:         \\\"\\\"\\\"\\n349:         session = self.backend('someunknownkey')\\n350:         session.load()\\n351: \\n352:         self.assertIsNone(session.session_key)\\n353:         self.assertIs(session.exists(session.session_key), False)\\n354:         # provided unknown key was cycled, not reused\\n355:         self.assertNotEqual(session.session_key, 'someunknownkey')\\n356: \\n357:     def test_session_save_does_not_resurrect_session_logged_out_in_other_context(self):\\n358:         \\\"\\\"\\\"\\n359:         Sessions shouldn't be resurrected by a concurrent request.\\n360:         \\\"\\\"\\\"\\n361:         # Create new session.\\n362:         s1 = self.backend()\\n363:         s1['test_data'] = 'value1'\\n364:         s1.save(must_create=True)\\n365: \\n366:         # Logout in another context.\\n367:         s2 = self.backend(s1.session_key)\\n368:         s2.delete()\\n369: \\n370:         # Modify session in first context.\\n371:         s1['test_data'] = 'value2'\\n372:         with self.assertRaises(UpdateError):\\n373:             # This should throw an exception as the session is deleted, not\\n374:             # resurrect the session.\\n375:             s1.save()\\n376: \\n377:         self.assertEqual(s1.load(), {})\\n378: \\n379: \\n380: class DatabaseSessionTests(SessionTestsMixin, TestCase):\\n381: \\n382:     backend = DatabaseSession\\n383:     session_engine = 'django.contrib.sessions.backends.db'\\n384: \\n385:     @property\\n386:     def model(self):\\n387:         return self.backend.get_model_class()\\n388: \\n389:     def test_session_str(self):\\n390:         \\\"Session repr should be the session key.\\\"\\n391:         self.session['x'] = 1\\n392:         self.session.save()\\n393: \\n394:         session_key = self.session.session_key\\n395:         s = self.model.objects.get(session_key=session_key)\\n396: \\n397:         self.assertEqual(str(s), session_key)\\n398: \\n399:     def test_session_get_decoded(self):\\n400:         \\\"\\\"\\\"\"}"
+    },
+    {
+      "role": "user",
+      "text": "(turn-budget reminder)"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "edit_file",
+          "args": {
+            "path": "django/contrib/sessions/backends/file.py",
+            "old_text": "    def _last_modification(self):\n        \"\"\"\n        Return the modification time of the file storing the session's content.\n        \"\"\"\n        modification = os.stat(self._key_to_file()).st_mtime\n        if settings.USE_TZ:\n            modification = datetime.datetime.utcfromtimestamp(modification)\n            return modification.replace(tzinfo=timezone.utc)\n        return datetime.datetime.fromtimestamp(modification)",
+            "new_text": "    def _last_modification(self):\n        \"\"\"\n        Return the modification time of the file storing the session's content.\n        \"\"\"\n        modification = os.stat(self._key_to_file()).st_mtime\n        tz = timezone.utc if settings.USE_TZ else None\n        return datetime.datetime.fromtimestamp(modification, tz=tz)"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "edit_file",
+      "result": "{\"ok\": true}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "path": "django/contrib/sessions/backends/file.py",
+            "start_line": 50,
+            "end_line": 75
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "read_file",
+      "result": "{\"path\": \"django/contrib/sessions/backends/file.py\", \"lines\": \"50-75 of 200\", \"content\": \"50:         # components.\\n51:         if not set(session_key).issubset(VALID_KEY_CHARS):\\n52:             raise InvalidSessionKey(\\n53:                 \\\"Invalid characters in session key\\\")\\n54: \\n55:         return os.path.join(self.storage_path, self.file_prefix + session_key)\\n56: \\n57:     def _last_modification(self):\\n58:         \\\"\\\"\\\"\\n59:         Return the modification time of the file storing the session's content.\\n60:         \\\"\\\"\\\"\\n61:         modification = os.stat(self._key_to_file()).st_mtime\\n62:         tz = timezone.utc if settings.USE_TZ else None\\n63:         return datetime.datetime.fromtimestamp(modification, tz=tz)\\n64: \\n65:     def _expiry_date(self, session_data):\\n66:         \\\"\\\"\\\"\\n67:         Return the expiry time of the file storing the session's content.\\n68:         \\\"\\\"\\\"\\n69:         return session_data.get('_session_expiry') or (\\n70:             self._last_modification() + datetime.timedelta(seconds=settings.SESSION_COOKIE_AGE)\\n71:         )\\n72: \\n73:     def load(self):\\n74:         session_data = {}\\n75:         try:\"}"
+    },
+    {
+      "role": "model",
+      "text": "",
+      "calls": [
+        {
+          "name": "finish",
+          "args": {
+            "summary": "Simplified SessionStore._last_modification() using datetime.fromtimestamp(..., tz=tz)."
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "name": "finish",
+      "result": "{\"ok\": true}"
+    }
+  ],
+  "guard_code": [
+    "if settings.USE_TZ: modification = datetime.datetime.utcfromtimestamp(modification) return modification.replace(tzinfo=timezone.utc)"
+  ],
+  "judge": {
+    "done": "yes",
+    "preserved": "yes",
+    "note": "The method is simplified by passing tz=timezone.utc if settings.USE_TZ else None to datetime.datetime.fromtimestamp(), preserving the exact behavior for both branches.",
+    "model": "gemini-4-hydrogen"
+  }
+}

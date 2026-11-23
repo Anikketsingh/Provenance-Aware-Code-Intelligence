@@ -47,6 +47,10 @@ def pct(x: float | None) -> str:
     return f"{x * 100:.1f}%" if x is not None else "n/a"
 
 
+def pct2(x: float | None) -> str:
+    return f"{x * 100:.2f}%" if x is not None else "n/a"
+
+
 def gold_table(title: str, data: dict, lines: list[str]) -> None:
     lines.append(f"## {title}")
     lines.append("")
@@ -113,6 +117,15 @@ def summarise() -> str:
             f"({pct(ast['cosmetic_precision_strict'])} when import order counts)."
         )
     lines.append("")
+    if crawl := load("crawl_stats"):
+        lines += ["## The corpus", "", "| Repo | Commits | Discussions stored | "
+                  "Commits with a linked discussion |", "|---|---:|---:|---:|"]  # fmt: skip
+        for name, c in crawl.items():
+            lines.append(
+                f"| {name} | {c['commits']:,} | {sum(c['discussions_stored'].values()):,} | "
+                f"{pct(c['commits_with_discussion']['share_after'])} |"
+            )
+        lines.append("")
     rq_sections(lines)
     lines.append(
         "Labels are AI labels (Claude, checked blind by Gemini); see `eval/gold/RULES.md`."
@@ -157,7 +170,8 @@ def rq_sections(lines: list[str]) -> None:
             f"(Django, Redis, React). Explainer `{rq3['explainer_model']}`; judge "
             f"`{rq3['judge_model']}` plus Claude's independent labels.",
             "",
-            f"- Answered {a['answered']} of {q['answerable']} answerable questions; "
+            f"- Answered {a['answered']} of {q['answerable']} answerable questions "
+            f"({pct(a['coverage'])} coverage); "
             f"{a['correct']} correct, {a['partly']} partly, {a['wrong']} wrong "
             f"({pct(a['accuracy_when_answered'])} correct when answered).",
             f"- Of the {a['abstained']} abstentions on answerable questions, "
@@ -192,17 +206,25 @@ def rq_sections(lines: list[str]) -> None:
             m = w["ours"]
             lo, hi = m["precision_ci95"]
             lines.append(
-                f"| {window} days | {m['removals']} | {pct(m['base_rate'])} | "
+                f"| {window} days | {m['removals']} | {pct2(m['base_rate'])} | "
                 f"{pct(m['precision'])} ({pct(lo)}–{pct(hi)}) | {pct(m['recall'])} "
                 f"({m['true_positives']}/{m['positives']}) | {m['lift']:.1f}× | "
-                f"{pct(w['flag_every_removal']['precision'])} | "
-                f"{pct(w['keyword_rule']['precision'])} |"
+                f"{pct2(w['flag_every_removal']['precision'])} | "
+                f"{pct2(w['keyword_rule']['precision'])} |"
             )
+        if tune := load("protect_threshold"):
+            at = tune["curve"][str(tune["chosen_threshold"])]
+            lines += [
+                "",
+                f"On the tune split (removals before 2020), the chosen threshold "
+                f"{tune['chosen_threshold']} had precision {pct(at['precision'])} and recall "
+                f"{pct(at['recall'])} against a base rate of {pct2(tune['base_rate'])}.",
+            ]
         lines += ["", "Per repo, 90-day window:", ""]
         for repo, windows in rq4["by_repo"].items():
             m = windows["90"]["ours"]
             lines.append(
-                f"- {repo}: base rate {pct(m['base_rate'])}, precision {pct(m['precision'])} "
+                f"- {repo}: base rate {pct2(m['base_rate'])}, precision {pct(m['precision'])} "
                 f"({m['true_positives']} of {m['flagged']} flagged), recall {pct(m['recall'])} "
                 f"of {m['positives']} positives."
             )
