@@ -302,7 +302,7 @@ Save as `eval/data/guard_events.jsonl`. Split by date: **tune on events before 2
 
 **4.7 Prepare the release (CLAUDE).**
 - Version `1.0.0`, a `CHANGELOG.md`, and the README completed with the compatibility table.
-- `server.json` for the official MCP registry, and the PyPI ownership marker `mcp-name: io.github.anikketsingh/whyblame` in the README.
+- `server.json` for the official MCP registry, and the PyPI ownership marker `mcp-name: io.github.Anikketsingh/whyblame` in the README.
 - `uv build`, then check the wheel's contents, then upload to TestPyPI (if you added a TestPyPI token) and install it into a new venv from there.
 - Draft the GitHub release notes.
 
