@@ -245,8 +245,9 @@ def _message(finding: Finding) -> str:
             )
     for link in finding.links[:1]:
         title = link.get("title_untrusted") or ""
+        text = " ".join(filter(None, [f"{link['label']}:" if title else link["label"], title]))
         where = f" {link['url']}" if link.get("url") else ""
-        parts.append(f"See {link['label']}: {title}{where}.")
+        parts.append(f"See {text}{where}.")
     parts.append(f"History score {finding.score:.2f}: {'; '.join(finding.signals) or 'none'}.")
     return " ".join(parts)
 

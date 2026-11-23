@@ -16,6 +16,12 @@ inputs:
     description: The revision the change starts from. Defaults to the pull request's base.
     required: false
     default: ""
+  github-repo:
+    description: >-
+      The owner/name whose pull requests and issues the history links to. Defaults to this
+      repository, or on a fork to the repository it was forked from.
+    required: false
+    default: ""
   python-version:
     description: Python used to run whyblame.
     required: false
@@ -37,6 +43,27 @@ runs:
         path: .git/provenance
         key: whyblame-${{ runner.os }}-${{ github.sha }}
         restore-keys: whyblame-${{ runner.os }}-
+
+    # A fork's history was discussed in the project it was forked from, so its links should
+    # point there, not at the fork's own (unrelated) pull request numbers.
+    - name: Name the repository the history links to
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        GITHUB_REPO_INPUT: ${{ inputs.github-repo }}
+        IS_FORK: ${{ github.event.repository.fork }}
+      run: |
+        slug="$GITHUB_REPO_INPUT"
+        if [ -z "$slug" ] && [ "$IS_FORK" = "true" ]; then
+          slug="$(gh api "repos/$GITHUB_REPOSITORY" --jq '.parent.full_name // empty' || true)"
+        fi
+        slug="${slug:-$GITHUB_REPOSITORY}"
+        if [[ ! "$slug" =~ ^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$ ]]; then
+          echo "::error::github-repo must look like owner/name"
+          exit 1
+        fi
+        echo "Links point at $slug"
+        echo "WHYBLAME_GITHUB_REPO=$slug" >> "$GITHUB_ENV"
 
     - name: Index history
       shell: bash

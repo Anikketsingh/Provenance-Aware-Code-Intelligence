@@ -45,6 +45,19 @@ def test_repo_at_works_from_a_subfolder_and_on_a_bare_clone(worktree, tmp_path):
     assert Repo.at(bare).git_dir == bare.resolve()
 
 
+def test_a_fork_is_named_after_its_upstream(worktree, monkeypatch):
+    # origin is the fork; upstream is where the history was discussed.
+    worktree.run("remote", "add", "upstream", "https://github.com/widget-org/widgets.git")
+    assert Repo.at(worktree.root).name == "widget-org/widgets"
+    # In CI a fork has no upstream remote, so the action names it.
+    worktree.run("remote", "remove", "upstream")
+    monkeypatch.setenv("WHYBLAME_GITHUB_REPO", "widget-org/widgets")
+    assert Repo.at(worktree.root).name == "widget-org/widgets"
+    monkeypatch.setenv("WHYBLAME_GITHUB_REPO", "not a repo; rm -rf /")
+    with pytest.raises(RepoNotFoundError, match="owner/name"):
+        Repo.at(worktree.root)
+
+
 def test_repo_without_github_remote_is_named_after_its_folder(git_repo):
     git_repo.commit("init", {"a.py": "x = 1\n"})
     assert Repo.at(git_repo.root).name == git_repo.root.name

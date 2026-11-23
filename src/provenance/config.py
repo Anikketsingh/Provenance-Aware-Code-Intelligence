@@ -80,13 +80,24 @@ def resolve_repo(arg: str, data_dir: Path | None = None) -> Repo:
     )
 
 
+#: Names the GitHub repo whose pull requests and issues a local repo's links point at, as
+#: `owner/name`. Needed on a fork in CI, where the only remote is the fork itself.
+GITHUB_REPO_ENV = "WHYBLAME_GITHUB_REPO"
+_SLUG = re.compile(r"^[\w.-]+/[\w.-]+$")
+
+
 def github_remote(git_dir: Path) -> str | None:
-    """The `owner/name` of the repo's GitHub remote, preferring `origin`."""
+    """The `owner/name` of the repo's GitHub remote: `upstream` first, then `origin`.
+
+    A fork's own numbers aren't where its history was discussed; the project it was forked
+    from is, and by convention that remote is called `upstream`.
+    """
     try:
         remotes = _git(git_dir, "remote").split()
     except RepoNotFoundError:
         return None
-    for remote in sorted(remotes, key=lambda r: r != "origin"):
+    rank = {"upstream": 0, "origin": 1}
+    for remote in sorted(remotes, key=lambda r: rank.get(r, 2)):
         try:
             url = _git(git_dir, "remote", "get-url", remote)
         except RepoNotFoundError:
@@ -97,6 +108,10 @@ def github_remote(git_dir: Path) -> str | None:
 
 
 def _local_name(git_dir: Path) -> str:
+    if override := os.environ.get(GITHUB_REPO_ENV, "").strip():
+        if not _SLUG.match(override):
+            raise RepoNotFoundError(f"{GITHUB_REPO_ENV} must look like owner/name: {override!r}")
+        return override
     if slug := github_remote(git_dir):
         return slug
     top = git_dir.parent if git_dir.name == ".git" else git_dir
