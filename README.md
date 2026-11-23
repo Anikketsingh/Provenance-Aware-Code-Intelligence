@@ -81,6 +81,19 @@ Agents get the same check through the `check_change` MCP tool: call it after edi
 
 On a held-out test set of 60 lines from Django and Redis, this finds the right commit **83.5%** of the time, against **69.2%** for git's strongest settings (`-w -M -C -C`). It won on 20 lines and lost on 2 (McNemar p < 0.001).
 
+## How much difference it makes
+
+| Question | Without | With whyblame |
+|---|---|---|
+| Right commit for a line (held-out, weighted) | 69.2% (git's best) | **83.5%** |
+| Hidden ticket found in the top 10 (1,000 Django commits) | 56.9% (message keywords) | **60.7%**; 39.6% even with the message hidden |
+| Abstains when the evidence is withheld | | **10 of 10** |
+| Claims backed by the evidence they cite | | **51 of 53** |
+| CI warning hits a guard that later had to be restored | 0.80% (base rate) | **2.7%**, 3.3× the base rate |
+| Agent keeps the guard (16-case pilot, 32 paired runs) | 16 of 32 | **22 of 32**, with as many tasks done (p = 0.031) |
+
+Every number comes from `eval/reproduce.py`. The full results are in [eval/results/summary.md](https://github.com/Anikketsingh/Provenance-Aware-Code-Intelligence/blob/main/eval/results/summary.md), and the analysis, including where it doesn't help, is in [reports/analysis.md](https://github.com/Anikketsingh/Provenance-Aware-Code-Intelligence/blob/main/reports/analysis.md). The labels are AI labels, as stated throughout.
+
 ## More commands
 
 ```bash
@@ -123,8 +136,9 @@ uv run provenance ui                                  # every indexed corpus rep
 ### Reproducing the results
 
 ```bash
-uv run python eval/reproduce.py         # rescore both gold sets and rebuild the table
-uv run python eval/reproduce.py --full  # also rerun the checks that need no labels
+uv run python eval/reproduce.py              # rescore everything that scores offline
+uv run python eval/reproduce.py --full       # also rerun the label-free checks, RQ2 and RQ4
+uv run python eval/reproduce.py --footprint  # also remeasure index time, RAM and latency
 ```
 
 This writes `eval/results/summary.md`, and every number in it comes from a saved run. The individual checks:
@@ -133,8 +147,15 @@ This writes `eval/results/summary.md`, and every number in it comes from a saved
 uv run python eval/ignore_list_eval.py django   # compare with Django's hand-kept skip list
 uv run python eval/ast_oracle.py django         # check against Python's own parser
 uv run python eval/method_gap.py                # how often methods differ, plus a stress test
-uv run python eval/score_gold.py --set test     # score every method on the held-out lines
+uv run python eval/score_gold.py --set test     # RQ1: score every method on the held-out lines
+uv run python eval/retrieval_bench.py           # RQ2: find the hidden ticket
+uv run python eval/explain_bench.py score       # RQ3: explanations (saved Gemini replies)
+uv run python eval/protect_bench.py --split test  # RQ4: the CI check on held-out history
+uv run python eval/agent_pilot.py score          # RQ5: the agent pilot (saved transcripts)
+uv run python eval/footprint.py                 # RQ6: cost on a laptop
 ```
+
+The final report is built from these results by `reports/final/build.py` (Word and PDF).
 
 The labelling rules are in `eval/gold/RULES.md`. The gold labels are AI labels: Claude labelled every line, and Gemini checked them blind. The rules file says exactly how.
 
