@@ -467,3 +467,7 @@ def why(repo: str, path: str, line: int, rev: str = "HEAD") -> None:
         typer.echo(f"\nLast logic change: {chain.origin[:10]}")
         if chain.first_seen:
             typer.echo(f"First appeared:    {chain.first_seen[:10]} ({chain.stop_reason})")
+
+
+if __name__ == "__main__":
+    app()
