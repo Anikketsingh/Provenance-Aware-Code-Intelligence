@@ -67,7 +67,7 @@ Create `~/whyblame-compat/django/.mcp.json` from the JSON block `setup.py` print
 
 ### 2. Cursor
 
-Put the same JSON in `~/whyblame-compat/django/.cursor/mcp.json`. Open the folder in Cursor, then go to **Settings → MCP**: whyblame should have a green dot and 4 tools. Use the **Agent** chat.
+Put the same JSON in `~/whyblame-compat/django/.cursor/mcp.json`. Open the folder in Cursor, then go to **Settings → MCP**: whyblame should have a green dot and 4 tools (5 with a Gemini key: `explain_line`). Use the **Agent** chat.
 
 ### 3. VS Code with GitHub Copilot (agent mode)
 
@@ -84,7 +84,7 @@ Open the folder, click **Start** above the server in that file, then pick **Agen
 ```bash
 cd ~/whyblame-compat/django
 gemini mcp add whyblame <cmd> mcp ~/whyblame-compat/django    # as printed by setup.py
-gemini            # then /mcp should list whyblame with 4 tools
+gemini            # then /mcp should list whyblame with 4 or 5 tools
 ```
 
 ### 5. Codex CLI
