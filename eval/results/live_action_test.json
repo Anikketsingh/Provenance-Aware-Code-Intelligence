@@ -1,0 +1,32 @@
+{
+  "what": "The whyblame GitHub Action on a real pull request (plan 09, task 3.9)",
+  "date": "2026-11-23",
+  "repository": "Anikketsingh/redis (a fork of redis/redis; the pull request stays inside the fork)",
+  "pull_request": "https://github.com/Anikketsingh/redis/pull/1",
+  "base": "unstable @ 9d5cd8c2345b49430d598665cbe77b10626fce00",
+  "change": "Removes the second `if (checkStringLength(c,offset,value_len) != C_OK) return;` in SETRANGE (src/t_string.c, the existing-key path). The other copy, for a new key, is kept, so the change removes exactly one guard.",
+  "action": "Anikketsingh/Provenance-Aware-Code-Intelligence@main, threshold 0.85 (frozen)",
+  "runs": [
+    {
+      "job": "https://github.com/Anikketsingh/redis/actions/runs/45119084136/job/137508479482",
+      "head": "41d5ba3a4f",
+      "index": "cold (no cache)",
+      "seconds": 240,
+      "annotations": [
+        "warning src/t_string.c:622 Protective code removed",
+        "GitHub notice: actions targeting Node 20 (fixed in 07625e8)"
+      ]
+    },
+    {
+      "job": "https://github.com/Anikketsingh/redis/actions/runs/45119598778/job/137510088990",
+      "head": "8f06e6533d",
+      "index": "restored from the first run's cache (incremental)",
+      "seconds": 31,
+      "annotations": ["warning src/t_string.c:622 Protective code removed"]
+    }
+  ],
+  "warning": "early-exit `if (checkStringLength(c,offset,value_len) != C_OK) return;` was removed (early-exit removed). It first appeared in 9f9e1ceaa0 \"Add SETRANGE command implementation and tests\", and was last changed in 05aed4cab9 \"Optimize SET/INCR*/DECR*/SETRANGE/APPEND by reducing duplicate computation (#13505)\". See PR #13505 https://github.com/redis/redis/pull/13505. History score 0.85: linked to PR #13505; bug words in its history ('overflow'); security words in its history ('Authenticated'); in place since 2024-09-04; the only guard this change removes.",
+  "found_on_the_way": "The first local dry run linked to the fork's own PR #13505, which doesn't exist. Fixed in 14930bd: links now point at the repository the fork came from.",
+  "local_dry_run": "A fresh index of the fork clone on the M1 (13,463 commits) took 148 s and gave the same warning.",
+  "note": "This shows the check works end to end on GitHub. It is one hand-picked case, not a measure of accuracy; RQ4 (eval/protect_bench.py --split test) is the measurement."
+}
