@@ -1,0 +1,44 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.Anikketsingh/whyblame",
+  "title": "whyblame",
+  "description": "Why does this code exist? Traces a line past reformats to the commit, ticket and PR behind it.",
+  "repository": {
+    "url": "https://github.com/Anikketsingh/Provenance-Aware-Code-Intelligence",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "whyblame",
+      "version": "1.0.0",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp"
+        },
+        {
+          "type": "positional",
+          "valueHint": "repo_path",
+          "description": "The git repository to answer about; index it once with `whyblame index`",
+          "default": ".",
+          "isRequired": false
+        }
+      ],
+      "environmentVariables": [
+        {
+          "name": "GEMINI_API_KEY",
+          "description": "Optional. Adds the explain_line tool: short answers that cite their evidence",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

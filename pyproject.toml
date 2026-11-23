@@ -1,6 +1,6 @@
 [project]
 name = "whyblame"
-version = "0.2.0"
+version = "1.0.0"
 description = "git blame tells you who. whyblame tells you why: trace any line past reformats to the change and ticket that explain it, for you and your AI agents (MCP)."
 readme = "README.md"
 license = "Apache-2.0"

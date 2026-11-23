@@ -1,17 +1,19 @@
 # whyblame
 
+<!-- mcp-name: io.github.Anikketsingh/whyblame -->
+
 **`git blame` tells you who. `whyblame` tells you why.**
 
 `git blame` names the last commit that touched a line, and that is often a reformat, a rename or a move. `whyblame` traces the line back past those to the change that really gave it its behaviour, and attaches the ticket or pull request that explains it. It answers you in the terminal and a local web UI, and it answers AI coding agents over MCP, **before** they delete a check whose purpose they can't see.
 
-![The web UI tracing a Django line past a Black reformat to the 2020 fix and its ticket](docs/images/ui.png)
+![The web UI tracing a Django line past a Black reformat to the 2020 fix and its ticket](https://raw.githubusercontent.com/Anikketsingh/Provenance-Aware-Code-Intelligence/main/docs/images/ui.png)
 
 ## Quickstart (about 30 seconds)
 
-Needs [uv](https://docs.astral.sh/uv/) and git. Run this inside any git repository:
+Needs Python 3.12+ and git. Run this inside any git repository:
 
 ```bash
-uv tool install git+https://github.com/Anikketsingh/Provenance-Aware-Code-Intelligence
+uv tool install whyblame           # or: pipx install whyblame, or: pip install whyblame
 whyblame index                     # once per repo; later runs only add new commits
 whyblame why . path/to/file.py 42  # the line's real history
 ```
@@ -52,6 +54,8 @@ whyblame check . --base main --head HEAD # a branch
 ```
 
 The same check runs on every pull request as a GitHub Action. It warns on the changed line and never blocks:
+
+![The Action warning on a pull request that removed a size check from Redis's SETRANGE, citing PR #13505](https://raw.githubusercontent.com/Anikketsingh/Provenance-Aware-Code-Intelligence/main/docs/images/action-warning.png)
 
 ```yaml
 on: pull_request
@@ -94,7 +98,7 @@ The index lives inside your repo's git directory (`.git/provenance/`), so nothin
 
 ## The research behind it
 
-This is a B.Tech major project at Delhi Technological University, by Aniket Singh Kushwaha, Aarish and Aftab, guided by Prof. Shailender Kumar. The design is in [plans/](plans/), and the full write-up is in [reports/](reports/).
+This is a B.Tech major project at Delhi Technological University, by Aniket Singh Kushwaha, Aarish and Aftab, guided by Prof. Shailender Kumar. The design is in [plans/](https://github.com/Anikketsingh/Provenance-Aware-Code-Intelligence/tree/main/plans), and the full write-up is in [reports/](https://github.com/Anikketsingh/Provenance-Aware-Code-Intelligence/tree/main/reports).
 
 ### Development setup
 

@@ -22,6 +22,28 @@ app = typer.Typer(
     help="Find out why a line of code exists, past reformats, renames and moves.",
 )
 
+
+def _show_version(value: bool) -> None:
+    if value:
+        from importlib.metadata import PackageNotFoundError, version
+
+        try:
+            typer.echo(f"whyblame {version('whyblame')}")
+        except PackageNotFoundError:
+            typer.echo("whyblame (not installed as a package)")
+        raise typer.Exit()
+
+
+@app.callback()
+def _main(
+    version: Annotated[
+        bool,
+        typer.Option("--version", callback=_show_version, is_eager=True, help="Show the version."),
+    ] = False,
+) -> None:
+    pass
+
+
 RepoArg = Annotated[
     str, typer.Argument(help="A path to a git repo (default: here), or a corpus name.")
 ]
