@@ -31,14 +31,14 @@ runs:
   using: composite
   steps:
     - name: Set up uv
-      uses: astral-sh/setup-uv@v6
+      uses: astral-sh/setup-uv@v10.3.3
       with:
         python-version: ${{ inputs.python-version }}
 
     # The index lives in .git/provenance. Restoring it makes indexing incremental, so only
     # commits new since the last run are processed.
     - name: Restore the history index
-      uses: actions/cache@v4
+      uses: actions/cache@v6
       with:
         path: .git/provenance
         key: whyblame-${{ runner.os }}-${{ github.sha }}
