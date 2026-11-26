@@ -1,7 +1,5 @@
 name: whyblame protective-code check
-description: >-
-  Warns on a pull request when it removes or weakens protective code (raise, assert, early
-  return checks, except/catch, locks, timeouts) whose history says it matters, and cites why.
+description: Warns when a pull request removes or weakens a guard whose history says it matters, and cites the reason.
 author: Aniket Singh Kushwaha
 branding:
   icon: shield
