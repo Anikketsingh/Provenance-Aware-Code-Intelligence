@@ -43,7 +43,7 @@ For each client, do **two runs** in the copy it makes (`~/whyblame-compat`):
 
 Claude rebuilds the package first (`rm -rf dist && uv build`), so `dist/` holds the final files. Then you:
 
-**a. PyPI.**
+**a. PyPI.** Done 27 Nov 2026: 1.0.0 is live, and `uvx whyblame --version` works from a clean folder.
 
 ```bash
 set -a; source .env; set +a      # loads UV_PUBLISH_TOKEN without printing it
@@ -56,7 +56,7 @@ Check it works in a new folder:
 cd /tmp && uv venv t && source t/bin/activate && pip install whyblame && whyblame --version
 ```
 
-**b. Tags.** Tell Claude "PyPI done". Claude tags `v1.0.0`, moves the `v1` tag to it (the README uses `@v1`), and pushes both.
+**b. Tags.** Done 27 Nov 2026: `v1.0.0` and `v1` point at e1eb19c. Tell Claude "PyPI done". Claude tags `v1.0.0`, moves the `v1` tag to it (the README uses `@v1`), and pushes both.
 
 **c. GitHub release and Marketplace.**
 
