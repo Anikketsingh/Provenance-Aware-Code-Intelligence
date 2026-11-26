@@ -17,7 +17,7 @@ Then open these in browser tabs, in order:
 
 1. The UI at `http://127.0.0.1:8765/#django:django/contrib/auth/hashers.py:114`.
 2. The live PR: https://github.com/Anikketsingh/redis/pull/1. Use its "Files changed" tab, scrolled to `src/t_string.c` line 622.
-3. The two agent clients from your compatibility runs (`plans/10-final-steps.md`), each opened on `~/whyblame-compat`, with the task text ready to paste.
+3. The two agent clients from your compatibility runs (`plans/10-final-steps.md`), each opened on `~/whyblame-compat/django`, with the task text ready to paste.
 4. A terminal in an empty folder for the install.
 
 ## The demo, in order
@@ -56,11 +56,7 @@ uv tool install whyblame && whyblame --version
 
 > *It's on PyPI, the GitHub Marketplace and the official MCP registry.*
 
-Say this line only once step 2 of `plans/10-final-steps.md` is done. Before that, say "it is packaged and ready to publish" and install from the repo:
-
-```bash
-uv tool install --from "git+https://github.com/Anikketsingh/Provenance-Aware-Code-Intelligence" whyblame
-```
+It has been live since 27 November 2026. With network, also open https://pypi.org/project/whyblame/. If the install is slow, `uvx whyblame --version` shows the same thing.
 
 ### 6. The numbers (1 min). Deck, the "How much difference" slide.
 
@@ -73,7 +69,7 @@ Read the headline row of each RQ off the slide: RQ1 tracing, RQ2 search, RQ3 exp
 | 1–2 | The UI won't start | `uv run provenance why django django/contrib/auth/hashers.py 114`, then `uv run provenance explain django django/contrib/auth/hashers.py 114`. Cached, so no network is needed. |
 | 3 | No network | The screenshot `docs/images/action-warning.png` (also in the report, Figure 4.1) |
 | 4 | An agent hangs, or no network | The saved compat run, or the backup recording at this step |
-| 5 | No network | Skip it and show the PyPI page screenshot, or say it's packaged |
+| 5 | No network | Skip it: say it's on PyPI, and point at the release slide and the report's Appendix D |
 | Any | The laptop dies | The backup recording, kept on the laptop and on Drive or USB |
 
 ## Likely questions

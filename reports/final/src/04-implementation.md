@@ -120,4 +120,4 @@ The test suite has {{tests.count}} tests, run on every push by GitHub Actions to
 
 Gemini is never called in tests; a fake backend replays fixed replies.
 
-Version 1.0.0 is packaged as `whyblame` (Python 3.12+). The package has been built and installed into a clean environment, where `index`, `why`, `check`, `init` and the stdio MCP server worked end to end. A `server.json` validated against the official MCP registry schema is ready for the registry listing.
+Version 1.0.0 is packaged as `whyblame` (Python 3.12+). The package has been built and installed into a clean environment, where `index`, `why`, `check`, `init` and the stdio MCP server worked end to end. A `server.json` validated against the official MCP registry schema was used for the registry listing (Appendix D).

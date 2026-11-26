@@ -1,212 +1,194 @@
-# Publish whyblame, then try every feature yourself
+# Use whyblame yourself: every feature, from the published package
 
-Part 1 publishes the package, about 30 minutes. Part 2 is what a stranger does after finding it. Parts 3 to 7 walk through every feature on your own laptop. Run all commands from the project folder unless a step says otherwise:
+whyblame 1.0.0 is live. This guide uses the **published** package, the way any stranger would, plus the research repos already indexed in this project. Every command here was run on 27 November 2026 and worked as shown.
 
-```bash
-cd ~/Desktop/Sem7/Major\ Projects
-```
+| Where it's published | Link |
+|---|---|
+| PyPI | https://pypi.org/project/whyblame/ |
+| GitHub release | https://github.com/Anikketsingh/Provenance-Aware-Code-Intelligence/releases/tag/v1.0.0 |
+| GitHub Marketplace (the Action) | https://github.com/marketplace/actions/whyblame-protective-code-check |
+| Official MCP registry | https://registry.modelcontextprotocol.io/v0/servers?search=whyblame (`io.github.Anikketsingh/whyblame`) |
 
----
+Two ways to run it:
 
-## Part 1. Publish (about 30 minutes)
-
-The package is already built and checked: `dist/whyblame-1.0.0*` passes `twine check`, and the name `whyblame` is still free on PyPI.
-
-### 1. PyPI (5 minutes)
-
-```bash
-set -a; source .env; set +a                  # loads UV_PUBLISH_TOKEN without printing it
-uv publish dist/whyblame-1.0.0-py3-none-any.whl dist/whyblame-1.0.0.tar.gz
-```
-
-Then check it from a folder that isn't the project. The first try can take a minute while PyPI updates:
-
-```bash
-cd /tmp && uvx whyblame --version            # expect: whyblame 1.0.0
-```
-
-The page is at https://pypi.org/project/whyblame/. A version can never be re-uploaded, so any later change ships as 1.0.1.
-
-### 2. Tags (1 minute)
-
-Tell Claude "PyPI done", or run these yourself:
-
-```bash
-git tag -a v1.0.0 -m "whyblame 1.0.0" && git tag -f v1 v1.0.0
-git push origin v1.0.0 && git push -f origin v1
-```
-
-`v1` is the tag the Action example in the README uses (`@v1`).
-
-### 3. GitHub release and Marketplace (10 minutes, in the browser)
-
-1. Open https://github.com/Anikketsingh/Provenance-Aware-Code-Intelligence/releases/new
-2. **Choose a tag:** `v1.0.0`. **Title:** `whyblame 1.0.0`.
-3. **Description:** paste `docs/releases/v1.0.0.md`. Delete its `### Works with` heading and the `COMPAT_TABLE` line under it until the compatibility runs exist.
-4. Tick **"Publish this Action to the GitHub Marketplace"**. The first time, GitHub asks you to accept the Marketplace developer agreement, and your account needs two-factor authentication.
-5. **Primary category:** Code quality. **Secondary:** Security.
-6. Click **Publish release**.
-
-### 4. The official MCP registry (10 minutes)
-
-PyPI must be done first: the registry checks that the package's README contains `mcp-name: io.github.Anikketsingh/whyblame`, and ours does.
-
-```bash
-brew install mcp-publisher
-# No Homebrew formula? Use the release binary instead:
-# curl -L https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_darwin_arm64.tar.gz | tar xz mcp-publisher
-mcp-publisher login github          # prints a code; open the link, sign in as Anikketsingh, enter the code
-mcp-publisher publish               # run in the project folder; it reads server.json
-```
-
-Check it:
-
-```bash
-curl -s "https://registry.modelcontextprotocol.io/v0/servers?search=whyblame"
-```
-
-The entry should list `io.github.Anikketsingh/whyblame`, version 1.0.0.
-
-### After publishing
-
-Tell Claude "published". Claude updates the deck's release slide (one line is waiting on your approval) and the report's release section. The compatibility table (`plans/10-final-steps.md`, step 1) can be added after release: the GitHub README updates at once, and the PyPI page updates with 1.0.1.
+- **`whyblame`**: the published package, for any repository.
+- **`uv run provenance`**: the same program from this project folder (`cd ~/Desktop/Sem7/Major\ Projects`). It can also name the research repos (`django`, `redis`, `react`) instead of taking a path.
 
 ---
 
-## Part 2. How a stranger uses it
-
-They find it on PyPI, the MCP registry, the Marketplace or a launch post. Then they follow the README's quickstart, which works in any git repository:
+## 1. Install it from PyPI (1 minute)
 
 ```bash
-uv tool install whyblame            # or: pipx install whyblame, or: pip install whyblame
-cd their-repo
-whyblame index                      # once; about 10 s for 3,000 commits, 6 min for 35,000
-whyblame why . path/to/file.py 42   # why does line 42 exist?
-whyblame init                       # agent rules + the exact MCP setup line for their client
+uv tool install whyblame        # or: pipx install whyblame / pip install whyblame
+uv tool update-shell            # once, if the next line says "command not found"; then open a new terminal
+whyblame --version              # whyblame 1.0.0
+which whyblame                  # ~/.local/bin/whyblame: this path is what MCP clients use
 ```
 
-That's all. No account, no API key, no server to run. Optionally, they can add:
-
-- `GITHUB_TOKEN`, so `whyblame index --github` fetches pull requests and issues;
-- `GEMINI_API_KEY`, for the `explain` command;
-- the Action, for pull-request warnings (Part 6).
-
-This path has been tested on a fresh clone of click, a repo that isn't part of our research data: index, then why, then the web UI. It works.
+To try it without installing, use `uvx whyblame <command>`. **Install it before running `whyblame init`, though.** Under `uvx`, `init` prints a path inside uv's temporary cache, and that folder can be deleted later, which breaks the client's config.
 
 ---
 
-## Part 3. The command line, every function
+## 2. Use it on any repository (5 minutes)
 
-Use the research repos: they are already indexed, with tickets and PRs. `uv run provenance` and `whyblame` are the same program, and a corpus repo can be named instead of given as a path.
+Tested on a fresh clone of click, a repo that is not part of the research data:
+
+```bash
+git clone https://github.com/pallets/click && cd click
+whyblame index .                          # about 11 s here; 6 min for Django's 35,000 commits; later runs add only new commits
+whyblame why . src/click/types.py 115     # the line's real history
+whyblame ui .                             # the web UI for this repo: http://127.0.0.1:8765
+whyblame init .                           # agent rules + the setup line for every client
+```
+
+Every command:
 
 | What | Command |
 |---|---|
-| Why does a line exist? (the trace, cosmetic commits skipped, linked tickets) | `uv run provenance why django django/contrib/auth/hashers.py 114` |
-| A cited explanation, or an abstention (uses Gemini; the key is in `.env`) | `uv run provenance explain django django/contrib/auth/hashers.py 112 115` |
-| Full-text search of tickets and PRs | `uv run provenance search django password bytes` |
-| Guards removed or weakened by your edits | `uv run provenance check <repo>` (Part 6 has a ready example) |
-| Index any repo of your own | `whyblame index ~/path/to/repo` |
-| Also fetch its PRs and issues (needs `GITHUB_TOKEN` in `.env`) | `whyblame index ~/path/to/repo --github` |
-| Write agent rules and print the MCP setup lines | `whyblame init ~/path/to/repo` |
-| The MCP server (stdio) | `whyblame mcp ~/path/to/repo` |
-| The MCP server over HTTP | `whyblame mcp ~/path/to/repo --http` (then use `http://127.0.0.1:8766/mcp`) |
-| Version | `whyblame --version` |
+| Index a repo (once; then incremental) | `whyblame index <path>` |
+| Also fetch its PRs and issues (needs `GITHUB_TOKEN`) | `whyblame index <path> --github` |
+| Why does this line exist? | `whyblame why <path> <file> <line>` |
+| A cited explanation, or "not enough evidence" (needs `GEMINI_API_KEY`) | `whyblame explain <path> <file> <start> [end]` |
+| Search tickets and PRs | `whyblame search <path> <words…>` |
+| Guards your uncommitted edits removed | `whyblame check <path>` |
+| Guards a branch removed | `whyblame check <path> --base main --head HEAD` |
+| Output for CI or scripts | add `--format github` or `--format json` to `check` |
+| Web UI | `whyblame ui <path>` |
+| Agent rules + MCP setup lines | `whyblame init <path>` |
+| MCP server (stdio) | `whyblame mcp <path>` |
+| MCP server (HTTP) | `whyblame mcp <path> --http`, then `http://127.0.0.1:8766/mcp` |
 
-Good lines to try:
-
-- `django/contrib/auth/hashers.py 114`: the Black reformat is skipped, and the trace lands on ticket #31375.
-- `src/t_string.c 622` in redis: the size check from the live PR test, PR #13505.
+`<path>` defaults to the current folder, so inside the repo `whyblame why . file.py 42` and `whyblame check` both work.
 
 ---
 
-## Part 4. The web UI
+## 3. The research repos (the demo material)
+
+These are already indexed with tickets and PRs, so run them from the project folder:
 
 ```bash
-uv run provenance ui                 # every indexed research repo: Django, Redis, React
-# or, for any repo you indexed yourself:
-whyblame ui ~/path/to/repo
+uv run provenance why django django/contrib/auth/hashers.py 114
+uv run provenance explain django django/contrib/auth/hashers.py 112 115
+uv run provenance search django password bytes
+uv run provenance why redis src/t_string.c 622
 ```
 
-It opens http://127.0.0.1:8765 in your browser. What to try:
+| Line | What you'll see |
+|---|---|
+| `django/contrib/auth/hashers.py 114` | The 2022 Black reformat is skipped (`cosmetic`), and the trace lands on the 2020 fix for ticket #31375, with PR #12627 |
+| `django/contrib/auth/hashers.py 112 115` with `explain` | An answer citing `[E1]` (the commit) and `[E2]` (the ticket). Cached, so it works offline. |
+| `redis src/t_string.c 622` | The size check from the live PR demo, PR #13505 |
+
+---
+
+## 4. The web UI
+
+```bash
+uv run provenance ui          # Django, Redis and React together
+```
+
+It opens http://127.0.0.1:8765. A direct link to the demo line is http://127.0.0.1:8765/#django:django/contrib/auth/hashers.py:114.
 
 1. **Explore tab.** Pick a repo and a file. Amber lines are where `git blame` lands on a commit that didn't change behaviour.
-2. **Click a line.** The history panel shows the skipped cosmetic commits as hatched layers. The solid layer is the commit that really set the line, with its linked tickets and PRs.
-3. **Ask Gemini, with citations.** You get an answer citing `[E1]`, `[E2]`, or an abstention when the evidence doesn't say why.
-4. **"What an AI agent receives".** Under the line, expand *Show the why_line reply from the MCP server* to see the exact JSON an agent gets.
-5. **Tickets tab.** Full-text search over the stored tickets and PRs.
+2. **Click a line.** The history panel shows skipped cosmetic commits as hatched layers. The solid layer is the commit that really set the line, with its tickets and PRs.
+3. **Ask Gemini, with citations.** You get an answer citing `[E1]`, `[E2]`, or an abstention.
+4. **What an AI agent receives.** Expand *Show the why_line reply from the MCP server* for the exact JSON an agent gets.
+5. **Tickets tab.** Full-text search of the stored tickets and PRs.
 6. **Results tab.** The evaluation numbers.
 7. **Connect an agent tab.** What the agent is told, and how to connect one.
 
-A direct link to a line: http://127.0.0.1:8765/#django:django/contrib/auth/hashers.py:114
-
-The search tab is empty for a repo indexed without `--github`, because nothing has been fetched to search.
-
 ---
 
-## Part 5. Connect it to an AI agent over MCP
+## 5. Connect it to an AI agent over MCP
 
-The quickest way is the ready-made Django copy, which sets everything up for you:
+### 5.1 Get a ready Django copy (once)
 
 ```bash
 uv run python eval/compat/setup.py
 ```
 
-This makes `~/whyblame-compat` (Django at the research revision, already indexed) and prints the exact config for each client, with your paths filled in. `eval/compat/README.md` has step-by-step instructions per client. In short:
+This makes `~/whyblame-compat/django`: Django at the research revision, with the full index, tickets and PRs already in place. Run it again at any time to undo an agent's edits; it keeps your MCP config files.
 
-**Claude Code (the VS Code extension).** Save the `mcpServers` block that `setup.py` prints as `~/whyblame-compat/.mcp.json`. Open that folder in a new VS Code window and start Claude Code there. Approve the `whyblame` server when asked, then type `/mcp` to see it connected.
+### 5.2 Register the server
 
-**Claude Desktop.** Open Settings, then Developer, then Edit Config. Add the same block, then restart Claude Desktop.
-
-**Cursor.** Save the same block as `~/whyblame-compat/.cursor/mcp.json`. Open the folder in Cursor, then go to Settings, MCP, and check that whyblame shows as connected.
-
-`setup.py` keeps these files when it resets the copy, so you only write each one once.
-
-**A local model (Ollama, `qwen3:4b`).** See "Local model" in `eval/compat/README.md`.
-
-The block every client takes has this shape:
+Use the **published** package through `uvx`, so the client always runs the PyPI version. Save this as `~/whyblame-compat/django/.mcp.json`:
 
 ```json
-{"mcpServers": {"whyblame": {"command": "/Users/anikket.singh/Desktop/Sem7/Major Projects/.venv/bin/whyblame",
-                             "args": ["mcp", "/Users/anikket.singh/whyblame-compat"]}}}
+{
+  "mcpServers": {
+    "whyblame": {
+      "command": "/opt/homebrew/bin/uvx",
+      "args": ["whyblame", "mcp", "/Users/anikket.singh/whyblame-compat/django"]
+    }
+  }
+}
 ```
 
-To get the fifth tool, `explain_line`, add `"env": {"GEMINI_API_KEY": "..."}` to that block. Only do this in your own client's config file; never in a file you commit or share.
+For the fifth tool, `explain_line`, add `"env": {"GEMINI_API_KEY": "<your key>"}` inside the `whyblame` block. Do this only in your own config file, never in a file you commit or share.
 
-**What to ask the agent, one tool at a time:**
+| Client | Where the config goes |
+|---|---|
+| **Claude Code, VS Code extension** | `.mcp.json` above. Open `~/whyblame-compat/django` in a **new VS Code window**, start Claude Code, approve the `whyblame` server, then type `/mcp` to see it connected. |
+| **Claude Code, terminal** | `claude mcp add whyblame -- /opt/homebrew/bin/uvx whyblame mcp ~/whyblame-compat/django` |
+| **Claude Desktop** | Settings → Developer → Edit Config. Add the same `mcpServers` block, then restart it. |
+| **Cursor** | The same JSON in `~/whyblame-compat/django/.cursor/mcp.json`. Settings → MCP should show a green dot and 4 tools. |
+| **VS Code Copilot agent mode** | The same server in `.vscode/mcp.json`. The exact format is in `eval/compat/README.md`. |
+| **Gemini CLI / Codex** | `gemini mcp add whyblame /opt/homebrew/bin/uvx whyblame mcp <path>` · `codex mcp add whyblame -- /opt/homebrew/bin/uvx whyblame mcp <path>` |
+| **A local model (Ollama `qwen3:4b`)** | `cd ~/whyblame-compat/django && codex --oss -m qwen3:4b`, after the Codex line above |
+| **Clients that take a URL** | Run `whyblame mcp ~/whyblame-compat/django --http` and give the client `http://127.0.0.1:8766/mcp` |
 
-| Tool | Ask |
+**Finding it in the registry.** Registry-aware clients and directories list it as `io.github.Anikketsingh/whyblame`. They install it as `uvx whyblame mcp <repo>`, which is exactly the config above.
+
+### 5.3 What to ask, one tool at a time
+
+| Tool | Ask the agent |
 |---|---|
 | `why_line` | "Why does line 114 of django/contrib/auth/hashers.py exist?" |
 | `why_range` | "Why do lines 105 to 120 of hashers.py exist?" |
 | `find_discussions` | "What discussions are behind line 114 of hashers.py?" |
-| `check_change` | Ask the agent to remove the type check in `make_password()`, then: "Run check_change before I commit." |
-| `explain_line` (Gemini key only) | "Explain line 114 of hashers.py with citations." |
-| All of them, unprompted | "Simplify make_password() in django/contrib/auth/hashers.py." Watch whether it calls `why_line` first and keeps the checks. |
+| `check_change` | "Remove the type check in make_password()", then "Run check_change before I commit." |
+| `explain_line` (with a Gemini key) | "Explain line 114 of hashers.py with citations." |
+| **The real test, unprompted** | "Simplify make_password() in django/contrib/auth/hashers.py." Watch whether it calls `why_line` first and keeps the check. |
 
-Afterwards, see what the agent left in the file:
+Then see what the agent left behind:
 
 ```bash
-uv run python eval/compat/verify.py
+uv run python eval/compat/verify.py                                     # did both guards survive?
+uv run python eval/compat/verify.py --client "Claude Code" --model "<model>" --rules no \
+  --connected yes --called yes --kept yes --notes "..."                 # records the run in the compatibility table
+uv run python eval/compat/setup.py                                      # reset for the next client
+uv run python eval/compat/setup.py --rules                              # the same, plus the whyblame init rules
 ```
-
-It says whether both guards survived. Add `--client ... --model ...` to record the run in the compatibility table.
 
 ---
 
-## Part 6. The protective-code check and the GitHub Action
+## 6. The protective-code check
 
-**Locally**, in the Django copy, delete a guard and check:
+### 6.1 Locally
 
 ```bash
-cd ~/whyblame-compat
-# Delete the 'if not isinstance(password, (bytes, str)):' block (with its raise) in
-# django/contrib/auth/hashers.py, then:
-"/Users/anikket.singh/Desktop/Sem7/Major Projects/.venv/bin/whyblame" check .
-# expect a finding at score 0.85 citing ticket #31375
-git checkout -- django/contrib/auth/hashers.py     # undo
+cd ~/whyblame-compat/django
+# Delete lines 112-115 of django/contrib/auth/hashers.py: the
+# 'if not isinstance(password, (bytes, str)):' check and its raise. Then:
+whyblame check .
+git checkout -- django/contrib/auth/hashers.py      # undo
 ```
 
-**On GitHub**, it already ran on your Redis fork: https://github.com/Anikketsingh/redis/pull/1, under "Files changed". To add it to any repository of yours, save this as `.github/workflows/whyblame.yml`:
+What it prints (tested with the PyPI package):
+
+```
+django/contrib/auth/hashers.py:111  [score 0.85]
+  early-exit `if not isinstance(password, (bytes, str)): raise TypeError(...)` was removed (early-exit removed).
+  It was added in 8aa71f4e87 "Fixed #31375 -- Made contrib.auth.hashers.make_password() accept only bytes or strings.".
+  See Ticket #31375 ... History score 0.85: linked to Ticket #31375; bug words in its history ('Fixed');
+  added by a fix; in place since 2020-03-31; the only guard this change removes.
+```
+
+A guard with no recorded reason gives no warning. For example, removing the `isinstance` check at `src/click/types.py:115` in click prints "No protective code with a recorded history was removed or weakened."
+
+### 6.2 On GitHub (the Marketplace Action)
+
+The live example is https://github.com/Anikketsingh/redis/pull/1, under "Files changed", at `src/t_string.c` line 622. To add it to any repository, save this as `.github/workflows/whyblame.yml`:
 
 ```yaml
 on: pull_request
@@ -219,19 +201,21 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: Anikketsingh/Provenance-Aware-Code-Intelligence@v1   # @main until the v1 tag exists
+      - uses: Anikketsingh/Provenance-Aware-Code-Intelligence@v1
 ```
 
-Open a pull request that deletes a guard, and the warning appears on the changed line.
+Open a pull request that deletes a guard with a recorded reason, and the warning appears on the changed line. It warns, never blocks, and never runs the PR's code.
 
 ---
 
-## Part 7. If something doesn't work
+## 7. If something doesn't work
 
 | Problem | Fix |
 |---|---|
-| "isn't indexed yet" | Run `whyblame index <path>` first |
-| An MCP client shows no tools | The command must be an **absolute path** to `whyblame`; restart the client after editing its config |
-| No `explain_line` tool | It only appears when `GEMINI_API_KEY` is set for the server |
+| `whyblame: command not found` | `uv tool update-shell`, then open a new terminal |
+| "isn't indexed yet" | `whyblame index <path>` first |
+| An MCP client shows no tools | The command must be an **absolute path** (`/opt/homebrew/bin/uvx` or `~/.local/bin/whyblame`, written out in full). Restart the client after editing its config. |
+| The config from `init` stopped working | It was printed under `uvx`, so it pointed into uv's cache. Run `uv tool install whyblame`, then `whyblame init` again. |
+| No `explain_line` tool | It appears only when `GEMINI_API_KEY` is set for the server |
 | Empty ticket search | That repo was indexed without `--github` |
-| `uvx whyblame` says the package isn't found right after publishing | Wait a minute, then run `uvx --refresh whyblame --version` |
+| An old version runs | `uvx --refresh whyblame --version`, or `uv tool upgrade whyblame` |

@@ -4,6 +4,8 @@
 
 **`git blame` tells you who. `whyblame` tells you why.**
 
+[PyPI](https://pypi.org/project/whyblame/) · [GitHub Marketplace](https://github.com/marketplace/actions/whyblame-protective-code-check) · [MCP registry](https://registry.modelcontextprotocol.io/v0/servers?search=whyblame) (`io.github.Anikketsingh/whyblame`) · [Release notes](https://github.com/Anikketsingh/Provenance-Aware-Code-Intelligence/releases/tag/v1.0.0)
+
 `git blame` names the last commit that touched a line, and that is often a reformat, a rename or a move. `whyblame` traces the line back past those to the change that really gave it its behaviour, and attaches the ticket or pull request that explains it. It answers you in the terminal and a local web UI, and it answers AI coding agents over MCP, **before** they delete a check whose purpose they can't see.
 
 ![The web UI tracing a Django line past a Black reformat to the 2020 fix and its ticket](https://raw.githubusercontent.com/Anikketsingh/Provenance-Aware-Code-Intelligence/main/docs/images/ui.png)

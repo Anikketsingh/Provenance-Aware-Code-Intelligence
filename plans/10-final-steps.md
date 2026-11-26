@@ -58,7 +58,7 @@ cd /tmp && uv venv t && source t/bin/activate && pip install whyblame && whyblam
 
 **b. Tags.** Done 27 Nov 2026: `v1.0.0` and `v1` point at e1eb19c. Tell Claude "PyPI done". Claude tags `v1.0.0`, moves the `v1` tag to it (the README uses `@v1`), and pushes both.
 
-**c. GitHub release and Marketplace.**
+**c. GitHub release and Marketplace.** Done 27 Nov 2026: release `v1.0.0` published and the Action listed on the Marketplace (the description was shortened to fit its 125-character limit, so both tags were moved to b65dffa).
 
 1. On GitHub, go to Releases and choose Draft a new release.
 2. Pick the tag `v1.0.0`, and title it `whyblame 1.0.0`.
@@ -66,7 +66,7 @@ cd /tmp && uv venv t && source t/bin/activate && pip install whyblame && whyblam
 4. Tick **"Publish this action to the GitHub Marketplace"**. The first time, GitHub asks you to accept the Marketplace agreement, and it needs 2FA on your account.
 5. Choose the categories **Code quality** and **Security**, then Publish.
 
-**d. The MCP registry.**
+**d. The MCP registry.** Done 27 Nov 2026: `io.github.Anikketsingh/whyblame` 1.0.0 is active.
 
 ```bash
 brew install mcp-publisher        # or download it from github.com/modelcontextprotocol/registry/releases
@@ -83,7 +83,7 @@ mcp-publisher publish             # run in the project folder; it reads server.j
   curl "https://registry.modelcontextprotocol.io/v0/servers?search=whyblame"
   ```
 
-**Then tell Claude: "published".** Claude ticks the Phase 4 checklist and updates the report's release section with the live links.
+**Then tell Claude: "published".** Done: the DTU report has Appendix D (page 43), and the deck's release and delivery slides say it is live.
 
 ## 3. Before the evaluation (Phase 6.6 and 6.7)
 

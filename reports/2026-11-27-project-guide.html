@@ -85,7 +85,7 @@
 <p class="kicker">B.Tech Major Project · DTU CSE · Complete Project Guide</p>
 <h1>Provenance: why does this line of code exist?</h1>
 <p class="lede">Everything about the project in one document, written so that someone who has never seen it can understand all of it: the problem, how the system works, what has been built and measured, everything built and measured for the final evaluation on <b>27 November 2026</b>, and what comes next.</p>
-<p class="meta">Updated 23 November 2026 for the final evaluation · Aniket Singh Kushwaha, with Aarish and Aftab · Guide: Prof. Shailender Kumar · Code on <code>main</code>, released as <b>whyblame 1.0</b>; every number here comes from a saved file in <code>eval/results/</code>. Sections 13 and 14 are new; the full write-up is the final report.</p>
+<p class="meta">Updated 27 November 2026 for the final evaluation · Aniket Singh Kushwaha, with Aarish and Aftab · Guide: Prof. Shailender Kumar · Code on <code>main</code>, released as <b>whyblame 1.0</b> on PyPI, the GitHub Marketplace and the official MCP registry; every number here comes from a saved file in <code>eval/results/</code>. Sections 13 and 14 are new; the full write-up is the final report.</p>
 
 <ul class="toc">
   <li><a href="#s1"><span class="no">01</span>The problem, from zero</a></li>
@@ -302,7 +302,7 @@ raise TypeError(                             raise TypeError(
 <tr><td><b>1 · Any repository</b></td><td><code>whyblame index</code> and <code>whyblame mcp</code> work on any local clone, incrementally, with the index kept in <code>.git/provenance/</code>. React was indexed end to end. Packaged with CI.</td></tr>
 <tr><td><b>2 · Evidence everywhere</b></td><td>A resumable GitHub crawler for pull requests and issues in Django, Redis and React: 90,909 discussions in all, linked to their merge commits. A time-respecting search finds discussions when no link was recorded, and labels them as found by search.</td></tr>
 <tr><td><b>3 · Protect code in CI</b></td><td><code>whyblame check</code> finds removed or weakened guards in Python, C and JavaScript and scores their history without any model. A GitHub Action warns on the changed line; it was tested live on a real Redis pull request.</td></tr>
-<tr><td><b>4 · Any model, v1.0</b></td><td>Streamable HTTP as well as stdio; <code>whyblame init</code> writes agent rules; replies are versioned and size-capped, with errors returned as a status. Packaged for PyPI, the GitHub Marketplace and the official MCP registry.</td></tr>
+<tr><td><b>4 · Any model, v1.0</b></td><td>Streamable HTTP as well as stdio; <code>whyblame init</code> writes agent rules; replies are versioned and size-capped, with errors returned as a status. Published on 27 November 2026 on PyPI, the GitHub Marketplace and the official MCP registry.</td></tr>
 <tr><td><b>5 · Research</b></td><td>RQ2 to RQ6 measured on frozen code, with one script that reproduces every number (<code>eval/reproduce.py</code>) and a freeze log of every script change.</td></tr>
 <tr><td><b>6 · Deliverables</b></td><td>The final report (Word and PDF, built from the results files), this guide, the updated deck, demo script v2 and launch-post drafts.</td></tr>
 </table>

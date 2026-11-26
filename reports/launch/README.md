@@ -1,6 +1,6 @@
 # Launch post drafts
 
-Drafts for after the evaluation, once whyblame is on PyPI and the MCP registry (`plans/10-final-steps.md`, step 2). You decide whether and when to post. Before posting, check these:
+Drafts for after the evaluation. whyblame 1.0.0 has been on PyPI, the GitHub Marketplace and the MCP registry since 27 November 2026. You decide whether and when to post. Before posting, check these:
 
 - `pip install whyblame` works, and the registry search finds it.
 - The numbers still match `eval/results/summary.md`.

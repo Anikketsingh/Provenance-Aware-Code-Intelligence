@@ -1,8 +1,8 @@
 # Changelog
 
-## 1.0.0 (2026-11)
+## 1.0.0 (2026-11-27)
 
-The first public release: install from PyPI and use it with any MCP client and model.
+The first public release: install from PyPI and use it with any MCP client and model. Published on [PyPI](https://pypi.org/project/whyblame/), the [GitHub Marketplace](https://github.com/marketplace/actions/whyblame-protective-code-check) and the [official MCP registry](https://registry.modelcontextprotocol.io/v0/servers?search=whyblame).
 
 - **Any client, any model.**
   - `whyblame mcp --http` serves Streamable HTTP at `http://127.0.0.1:8766/mcp` as well as stdio. It binds to localhost only and has DNS-rebinding protection; any other host gets a warning.
